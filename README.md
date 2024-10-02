@@ -1,5 +1,4 @@
-# Projet_Musee
-        <h1>Description du projet</h1>
+<h1>Description du projet</h1>
 <h2>Contexte</h2> 
 <p>Un grand musée présente au public différentes expositions simultanément, quelles soient temporaires ou permanentes. A la demande de groupes déjà constitués, des visites commentées de ces expositions peuvent être organisées. Les visites sont guidées par des conférenciers qui sont soit des employés du
 musée ou soit des guides extérieurs à celui-ci.<br>
