@@ -1,5 +1,5 @@
 # Projet_Musee
-
-Chose a mettre <br>
-Identité des personnes(nom, prenom, e-mail, login GitHub) + roles <br>
-Drive
+Juéry Clément clement.juery@iut-rodez.fr => cju3ry
+Chesnier Quentin quentin.chesnier@iut-rodez.fr => qchesnier
+Cazor--Bonnet Adrian adrian.cazor--bonnet@iut-rodez.fr =>CAZORBONNETAdrian
+Laduraux Baptiste baptiste.ladureau@iut-rodez.fr => Bladureau
