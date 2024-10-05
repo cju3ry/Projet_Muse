@@ -52,5 +52,8 @@ Rôles par itérations : <br>
       <td>Développeur</td>
     </tr>
   </table> <br>
+  <br>
+  Board : https://github.com/users/cju3ry/projects/1/views/1
+  <br>
   Drive : <br>
     https://drive.google.com/drive/folders/1gS8l9UbUGu54KAUvV5sjZ_MVGth5dX3B?usp=sharing
