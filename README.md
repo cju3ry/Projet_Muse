@@ -35,7 +35,7 @@
 Rôles par itérations : <br>
   <table border="1">
     <tr>
-      <th colspan="4">Itération 0 (du 30/09/24 au 9/10/24)</th>
+      <th colspan="4">Itération 0 (du 24/09/24 au 9/10/24)</th>
     </tr>
     <tr>
       <td>Cazor--Bonnet Adrian</td>
