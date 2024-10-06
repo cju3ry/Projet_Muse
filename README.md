@@ -36,8 +36,6 @@ Rôles par itérations : <br>
   <table border="1">
     <tr>
       <th colspan="4">Itération 0 (du 30/09/24 au 9/10/24)</th>
-      <!--Insérer la prochaine ligne ici-->
-      <!--On rajouteras les autres itération après la ligne du dessus-->
     </tr>
     <tr>
       <td>Cazor--Bonnet Adrian</td>
@@ -51,8 +49,55 @@ Rôles par itérations : <br>
       <td>Scrum Master</td>
       <td>Développeur</td>
     </tr>
+    <!--Insérer la prochaine ligne ici-->
+    <!--On rajouteras les autres itération après la ligne du dessus-->
+    <tr>
+      <th colspan="4">Itération 1 (du 10/10/24 au 23/10/24)</th>
+    </tr>
+    <tr>
+      <td>Cazor--Bonnet Adrian</td>
+      <td>Chesnier Quentin</td>
+      <td>Juery Clément</td>
+      <td>Ladureau Baptiste</td>
+    </tr>
+    <tr>
+      <td>Développeur</td>
+      <td>Développeur</td>
+      <td>Product Owner</td>
+      <td>Scrum Master</td>
+    </tr>
+    <tr>
+      <th colspan="4">Itération 2 (du 24/10/24 au 6/11/24)</th>
+    </tr>
+    <tr>
+      <td>Cazor--Bonnet Adrian</td>
+      <td>Chesnier Quentin</td>
+      <td>Juery Clément</td>
+      <td>Ladureau Baptiste</td>
+    </tr>
+    <tr>
+      <td>Scrum Master</td>
+      <td>Développeur</td>
+      <td>Développeur</td>
+      <td>Product Owner</td>
+    </tr>
+    <tr>
+      <th colspan="4">Itération 3 (du 7/11/24 au 24/11/24)</th>
+    </tr>
+    <tr>
+      <td>Cazor--Bonnet Adrian</td>
+      <td>Chesnier Quentin</td>
+      <td>Juery Clément</td>
+      <td>Ladureau Baptiste</td>
+    </tr>
+    <tr>
+      <td>Product Owner</td>
+      <td>Scrum Master</td>
+      <td>Développeur</td>
+      <td>Développeur</td>
+    </tr>
   </table> <br>
   <br>
-  Board : https://github.com/users/cju3ry/projects/1/views/1
+  Board : https://github.com/users/cju3ry/projects/1/views/1 <br>
   <br>
   Drive : https://drive.google.com/drive/folders/1gS8l9UbUGu54KAUvV5sjZ_MVGth5dX3B?usp=sharing
