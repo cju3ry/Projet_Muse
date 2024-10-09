@@ -100,7 +100,5 @@ Rôles par itérations : <br>
   <br>
   Board : https://github.com/users/cju3ry/projects/1/views/1 <br>
   <br>
-  Drive : https://drive.google.com/drive/folders/1gS8l9UbUGu54KAUvV5sjZ_MVGth5dX3B?usp=sharing <br>
-  <br>
-  Discord : https://discord.gg/wuZm8rWJ
+  Drive : https://drive.google.com/drive/folders/1gS8l9UbUGu54KAUvV5sjZ_MVGth5dX3B?usp=sharing
   
