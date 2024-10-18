@@ -61,21 +61,4 @@ public class Conferencier {
 	public String toString() {
 		return "	Conférencier/Conférencière : " + this.nom + " " + this.prenom;
 	}
-	
-	
-	    public static void main(String[] args) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
-	    	gestionDonnees.initialisesDonnees();
-	       
-	        ArrayList<Date> indisponibilite = new ArrayList<>();
-	        
-	        indisponibilite.add(new Date()); // Exemple d'une date actuelle
-
-	        String[] specialites = {"Java", "AI", "Data Science"};
-
-	        Conferencier conferencier = new Conferencier( "ABC1234","Dupont","Jean",true,indisponibilite,specialites,"0612345678");
-	        
-	        System.out.println(conferencier.toString());
-	            
-	        
-	    }
-	}
+}

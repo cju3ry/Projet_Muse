@@ -9,12 +9,12 @@ public class Employe {
 	private String numTel;
 	
 	public Employe(String id, String nom, String prenom, String numTel) throws EmployeException {
-		if (id.length() != 7 || id == null) {
+		if (id == null || id.length() != 7) {
 			throw new EmployeException();
 		}
 		
 		for (Employe employe : gestionDonnees.employes) {
-			if (employe.getId() == id) {
+			if (employe.getId().equals(id)) {
 				throw new EmployeException();
 			}
 			
