@@ -21,7 +21,12 @@ public class Exposition {
 		SimpleDateFormat periode = new SimpleDateFormat("yyyy");
 		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
 		
-		if (id.length() != 7) {
+		periode.setLenient(false);
+		tempsExpo.setLenient(false);
+		
+		if (id.length() != 7 || intitule == null || resume == null
+			|| nbOeuvre <= 0 || periodeDebut == null && periodeFin == null
+			|| motCles.length > 10) {
 			throw new ExpositionException();
 		}
 		
@@ -31,19 +36,16 @@ public class Exposition {
 			}
 		}
 		
-		if (intitule == null) {
-			throw new ExpositionException();
-		}
-		
-		if (nbOeuvre <= 0) {
-			throw new ExpositionException();
-		}
-		
-		if (periodeDebut == null && periodeFin == null) {
-			throw new ExpositionException();
-		}
-		
 		if (estTemporaire == true && debutExpo == null && finExpo == null) {
+			throw new ExpositionException();
+		}
+		
+		if (Integer.parseInt(periodeDebut) > 2024 || Integer.parseInt(periodeFin) > 2024) {
+			throw new ExpositionException();
+		}
+		
+		if (estTemporaire == true && debutExpo.substring(6,debutExpo.length()).length() > 4
+			|| estTemporaire == true && finExpo.substring(6,finExpo.length()).length() > 4) {
 			throw new ExpositionException();
 		}
 		
@@ -65,7 +67,7 @@ public class Exposition {
 			}
 			
 		} catch (ParseException e) {
-			System.out.print("Format de la date incorrect ou inexistante !!!");
+			throw new ExpositionException();
 		}
 		
 		this.id = id;
@@ -87,15 +89,12 @@ public class Exposition {
 	
 	public static void main (String args[]) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
 		gestionDonnees.initialisesDonnees();
-		String[] tab = new String[2];
+		String[] tab = new String[10];
 		tab[0] = "dbzayudza";
 		tab[1] = "salut";
-		Exposition expo1 = new Exposition("E000001", "coucou", "dzayudfgauyfaf", 4, false, tab, "1984", "1987", null, null);
+		Exposition expo1 = new Exposition("E000001", "coucou", "dzayudfgauyfaf", 12, false, tab, "1984", "1988", null, null);
 		
-		// Exposition expo2 = new Exposition("E000001", "Juery", "Clément", null);
-		
-		System.out.print(expo1.toString());
-//		System.out.print(expo2.toString());
+		Exposition expo2 = new Exposition("E000002", "salut", "dzayudfgauyfaf", 6, true, tab, "1984", "1987", "12/12/2012", "12/12/2024");
 		
 		for (Exposition exposition : gestionDonnees.expositions) {
 			System.out.print(exposition.toString());
