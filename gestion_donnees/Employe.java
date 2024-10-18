@@ -9,7 +9,7 @@ public class Employe {
 	private String numTel;
 	
 	public Employe(String id, String nom, String prenom, String numTel) throws EmployeException {
-		if (id.length() != 7) {
+		if (id.length() != 7 || id == null) {
 			throw new EmployeException();
 		}
 		
@@ -54,19 +54,5 @@ public class Employe {
 	
 	public String toString() {
 		return "	Employé(e) : " + this.nom + " " + this.prenom + "\n";
-	}
-	
-	public static void main (String args[]) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
-		gestionDonnees.initialisesDonnees();
-		Employe employe1 = new Employe("E000001", "Juéry", "Clément", "1554");
-		
-		Employe employe2 = new Employe("E000401", "Juery", "Clément", null);
-		
-//		System.out.print(employe1.toString());
-//		System.out.print(employe2.toString());
-		
-		for (Employe employe : gestionDonnees.employes) {
-			System.out.print(employe.toString());
-		}
 	}
 }

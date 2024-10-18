@@ -13,7 +13,7 @@ public class Conferencier {
 	private String numTel;
 	
 	public Conferencier(String id, String nom, String prenom, boolean estEmploye, ArrayList<Date> indisponibilite, String[] specialite, String numTel) throws ConferencierException {
-		if (id.length() != 7) {
+		if (id.length() != 7 || id == null) {
 			throw new ConferencierException();
 		}
 		
@@ -29,7 +29,11 @@ public class Conferencier {
 			}
 		}
 		
-		if (numTel.length() != 10) {
+		if (specialite.length > 6) {
+			throw new ConferencierException();
+		}
+		
+		if (numTel.length() != 10 || numTel == null) {
 			throw new ConferencierException();
 		}
 		
