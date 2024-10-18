@@ -12,11 +12,12 @@ public class Visite {
 	private Employe employe;
 	private Conferencier conferencier;
 	
-	public Visite(String id, String intitule, Date dateVisite, Date heureVisite, String telephone, Exposition exposition, Employe employe, Conferencier conferencier) throws VisiteException {
+	public Visite(String idVisite, String intitule, Date dateVisite, Date heureVisite, String telephone, Exposition exposition, Employe employe, Conferencier conferencier) throws VisiteException {
 		
-		if (id.length() != 7) {
+		if (id.length() != 7 || idVisite == null) {
 			throw new VisiteException();
 		}
+		
 		
 		this.id = id;
 		this.intitule = intitule;
