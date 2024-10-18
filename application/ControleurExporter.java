@@ -4,10 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class ControleurImporterLocal {
+public class ControleurExporter {
+
+	@FXML
+    private Button btnAfficherIp;
 
     @FXML
-    private Button btnChoisirFichierConferenciers;
+    private Button btnChoisirFichierConferencier;
 
     @FXML
     private Button btnChoisirFichierEmployes;
@@ -22,13 +25,16 @@ public class ControleurImporterLocal {
     private Button btnConsulter;
 
     @FXML
+    private Button btnEntrerIp;
+
+    @FXML
     private Button btnExporter;
 
     @FXML
-    private Button btnImporter;
+    private Button btnExporterFichiers;
 
     @FXML
-    private Button btnImporterFichiers;
+    private Button btnImporter;
 
     @FXML
     private Button btnNotice;
@@ -40,16 +46,22 @@ public class ControleurImporterLocal {
     private Button btnRevenirArriere;
 
     @FXML
+    private Button checkConferencier;
+
+    @FXML
+    private Button checkEmployes;
+
+    @FXML
     private Button checkExpositions;
 
     @FXML
-    private Button checkFichierConferenciers;
+    private Button checkVisites;
+
 
     @FXML
-    private Button choisirFicherVisites;
+    void afficherIp(ActionEvent event) {
 
-    @FXML
-    private Button choisirFichierEmployes;
+    }
 
     @FXML
     void choisirFichierConferencier(ActionEvent event) {
@@ -67,13 +79,13 @@ public class ControleurImporterLocal {
     }
 
     @FXML
-    void choisirFichierVisites(ActionEvent event) {
-
-    }
-
-    @FXML
     void consulter(ActionEvent event) {
     	Main.setPageConsulter();
+    }	
+
+    @FXML
+    void entrerIp(ActionEvent event) {
+
     }
 
     @FXML
@@ -82,13 +94,13 @@ public class ControleurImporterLocal {
     }
 
     @FXML
-    void importer(ActionEvent event) {
-    	Main.setPageImporter();
+    void exporterFichiers(ActionEvent event) {
+
     }
 
     @FXML
-    void importerFichiers(ActionEvent event) {
-
+    void importer(ActionEvent event) {
+    	Main.setPageImporter();
     }
 
     @FXML
@@ -103,7 +115,7 @@ public class ControleurImporterLocal {
 
     @FXML
     void revenirArriere(ActionEvent event) {
-    	Main.setPageImporter();
+    	Main.setPageDeGarde();
 
     }
 

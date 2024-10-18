@@ -38,12 +38,12 @@ public class ControleurConsulter {
     
     @FXML
     void importer(ActionEvent event) {
-    	
+    	Main.setPageImporter();
     }
     
     @FXML
     void exporter(ActionEvent event) {
-    	
+    	Main.setPageExporter();
     }
     
     @FXML
@@ -58,7 +58,7 @@ public class ControleurConsulter {
     
     @FXML
     void quitter(ActionEvent event) {
-    	System.exit(1);
+    	System.exit(0);
     }
 
     @FXML

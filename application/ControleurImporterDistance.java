@@ -4,25 +4,28 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class ControleurImporterLocal {
+public class ControleurImporterDistance {
 
     @FXML
-    private Button btnChoisirFichierConferenciers;
+    private Button btnAfficherIp;
 
     @FXML
-    private Button btnChoisirFichierEmployes;
-
-    @FXML
-    private Button btnChoisirFichierExpositions;
-
-    @FXML
-    private Button btnChoisirFichierVisites;
+    private Button btnConferencier;
 
     @FXML
     private Button btnConsulter;
 
     @FXML
+    private Button btnEmployes;
+
+    @FXML
+    private Button btnEntrerIp;
+
+    @FXML
     private Button btnExporter;
+
+    @FXML
+    private Button btnExposition;
 
     @FXML
     private Button btnImporter;
@@ -40,20 +43,31 @@ public class ControleurImporterLocal {
     private Button btnRevenirArriere;
 
     @FXML
+    private Button btnVisites;
+
+    @FXML
+    private Button checkConferencier;
+
+    @FXML
+    private Button checkEmployes;
+
+    @FXML
     private Button checkExpositions;
 
     @FXML
-    private Button checkFichierConferenciers;
+    private Button checkIp;
 
     @FXML
-    private Button choisirFicherVisites;
+    private Button checkVisites;
 
     @FXML
-    private Button choisirFichierEmployes;
+    void afficherIp(ActionEvent event) {
+
+    }
 
     @FXML
     void choisirFichierConferencier(ActionEvent event) {
-
+    	
     }
 
     @FXML
@@ -62,7 +76,7 @@ public class ControleurImporterLocal {
     }
 
     @FXML
-    void choisirFichierExpositions(ActionEvent event) {
+    void choisirFichierExposition(ActionEvent event) {
 
     }
 
@@ -77,6 +91,11 @@ public class ControleurImporterLocal {
     }
 
     @FXML
+    void entrerIp(ActionEvent event) {
+
+    }
+
+    @FXML
     void exporter(ActionEvent event) {
     	Main.setPageExporter();
     }
@@ -87,7 +106,7 @@ public class ControleurImporterLocal {
     }
 
     @FXML
-    void importerFichiers(ActionEvent event) {
+    void importerFichier(ActionEvent event) {
 
     }
 
