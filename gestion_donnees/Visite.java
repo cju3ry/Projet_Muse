@@ -139,7 +139,7 @@ public class Visite {
 	    Employe employeLiée = new Employe("1111111", "Clement", "juery", "1234");
 	    
 
-	    Exposition expositionLiée = new Exposition("E000002", "salut", "dzayudfgauyfaf", 6, true, tab, "1984", "1987", "12/10/2012", "12/12/2024");
+	    Exposition expositionLiée = new Exposition("E000002", "salut", "1984", "1987", 6, tab, "dzayudfgauyfaf", "12/10/2012", "12/12/2024");
 	    
 	    		
 	    Conferencier conferencier = new Conferencier("ABC1234","Dupont","Jean",true,indisponibilite, specialites,"0612345678");
