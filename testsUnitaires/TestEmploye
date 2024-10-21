@@ -1,0 +1,63 @@
+/*
+ * Date       21/10/2024
+ * IUT de Rodez
+ * @copyright Tous droits réservés. Ce fichier est soumis aux termes du droit d'auteur et 
+ * ne peut être reproduit, distribué, ou modifié sans l'autorisation expresse du détenteur du droit d'auteur.
+ */
+
+package testsUnitaires;
+
+import gestion_donnees.Employe;
+import gestion_donnees.EmployeException;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Classe de test pour Employe.
+ */
+public class TestEmploye {
+
+    private Employe employe;
+
+    @Test
+    public void testConstructeurOk() throws EmployeException {
+        employe = new Employe("1234567", "Johnson", "Billy", "0000");
+        assertEquals("1234567", employe.getId());
+        assertEquals("Johnson", employe.getNom());
+        assertEquals("Billy", employe.getPrenom());
+        assertEquals("0000", employe.getNumTel());
+    }
+
+    @Test
+    public void testConstructeurNOk() {
+        assertThrows(EmployeException.class, () -> {
+            new Employe("12345", "Johnson", "Billy", "0000");
+        });
+    }
+
+    @Test
+    public void testConstructeuridNull() {
+        assertThrows(EmployeException.class, () -> {
+            new Employe(null, "Johnson", "Billy", "0000");
+        });
+    }
+
+    @Test
+    public void testConstructeurMauvaisTel() {
+        assertThrows(EmployeException.class, () -> {
+            new Employe("1234567", "Johnson", "Billy", "00000");
+        });
+    }
+
+    @Test
+    public void testConstructeurNullTel() throws EmployeException {
+        employe = new Employe("1234567", "Johnson", "Billy", null);
+        assertNull(employe.getNumTel());
+    }
+
+    @Test
+    public void testToString() throws EmployeException {
+        employe = new Employe("1234567", "Johnson", "Billy", "0000");
+        assertEquals("	Employé(e) : Johnson Billy\n", employe.toString());
+    }
+}
