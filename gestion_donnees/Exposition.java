@@ -31,6 +31,44 @@ public class Exposition {
 		this.intitule = intitule;
 	}
 	
+	public Exposition(String id, String intitule, String debutExpo, String finExpo) throws ExpositionException {  
+		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
+		tempsExpo.setLenient(false);
+		
+		if (id.length() != 7 || intitule == null) {
+			throw new ExpositionException();
+		}
+		
+		if (donnees.idExistantExpositions(id)) {
+			throw new ExpositionException();
+		}
+		
+		if (debutExpo != null && finExpo != null) {
+			this.estTemporaire = true;
+		} else if (debutExpo == null && finExpo == null) {
+			this.estTemporaire = false;
+		} else {
+			throw new ExpositionException();
+		}
+		
+		try {
+			if (this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
+				throw new ExpositionException();
+			}
+			
+			if (this.estTemporaire) {
+				this.debutExpo = tempsExpo.parse(debutExpo);
+				this.finExpo = tempsExpo.parse(finExpo);
+			}
+			
+		} catch (ParseException e) {
+			throw new ExpositionException();
+		}
+		
+		this.id = id;
+		this.intitule = intitule;
+	}
+	
 	public String getId() {
 		return this.id;
 	}
@@ -64,33 +102,6 @@ public class Exposition {
 		}
 	}
 	
-	public void setTempsExpo (String debutExpo, String finExpo) throws ExpositionException {
-		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
-		tempsExpo.setLenient(false);
-		
-		if (debutExpo != null && finExpo != null) {
-			this.estTemporaire = true;
-		} else if (debutExpo == null && finExpo == null) {
-			this.estTemporaire = false;
-		} else {
-			throw new ExpositionException();
-		}
-		
-		try {
-			if (this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
-				throw new ExpositionException();
-			}
-			
-			if (this.estTemporaire) {
-				this.debutExpo = tempsExpo.parse(debutExpo);
-				this.finExpo = tempsExpo.parse(finExpo);
-			}
-			
-		} catch (ParseException e) {
-			throw new ExpositionException();
-		}
-	}
-	
 	public void setNbOeuvre(int nbOeuvre) throws ExpositionException {
 		if (nbOeuvre <= 0) {
 			throw new ExpositionException();
@@ -108,7 +119,7 @@ public class Exposition {
 	}
 	
 	public void setResume(String resume) throws ExpositionException {
-		if (resume == "") {
+		if (resume == null) {
 			throw new ExpositionException();
 		}
 		
