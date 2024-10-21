@@ -17,17 +17,9 @@ public class Exposition {
 	private Date debutExpo;
 	private Date finExpo;
 	
-	public Exposition(String id, String intitule, String periodeDebut, String periodeFin, int nbOeuvre, String[] motCles, String resume, String debutExpo, String finExpo) throws ExpositionException {
+	public Exposition(String id, String intitule) throws ExpositionException {  
 		
-		SimpleDateFormat periode = new SimpleDateFormat("yyyy");
-		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
-		
-		periode.setLenient(false);
-		tempsExpo.setLenient(false);
-		
-		if (id.length() != 7 || intitule == null || resume == null
-			|| nbOeuvre <= 0 || periodeDebut == null && periodeFin == null
-			|| motCles.length > 10) {
+		if (id.length() != 7 || intitule == null) {
 			throw new ExpositionException();
 		}
 		
@@ -35,9 +27,46 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
+		this.id = id;
+		this.intitule = intitule;
+	}
+	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setPeriode (String periodeDebut, String periodeFin) throws ExpositionException {
+		SimpleDateFormat periode = new SimpleDateFormat("yyyy");
+		periode.setLenient(false);
+		
+		if (periodeDebut == null || periodeFin == null) {
+			throw new ExpositionException();
+		}
+		
 		if (Integer.parseInt(periodeDebut) > 2024 || Integer.parseInt(periodeFin) > 2024) {
 			throw new ExpositionException();
 		}
+		
+		try {
+			if (periode.parse(periodeDebut).getTime() > periode.parse(periodeFin).getTime()) {
+				throw new ExpositionException();
+			}
+			
+			if (periodeDebut != null && periodeFin != null) {
+				this.periodeDebut = periode.parse(periodeDebut);
+				this.periodeFin = periode.parse(periodeFin);
+			} else { 
+				throw new ExpositionException();
+			}
+			
+		} catch (ParseException e) {
+			throw new ExpositionException();
+		}
+	}
+	
+	public void setTempsExpo (String debutExpo, String finExpo) throws ExpositionException {
+		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
+		tempsExpo.setLenient(false);
 		
 		if (debutExpo != null && finExpo != null) {
 			this.estTemporaire = true;
@@ -47,22 +76,8 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
-		// vérification de l'année seulement
-		if (this.estTemporaire && debutExpo.substring(6,debutExpo.length()).length() > 4
-			|| this.estTemporaire && finExpo.substring(6,finExpo.length()).length() > 4) {
-			throw new ExpositionException();
-		}
-		
 		try {
-			if (periode.parse(periodeDebut).getTime() > periode.parse(periodeFin).getTime()
-				|| this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
-				throw new ExpositionException();
-			}
-			
-			if (periodeDebut != null && periodeFin != null) {
-				this.periodeDebut = periode.parse(periodeDebut);
-				this.periodeFin = periode.parse(periodeFin);
-			} else { 
+			if (this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
 				throw new ExpositionException();
 			}
 			
@@ -74,17 +89,30 @@ public class Exposition {
 		} catch (ParseException e) {
 			throw new ExpositionException();
 		}
-		
-		this.id = id;
-		this.intitule = intitule;
-		this.resume = resume;
-		this.nbOeuvre = nbOeuvre;
-		this.motCles = motCles;
-		donnees.ajoutExposition(this);
 	}
 	
-	public String getId() {
-		return this.id;
+	public void setNbOeuvre(int nbOeuvre) throws ExpositionException {
+		if (nbOeuvre <= 0) {
+			throw new ExpositionException();
+		}
+		
+		this.nbOeuvre = nbOeuvre;
+	}
+	
+	public void setMotCles(String[] motCles) throws ExpositionException {
+		if (motCles.length > 10 || motCles.length <= 0) {
+			throw new ExpositionException();
+		}
+		
+		this.motCles = motCles;
+	}
+	
+	public void setResume(String resume) throws ExpositionException {
+		if (resume == "") {
+			throw new ExpositionException();
+		}
+		
+		this.resume = resume;
 	}
 	
 	public String toString() {
@@ -96,20 +124,6 @@ public class Exposition {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public static void main (String args[]) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
-		DonneesApplication.initialisesDonnees();
-		String[] tab = new String[10];
-		tab[0] = "dbzayudza";
-		tab[1] = "salut";
-		Exposition expo1 = new Exposition("E000001", "coucou", "1984", "1988", 12, tab, "dzayudfgauyfaf", null, null);
-		
-		Exposition expo2 = new Exposition("E000002", "salut", "1984", "1988", 6, tab, "dzayudfgauyfaf", "12/12/2012", "12/12/2012");
-		
-		for (Exposition exposition : DonneesApplication.expositions) {
-			System.out.print(exposition.toString());
 		}
 	}
 }
