@@ -15,7 +15,7 @@ public class Visite {
 	private String employe;
 	private String conferencier;
 	
-	public Visite(String idVisite, String intitule, String dateVisite, String heureVisite, String expositionId, String employeId, String conferencierId, String numTel) throws VisiteException, EmployeException {
+	public Visite(String idVisite, String expositionId, String conferencierId, String employeId, String dateVisite, String heureVisite, String intitule, String numTel) throws VisiteException, EmployeException {
 		
 		SimpleDateFormat jourVisite = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat heureDebut = new SimpleDateFormat("HH'h'mm");
@@ -38,13 +38,13 @@ public class Visite {
 		if (employeId.length() != 7 || employeId == null) {
 			throw new VisiteException();
 		} else {
-			Employe employeTrouvé = null;
+			boolean employeTrouvé = false;
 			for (Employe employe : gestionDonnees.employes) {
 				if (employe.getId() == employeId) {
-					employeTrouvé = employe;
+					employeTrouvé = true;
 				}
 			}
-			if (employeTrouvé != null) {
+			if (employeTrouvé) {
 			     this.employe = employeId;
 			 } else {
 			     throw new VisiteException();
@@ -56,15 +56,15 @@ public class Visite {
 		if (expositionId.length() != 7 || expositionId == null) {
 			throw new VisiteException();
 		} else {
-			Exposition expositionTrouvée = null;
+			boolean expositionTrouvée = false;
 			
 			for (Exposition exposition : gestionDonnees.expositions) {
 			        if (exposition.getId() == expositionId) {
-			            expositionTrouvée = exposition;
+			            expositionTrouvée = true;
 			        }
 			    }
 			    
-			 if (expositionTrouvée != null) {
+			 if (expositionTrouvée) {
 			     this.exposition = employeId;
 			 } else {
 			     throw new VisiteException();
@@ -74,15 +74,15 @@ public class Visite {
 		if (conferencierId.length() != 7 || conferencierId == null) {
 			throw new VisiteException();
 		} else {
-			Conferencier conferencierTrouvé = null;
+			boolean conferencierTrouvé = false;
 			
 			for (Conferencier conferenciers : gestionDonnees.conferenciers) {
 			        if (conferenciers.getId() == conferencierId) {
-			            conferencierTrouvé = conferenciers;
+			            conferencierTrouvé = true;
 			        }
 			    }
 			    
-			 if (conferencierTrouvé != null) {
+			 if (conferencierTrouvé) {
 				 this.conferencier = conferencierId;
 			 } else {
 			     throw new VisiteException();
@@ -150,7 +150,7 @@ public class Visite {
 	    String numTel = "111111111";
 	    String heureVisite = "15h00";
 	    
-	    Visite visite1 = new Visite(idVisite, intitule, dateVisite, heureVisite, "E000002", "1111111", "ABC1234", numTel);
+	    Visite visite1 = new Visite(idVisite, "E000002", "ABC1234", "1111111", dateVisite, heureVisite, intitule, numTel);
 	        
 	    System.out.println(visite1.toString());
 	  
