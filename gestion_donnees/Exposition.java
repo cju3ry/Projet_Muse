@@ -51,6 +51,12 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
+		// vérification de l'année seulement
+		if (this.estTemporaire && debutExpo.substring(6,debutExpo.length()).length() > 4
+			|| this.estTemporaire && finExpo.substring(6,finExpo.length()).length() > 4) {
+			throw new ExpositionException();
+		}
+		
 		try {
 			if (this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
 				throw new ExpositionException();
