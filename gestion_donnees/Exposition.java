@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Exposition {
+	public DonneesApplication donnees = new DonneesApplication();
 	private String id;
 	private String intitule;
 	private String resume;
@@ -22,6 +23,10 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
+		if (donnees.idExistantExpositions(id)) {
+			throw new ExpositionException();
+		}
+		
 		this.id = id;
 		this.intitule = intitule;
 	}
@@ -31,6 +36,10 @@ public class Exposition {
 		tempsExpo.setLenient(false);
 		
 		if (id.length() != 7 || intitule == null) {
+			throw new ExpositionException();
+		}
+		
+		if (donnees.idExistantExpositions(id)) {
 			throw new ExpositionException();
 		}
 		
