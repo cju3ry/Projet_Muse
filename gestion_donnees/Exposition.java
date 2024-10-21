@@ -16,7 +16,7 @@ public class Exposition {
 	private Date debutExpo;
 	private Date finExpo;
 	
-	public Exposition(String id, String intitule, String resume, int nbOeuvre, boolean estTemporaire, String[] motCles, String periodeDebut, String periodeFin, String debutExpo, String finExpo) throws ExpositionException {
+	public Exposition(String id, String intitule, String periodeDebut, String periodeFin, int nbOeuvre, String[] motCles, String resume, String debutExpo, String finExpo) throws ExpositionException {
 		
 		SimpleDateFormat periode = new SimpleDateFormat("yyyy");
 		SimpleDateFormat tempsExpo = new SimpleDateFormat("dd/MM/yyyy");
@@ -36,34 +36,40 @@ public class Exposition {
 			}
 		}
 		
-		if (estTemporaire == true && debutExpo == null && finExpo == null) {
-			throw new ExpositionException();
-		}
-		
 		if (Integer.parseInt(periodeDebut) > 2024 || Integer.parseInt(periodeFin) > 2024) {
 			throw new ExpositionException();
 		}
 		
-		if (estTemporaire == true && debutExpo.substring(6,debutExpo.length()).length() > 4
-			|| estTemporaire == true && finExpo.substring(6,finExpo.length()).length() > 4) {
+		if (debutExpo != null && finExpo != null) {
+			this.estTemporaire = true;
+		} else if (debutExpo == null && finExpo == null) {
+			this.estTemporaire = false;
+		} else {
+			throw new ExpositionException();
+		}
+		
+		// vérification de l'année seulement
+		if (this.estTemporaire && debutExpo.substring(6,debutExpo.length()).length() > 4
+			|| this.estTemporaire && finExpo.substring(6,finExpo.length()).length() > 4) {
 			throw new ExpositionException();
 		}
 		
 		try {
 			if (periode.parse(periodeDebut).getTime() > periode.parse(periodeFin).getTime()
-				|| estTemporaire == true && periode.parse(debutExpo).getTime() > periode.parse(finExpo).getTime()) {
+				|| this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
 				throw new ExpositionException();
 			}
 			
-			this.periodeDebut = periode.parse(periodeDebut);
-			this.periodeFin = periode.parse(periodeFin);
+			if (periodeDebut != null && periodeFin != null) {
+				this.periodeDebut = periode.parse(periodeDebut);
+				this.periodeFin = periode.parse(periodeFin);
+			} else { 
+				throw new ExpositionException();
+			}
 			
-			if (debutExpo != null && finExpo != null) {
+			if (this.estTemporaire) {
 				this.debutExpo = tempsExpo.parse(debutExpo);
 				this.finExpo = tempsExpo.parse(finExpo);
-			} else {
-				this.debutExpo = null;
-				this.finExpo = null;
 			}
 			
 		} catch (ParseException e) {
@@ -74,7 +80,6 @@ public class Exposition {
 		this.intitule = intitule;
 		this.resume = resume;
 		this.nbOeuvre = nbOeuvre;
-		this.estTemporaire = estTemporaire;
 		this.motCles = motCles;
 		gestionDonnees.expositions.add(this);
 	}
@@ -92,9 +97,9 @@ public class Exposition {
 		String[] tab = new String[10];
 		tab[0] = "dbzayudza";
 		tab[1] = "salut";
-		Exposition expo1 = new Exposition("E000001", "coucou", "dzayudfgauyfaf", 12, false, tab, "1984", "1988", null, null);
+		Exposition expo1 = new Exposition("E000001", "coucou", "1984", "1988", 12, tab, "dzayudfgauyfaf", null, null);
 		
-		Exposition expo2 = new Exposition("E000002", "salut", "dzayudfgauyfaf", 6, true, tab, "1984", "1987", "12/12/2012", "12/12/2024");
+		Exposition expo2 = new Exposition("E000002", "salut", "1984", "1988", 6, tab, "dzayudfgauyfaf", "12/12/2012", "12/12/2012");
 		
 		for (Exposition exposition : gestionDonnees.expositions) {
 			System.out.print(exposition.toString());
