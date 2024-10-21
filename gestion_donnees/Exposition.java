@@ -2,10 +2,10 @@ package gestion_donnees;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Exposition {
-	public DonneesApplication donnees = new DonneesApplication();
 	private String id;
 	private String intitule;
 	private String resume;
@@ -23,10 +23,6 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
-		if (donnees.idExistantExpositions(id)) {
-			throw new ExpositionException();
-		}
-		
 		this.id = id;
 		this.intitule = intitule;
 	}
@@ -39,33 +35,19 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
-		if (donnees.idExistantExpositions(id)) {
-			throw new ExpositionException();
-		}
-		
-		if (debutExpo != null && finExpo != null) {
-			this.estTemporaire = true;
-		} else if (debutExpo == null && finExpo == null) {
-			this.estTemporaire = false;
-		} else {
-			throw new ExpositionException();
-		}
-		
 		// vérification de l'année seulement
-		if (this.estTemporaire && debutExpo.substring(6,debutExpo.length()).length() > 4
-			|| this.estTemporaire && finExpo.substring(6,finExpo.length()).length() > 4) {
+		if (debutExpo.substring(7,debutExpo.length()).length() > 4
+			|| finExpo.substring(7,finExpo.length()).length() > 4) {
 			throw new ExpositionException();
 		}
 		
 		try {
-			if (this.estTemporaire && tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
+			if (tempsExpo.parse(debutExpo).getTime() > tempsExpo.parse(finExpo).getTime()) {
 				throw new ExpositionException();
 			}
 			
-			if (this.estTemporaire) {
-				this.debutExpo = tempsExpo.parse(debutExpo);
-				this.finExpo = tempsExpo.parse(finExpo);
-			}
+			this.debutExpo = tempsExpo.parse(debutExpo);
+			this.finExpo = tempsExpo.parse(finExpo);
 			
 		} catch (ParseException e) {
 			throw new ExpositionException();

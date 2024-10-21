@@ -1,4 +1,5 @@
 
+
 package gestion_donnees;
 
 import java.util.ArrayList;
@@ -14,18 +15,6 @@ public class Employe {
 			throw new EmployeException();
 		}
 		
-		for (Employe employe : DonneesApplication.employes) {
-			if (employe.getId() == id) {
-				throw new EmployeException();
-			}
-			
-			if (employe.getPrenom() == prenom) {
-				if (employe.getNom() == nom) {
-					throw new EmployeException();
-				}
-			}
-		}
-		
 		if (numTel != null) {
 			if (numTel.length() != 4) {
 				throw new EmployeException();
@@ -36,7 +25,6 @@ public class Employe {
 		this.nom = nom;
 		this.prenom = prenom;
 		this.numTel = numTel;
-		donnees.ajoutEmploye.add(this);
 	}
 	
 	public String getId() {
