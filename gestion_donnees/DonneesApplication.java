@@ -38,7 +38,7 @@ public class DonneesApplication {
 	    return contenuCsv;
 	}
 	
-	public static void importerEmployes(ArrayList<String> arraysEmployes) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
+	public static void importerEmployes(ArrayList<String> arraysEmployes) throws EmployeException {
 		//initialisesDonnees();
 	    for (int i = 1; i < arraysEmployes.size(); i++) {
 	        String[] tempEmployes = arraysEmployes.get(i).split(";");
@@ -68,7 +68,7 @@ public class DonneesApplication {
 	    }
 	}
 	
-	public void importerConferenciers(ArrayList<String> arraysConferenciers) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
+	public void importerConferenciers(ArrayList<String> arraysConferenciers) throws ConferencierException {
 		//initialisesDonnees();
 		boolean estEmployes = false;
 	    for (int i = 1; i < arraysConferenciers.size(); i++) {
@@ -176,7 +176,7 @@ public class DonneesApplication {
 	    }
 	}
 	
-	public static void importerVisites(ArrayList<String> arraysVisites) throws VisiteException, ConferencierException, EmployeException, ExpositionException {
+	public static void importerVisites(ArrayList<String> arraysVisites) throws VisiteException {
 		//initialisesDonnees();
 		boolean	estVisite = false;
 		for (int i = 1; i < arraysVisites.size(); i++) {
@@ -197,6 +197,10 @@ public class DonneesApplication {
 					&& !idExistantExpositions(idExposition) 
 					&& !idExistantExpositions(idExposition)) {
 					throw new VisiteException();
+    			}
+				
+				if (idExistantVisites(idVisites)) {
+    				throw new VisiteException();
     			}
 				
 				Visite visite = new Visite(idVisites, dateVisite, heureVisite, intitule, numTel);
