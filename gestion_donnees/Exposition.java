@@ -92,6 +92,14 @@ public class Exposition {
 		return "	Exposition : " + this.intitule + "\n";
 	}
 	
+	public boolean estTemporaire() {
+		if (this.estTemporaire) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static void main (String args[]) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
 		gestionDonnees.initialisesDonnees();
 		String[] tab = new String[10];
