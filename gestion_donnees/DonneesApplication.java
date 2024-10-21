@@ -192,7 +192,17 @@ public class DonneesApplication {
 				String heureVisite = tempVisites[5].trim();
 				String intitule = tempVisites[6].trim();
 				String numTel = tempVisites[7].trim();
-				Visite visite = new Visite(idVisites, idExposition, idConferencier, idEmploye, dateVisite, heureVisite, intitule, numTel);
+				
+				if (!idExistantExpositions(idExposition) 
+					&& !idExistantExpositions(idExposition) 
+					&& !idExistantExpositions(idExposition)) {
+					throw new VisiteException();
+    			}
+				
+				Visite visite = new Visite(idVisites, dateVisite, heureVisite, intitule, numTel);
+				visite.setEmployeId(idEmploye);
+				visite.setConferencierId(idConferencier);
+				visite.setExpositionId(idExposition);
 				System.out.println("Visite ajouté : " + visite);
 			} else {
 
