@@ -176,7 +176,7 @@ public class DonneesApplication {
 	    }
 	}
 	
-	public static void importerVisites(ArrayList<String> arraysVisites) throws VisiteException {
+	public static void importerVisites(ArrayList<String> arraysVisites) throws VisiteException, EmployeException {
 		//initialisesDonnees();
 		boolean	estVisite = false;
 		for (int i = 1; i < arraysVisites.size(); i++) {
@@ -194,8 +194,8 @@ public class DonneesApplication {
 				String numTel = tempVisites[7].trim();
 				
 				if (!idExistantExpositions(idExposition) 
-					&& !idExistantExpositions(idExposition) 
-					&& !idExistantExpositions(idExposition)) {
+					&& !idExistantEmployes(idEmploye) 
+					&& !idExistantConferenciers(idConferencier)) {
 					throw new VisiteException();
     			}
 				
@@ -340,9 +340,9 @@ public class DonneesApplication {
 
 		DonneesApplication donnees = new DonneesApplication();
 		
-//		donnees.importerEmployes(LireCsv("employe.csv"));
-		donnees.importerExpositions(LireCsv("exposition.csv"));
-//		donnees.importerConferenciers(LireCsv("conferencier.csv"));
-//		donnees.importerVisites(LireCsv("visites.csv"));
+		donnees.importerEmployes(LireCsv("employes.csv"));
+		donnees.importerExpositions(LireCsv("expositions.csv"));
+		donnees.importerConferenciers(LireCsv("conferenciers.csv"));
+		donnees.importerVisites(LireCsv("visites.csv"));
 	}
 }

@@ -28,7 +28,7 @@ public class Visite {
 			throw new VisiteException();
 		}
 			
-		if (numTel.length() != 9 || numTel == null) {
+		if (numTel.length() != 10 || numTel == null) {
 			throw new VisiteException();
 		}
 		
