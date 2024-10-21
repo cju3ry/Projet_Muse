@@ -1,5 +1,7 @@
+
 package gestion_donnees;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -46,6 +48,17 @@ public class Conferencier {
 		gestionDonnees.conferenciers.add(this);
 	}
 	
+	private boolean indisponibiliteOk(ArrayList<String> indisponibilite) {
+		SimpleDateFormat formatIndisponibilite = new SimpleDateFormat("dd/MM/yyyy");
+		formatIndisponibilite.setLenient(false);
+		
+		if () {
+			
+		}
+		
+		return false;
+	}
+	
 	public String getId() {
 		return this.id;
 	}
@@ -62,20 +75,19 @@ public class Conferencier {
 		return "	Conférencier/Conférencière : " + this.nom + " " + this.prenom;
 	}
 	
-	
-	    public static void main(String[] args) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
-	    	gestionDonnees.initialisesDonnees();
-	       
-	        ArrayList<Date> indisponibilite = new ArrayList<>();
-	        
-	        indisponibilite.add(new Date()); // Exemple d'une date actuelle
+    public static void main(String[] args) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
+    	gestionDonnees.initialisesDonnees();
+       
+        ArrayList<Date> indisponibilite = new ArrayList<>();
+        
+        indisponibilite.add(new Date()); // Exemple d'une date actuelle
 
-	        String[] specialites = {"Java", "AI", "Data Science"};
+        String[] specialites = {"Java", "AI", "Data Science"};
 
-	        Conferencier conferencier = new Conferencier( "ABC1234","Dupont","Jean",true,indisponibilite,specialites,"0612345678");
-	        
-	        System.out.println(conferencier.toString());
-	            
-	        
-	    }
-	}
+        Conferencier conferencier = new Conferencier( "ABC1234","Dupont","Jean",true,indisponibilite,specialites,"0612345678");
+        
+        System.out.println(conferencier.toString());
+            
+        
+    }
+}

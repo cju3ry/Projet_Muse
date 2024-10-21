@@ -1,3 +1,4 @@
+
 package gestion_donnees;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class Employe {
 			throw new EmployeException();
 		}
 		
-		for (Employe employe : gestionDonnees.employes) {
+		for (Employe employe : DonneesApplication.employes) {
 			if (employe.getId() == id) {
 				throw new EmployeException();
 			}
@@ -31,13 +32,11 @@ public class Employe {
 			}
 		}
 		
-		
-		
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.numTel = numTel;
-		gestionDonnees.employes.add(this);
+		DonneesApplication.employes.add(this);
 	}
 	
 	public String getId() {

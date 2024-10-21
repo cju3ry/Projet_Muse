@@ -1,3 +1,4 @@
+
 package gestion_donnees;
 
 import java.text.ParseException;
@@ -26,7 +27,7 @@ public class Visite {
 		if (idVisite.length() != 7 || idVisite == null) {
 			throw new VisiteException();
 		} else {
-			for (Visite visite : gestionDonnees.visites) {
+			for (Visite visite : DonneesApplication.visites) {
 				if (visite.getId() == id) {
 					throw new VisiteException();
 				}
@@ -39,7 +40,7 @@ public class Visite {
 			throw new VisiteException();
 		} else {
 			boolean employeTrouvé = false;
-			for (Employe employe : gestionDonnees.employes) {
+			for (Employe employe : DonneesApplication.employes) {
 				if (employe.getId() == employeId) {
 					employeTrouvé = true;
 				}
@@ -58,7 +59,7 @@ public class Visite {
 		} else {
 			boolean expositionTrouvée = false;
 			
-			for (Exposition exposition : gestionDonnees.expositions) {
+			for (Exposition exposition : DonneesApplication.expositions) {
 			        if (exposition.getId() == expositionId) {
 			            expositionTrouvée = true;
 			        }
@@ -76,7 +77,7 @@ public class Visite {
 		} else {
 			boolean conferencierTrouvé = false;
 			
-			for (Conferencier conferenciers : gestionDonnees.conferenciers) {
+			for (Conferencier conferenciers : DonneesApplication.conferenciers) {
 			        if (conferenciers.getId() == conferencierId) {
 			            conferencierTrouvé = true;
 			        }
@@ -111,7 +112,7 @@ public class Visite {
 			
 		this.intitule = intitule;
 		this.telephone = numTel;
-		gestionDonnees.visites.add(this);
+		DonneesApplication.visites.add(this);
 	}
 	
 	public String getId() {
@@ -124,7 +125,7 @@ public class Visite {
 	
 	public static void main(String args[]) throws VisiteException, EmployeException, ExpositionException, ConferencierException {
 
-	    gestionDonnees.initialisesDonnees();
+	    DonneesApplication.initialisesDonnees();
 	    
 	    String[] tab = new String[10];
 		tab[0] = "dbzayudza";

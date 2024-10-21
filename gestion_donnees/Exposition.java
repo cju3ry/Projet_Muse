@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Exposition {
+	public DonneesApplication donnees = new DonneesApplication();
 	private String id;
 	private String intitule;
 	private String resume;
@@ -30,10 +31,8 @@ public class Exposition {
 			throw new ExpositionException();
 		}
 		
-		for (Exposition exposition : gestionDonnees.expositions) {
-			if (exposition.getId() == id) {
-				throw new ExpositionException();
-			}
+		if (donnees.idExistantExpositions(id)) {
+			throw new ExpositionException();
 		}
 		
 		if (Integer.parseInt(periodeDebut) > 2024 || Integer.parseInt(periodeFin) > 2024) {
@@ -81,7 +80,7 @@ public class Exposition {
 		this.resume = resume;
 		this.nbOeuvre = nbOeuvre;
 		this.motCles = motCles;
-		gestionDonnees.expositions.add(this);
+		donnees.ajoutExposition(this);
 	}
 	
 	public String getId() {
@@ -101,7 +100,7 @@ public class Exposition {
 	}
 	
 	public static void main (String args[]) throws EmployeException, ExpositionException, ConferencierException, VisiteException {
-		gestionDonnees.initialisesDonnees();
+		DonneesApplication.initialisesDonnees();
 		String[] tab = new String[10];
 		tab[0] = "dbzayudza";
 		tab[1] = "salut";
@@ -109,7 +108,7 @@ public class Exposition {
 		
 		Exposition expo2 = new Exposition("E000002", "salut", "1984", "1988", 6, tab, "dzayudfgauyfaf", "12/12/2012", "12/12/2012");
 		
-		for (Exposition exposition : gestionDonnees.expositions) {
+		for (Exposition exposition : DonneesApplication.expositions) {
 			System.out.print(exposition.toString());
 		}
 	}
