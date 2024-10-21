@@ -36,7 +36,7 @@ public class Employe {
 		this.nom = nom;
 		this.prenom = prenom;
 		this.numTel = numTel;
-		DonneesApplication.employes.add(this);
+		donnees.ajoutEmploye.add(this);
 	}
 	
 	public String getId() {
