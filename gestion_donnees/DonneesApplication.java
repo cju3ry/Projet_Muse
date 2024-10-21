@@ -47,13 +47,55 @@ public class DonneesApplication {
 		
 	}
 	
+	public void ajoutEmploye(Employe employe) {
+		this.employes.add(employe);
+	}
+	
+	public void ajoutConferencier(Conferencier conferencier) {
+		this.conferenciers.add(conferencier);
+	}
+	
 	public void ajoutExposition(Exposition exposition) {
 		this.expositions.add(exposition);
+	}
+	
+	public void ajoutVisite(Visite visite) {
+		this.visites.add(visite);
+	}
+	
+	public boolean idExistantEmployes(String id) {
+		for (Employe employe : employes) {
+			if (employe.getId() == id) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean idExistantConferenciers(String id) {
+		for (Conferencier conferencier : conferenciers) {
+			if (conferencier.getId() == id) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean idExistantExpositions(String id) {
 		for (Exposition exposition : expositions) {
 			if (exposition.getId() == id) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean idExistantVisites(String id) {
+		for (Visite visite : visites) {
+			if (visite.getId() == id) {
 				return true;
 			}
 		}
