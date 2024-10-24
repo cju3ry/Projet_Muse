@@ -64,6 +64,7 @@ public class DonneesApplication {
 	        } else {
 				//TODO mettre une exception avec un message explicite.
 	            System.out.println("Erreur dans la ligne " + (i + 1) + ": Format incorrect");
+	            throw new IllegalArgumentException();
 	        }
 	    }
 	}
@@ -158,6 +159,7 @@ public class DonneesApplication {
                     expoTemp.setMotCles(motCles);
                     expoTemp.setResume(resume);
 					System.out.println("Expositions ajouté : " + expoTemp);
+					expositions.add(expoTemp);
                 } else {
 					Exposition expo = new Exposition(id, intitule);
                     expo.setPeriode(periodeDebut, periodeFin);
@@ -165,6 +167,7 @@ public class DonneesApplication {
                     expo.setMotCles(motCles);
                     expo.setResume(resume);
 					System.out.println("Expositions ajouté : " + expo);
+					expositions.add(expo);
                 }
                 //Exposition expo = new Exposition(id, intitule,periodeDebut,periodeFin, nbOeuvre, motCles,resume , debutExpo, finExpo);
 
@@ -208,6 +211,7 @@ public class DonneesApplication {
 				visite.setConferencierId(idConferencier);
 				visite.setExpositionId(idExposition);
 				System.out.println("Visite ajouté : " + visite);
+				visites.add(visite);
 			} else {
 
 				//TODO mettre une exception avec un message explicite.
@@ -344,5 +348,6 @@ public class DonneesApplication {
 		donnees.importerExpositions(LireCsv("expositions.csv"));
 		donnees.importerConferenciers(LireCsv("conferenciers.csv"));
 		donnees.importerVisites(LireCsv("visites.csv"));
+		
 	}
 }

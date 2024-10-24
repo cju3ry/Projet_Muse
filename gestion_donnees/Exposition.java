@@ -113,7 +113,7 @@ public class Exposition {
 		
 		this.resume = resume;
 	}
-	
+
 	public String toString() {
 		return "	Exposition : " + this.intitule + "\n";
 	}

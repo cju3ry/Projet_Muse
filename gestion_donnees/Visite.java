@@ -57,7 +57,7 @@ public class Visite {
 	}
 	
 	public String toString() {
-		return "	Visite : " + this.intitule;
+		return "	Visite : " + this.intitule + "\n";
 	}
 	
 	public void setExpositionId(String expositionId) throws VisiteException {
