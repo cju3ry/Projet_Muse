@@ -12,7 +12,7 @@
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="60.0" layoutX="20.0" layoutY="16.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="1040.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="20.0" layoutY="102.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="150.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="215.0" layoutY="95.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 40; -fx-arc-width: 40;" width="845.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="215.0" layoutY="102.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 40; -fx-arc-width: 40;" width="845.0" />
       <Button fx:id="btnImporter" layoutX="35.0" layoutY="123.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importer" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
          <font>
             <Font name="Calibri" size="17.0" />
@@ -41,7 +41,7 @@
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnRevenirArriere" layoutX="778.0" layoutY="603.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#revenirArriere" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: F76C6C;" text="Revenir en arrière">
+      <Button fx:id="btnRevenirArriere" layoutX="778.0" layoutY="610.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#revenirArriere" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: F76C6C;" text="Revenir en arrière">
          <font>
             <Font name="Calibri" size="25.0" />
          </font>
@@ -49,47 +49,47 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Button fx:id="btnChoisirFichierConferencier" layoutX="321.0" layoutY="297.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierConferencier" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Conférenciers">
+      <Button fx:id="btnChoisirFichierConferencier" layoutX="321.0" layoutY="304.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierConferencier" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Conférenciers">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="checkConferencier" layoutX="550.0" layoutY="298.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="✅" textFill="#26ff00">
+      <Button fx:id="checkConferencier" layoutX="550.0" layoutY="305.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="✅" textFill="#26ff00">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnChoisirFichierEmployes" layoutX="676.0" layoutY="297.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierEmployes" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Employés">
+      <Button fx:id="btnChoisirFichierEmployes" layoutX="676.0" layoutY="304.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierEmployes" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Employés">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="checkEmployes" layoutX="906.0" layoutY="298.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="❌" textFill="#ff3f00">
+      <Button fx:id="checkEmployes" layoutX="906.0" layoutY="305.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="❌" textFill="#ff3f00">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnChoisirFichierExpositions" layoutX="321.0" layoutY="381.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierExpositions" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Expositions">
+      <Button fx:id="btnChoisirFichierExpositions" layoutX="321.0" layoutY="388.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierExpositions" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Expositions">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="checkExpositions" layoutX="550.0" layoutY="382.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="✅" textFill="#22ff00">
+      <Button fx:id="checkExpositions" layoutX="550.0" layoutY="389.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="✅" textFill="#22ff00">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnChoisirFichierVisites" layoutX="676.0" layoutY="381.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierEmployes" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Visites">
+      <Button fx:id="btnChoisirFichierVisites" layoutX="676.0" layoutY="388.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierEmployes" prefHeight="34.0" prefWidth="180.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="Visites">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="checkVisites" layoutX="906.0" layoutY="382.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="❌" textFill="#ff3f00">
+      <Button fx:id="checkVisites" layoutX="906.0" layoutY="389.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="49.0" style="-fx-background-radius: 5; -fx-background-color: #83C7EA;" text="❌" textFill="#ff3f00">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
       </Button>
-      <Button fx:id="btnExporterFichiers" layoutX="498.0" layoutY="470.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exporterFichiers" prefHeight="60.0" prefWidth="280.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="Exporter les fichiers">
+      <Button fx:id="btnExporterFichiers" layoutX="498.0" layoutY="477.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exporterFichiers" prefHeight="60.0" prefWidth="280.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="Exporter les fichiers">
          <font>
             <Font name="Calibri" size="25.0" />
          </font>
@@ -97,7 +97,7 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Button fx:id="btnAfficherIp" layoutX="260.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#afficherIp" prefHeight="60.0" prefWidth="280.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="Afficher l'adresse ip de l'ordinateur">
+      <Button fx:id="btnAfficherIp" layoutX="260.0" layoutY="196.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#afficherIp" prefHeight="60.0" prefWidth="280.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="Afficher l'adresse ip de l'ordinateur">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
@@ -105,7 +105,7 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Button fx:id="btnEntrerIp" layoutX="741.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#entrerIp" prefHeight="60.0" prefWidth="75.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="Ip">
+      <Button fx:id="btnEntrerIp" layoutX="741.0" layoutY="196.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#entrerIp" prefHeight="60.0" prefWidth="75.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="Ip">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
@@ -113,9 +113,9 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Text layoutX="734.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Entrez l’adresse ip de l'ordinateur" />
-      <Text layoutX="730.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" auquel les fichiers seront exportés" />
-      <Button layoutX="869.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="75.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="✅" textFill="#44ff57">
+      <Text layoutX="734.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Entrez l’adresse ip de l'ordinateur" />
+      <Text layoutX="730.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" auquel les fichiers seront exportés" />
+      <Button layoutX="869.0" layoutY="196.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="60.0" prefWidth="75.0" style="-fx-background-radius: 10; -fx-background-color: #83C7EA;" text="✅" textFill="#44ff57">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
