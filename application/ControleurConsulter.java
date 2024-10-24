@@ -3,10 +3,15 @@ package application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 
 public class ControleurConsulter {
+	
+	public String elementAAfficher;
 
-    @FXML
+
+
+	@FXML
     private Button btnConferencier;
 
     @FXML
@@ -36,6 +41,7 @@ public class ControleurConsulter {
     @FXML
     private Button btnVisites;
     
+    
     @FXML
     void importer(ActionEvent event) {
     	Main.setPageImporter();
@@ -60,26 +66,30 @@ public class ControleurConsulter {
     void quitter(ActionEvent event) {
     	System.exit(0);
     }
+    
+
 
     @FXML
     void consulterConferencier(ActionEvent event) {
-    	Main.setPageConsulterDonnees();
+    	Main.setPageConsulterDonneesConferencier();
+
     }
 
     @FXML
     void consulterEmployes(ActionEvent event) {
-    	Main.setPageConsulterDonnees();
+    	Main.setPageConsulterDonneesEmploye();
     }
 
     @FXML
     void consulterExpositions(ActionEvent event) {
-    	Main.setPageConsulterDonnees();
+
+    	Main.setPageConsulterDonneesExposition();
 
     }
 
     @FXML
     void consulterVisites(ActionEvent event) {
-    	Main.setPageConsulterDonnees();
+    	Main.setPageConsulterDonneesVisite();
     }
     
 
@@ -87,5 +97,6 @@ public class ControleurConsulter {
     void revenirEnArriere(ActionEvent event) {
     	Main.setPageDeGarde();
     }
+    
 
 }

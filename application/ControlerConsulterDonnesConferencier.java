@@ -1,12 +1,15 @@
 package application;
 
+import gestion_donnees.ConferencierException;
+import gestion_donnees.DonneesApplication;
+import gestion_donnees.ExpositionException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
-public class ControlerConsulterDonnees {
-	
+public class ControlerConsulterDonnesConferencier {
+
     @FXML
     private Button btnConsulter;
 
@@ -20,23 +23,32 @@ public class ControlerConsulterDonnees {
     private Button btnNotice;
 
     @FXML
-    private Button btnQuitter;
+    private Button btnQuitter1;
 
     @FXML
     private Button btnRevenir;
 
     @FXML
-    public TextArea textAreaConsultation;
+    private TextArea textAreaConsultation;
     
-    public TextArea getTextAreaConsultation() {
-		return textAreaConsultation;
-	}
-
-	@FXML
+    
+    
+    @FXML
     void initialize() {
     	textAreaConsultation.setEditable(false);
+    	DonneesApplication donnees1 = new DonneesApplication();
+    	try {
+			donnees1.importerConferenciers(DonneesApplication.LireCsv("conferenciers.csv"));
+		} catch (ConferencierException e) {
+			e.printStackTrace();
+		}
+		String listeConferencier = donnees1.getConferenciers().toString();
+		System.out.print(listeConferencier.toString());
+		textAreaConsultation.setText(listeConferencier.substring(1,listeConferencier.length()-1));
+    
     }
-     
+    
+    
     @FXML
     void consulter(ActionEvent event) {
     	Main.setPageConsulter();
@@ -68,5 +80,4 @@ public class ControlerConsulterDonnees {
     	Main.setPageConsulter();
     }
 
-    
 }

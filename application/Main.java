@@ -28,7 +28,13 @@ public class Main extends Application {
 	
 	private static Scene scenePageConsulter;
 	
-	private static Scene scenePageConsulterDonnees;
+	private static Scene scenePageConsulterDonneesConferencier;
+	
+	private static Scene scenePageConsulterDonneesEmploye;
+	
+	private static Scene scenePageConsulterDonneesVisite;
+	
+	private static Scene scenePageConsulterDonneesExposition;
 	
 	private static FXMLLoader chargeurFxmlPageDeGarde = new FXMLLoader();
 	
@@ -42,7 +48,14 @@ public class Main extends Application {
 	
 	private static FXMLLoader chargeurFxmlPageConsulter = new FXMLLoader();
 	
-	private static FXMLLoader chargeurFxmlPageConsulterDonnees = new FXMLLoader();
+	
+	private static FXMLLoader chargeurFxmlPageConsulterDonneesConferencier = new FXMLLoader();
+	
+	private static FXMLLoader chargeurFxmlPageConsulterDonneesEmploye = new FXMLLoader();
+	
+	private static FXMLLoader chargeurFxmlPageConsulterDonneesVisite = new FXMLLoader();
+	
+	private static FXMLLoader chargeurFxmlPageConsulterDonneesExposition = new FXMLLoader();
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -72,11 +85,23 @@ public class Main extends Application {
 		chargeurFxmlPageConsulter.setLocation(getClass().getResource("/ihm/vueConsulter.fxml"));
 		conteneur = chargeurFxmlPageConsulter.load();
 		scenePageConsulter = new Scene(conteneur);
-		
-		chargeurFxmlPageConsulterDonnees.setLocation(getClass().getResource("/ihm/vueConsulterDonnees.fxml"));
-		conteneur = chargeurFxmlPageConsulterDonnees.load();
-		scenePageConsulterDonnees = new Scene(conteneur);
 	
+		chargeurFxmlPageConsulterDonneesConferencier.setLocation(getClass().getResource("/ihm/vueConsulterDonneesConferencier.fxml"));
+		conteneur = chargeurFxmlPageConsulterDonneesConferencier.load();
+		scenePageConsulterDonneesConferencier = new Scene(conteneur);
+		
+		chargeurFxmlPageConsulterDonneesEmploye.setLocation(getClass().getResource("/ihm/vueConsulterDonneesEmploye.fxml"));
+		conteneur = chargeurFxmlPageConsulterDonneesEmploye.load();
+		scenePageConsulterDonneesEmploye = new Scene(conteneur);
+		
+		chargeurFxmlPageConsulterDonneesExposition.setLocation(getClass().getResource("/ihm/vueConsulterDonneesExposition.fxml"));
+		conteneur = chargeurFxmlPageConsulterDonneesExposition.load();
+		scenePageConsulterDonneesExposition = new Scene(conteneur);
+		
+		chargeurFxmlPageConsulterDonneesVisite.setLocation(getClass().getResource("/ihm/vueConsulterDonneesVisite.fxml"));
+		conteneur = chargeurFxmlPageConsulterDonneesVisite.load();
+		scenePageConsulterDonneesVisite = new Scene(conteneur);
+		
 		primaryStage.setTitle("PadeDeGarde");
 		primaryStage.setScene(scenePageDeGarde);
 //		primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -111,11 +136,28 @@ public class Main extends Application {
 		fenetrePrincipale.setScene(scenePageConsulter);
 	}
 	
-	public static void setPageConsulterDonnees() {
-		fenetrePrincipale.setScene(scenePageConsulterDonnees);
+//	public static void setPageConsulterDonnees() {
+//		fenetrePrincipale.setScene(scenePageConsulterDonnees);
+//	}
+	
+	public static void setPageConsulterDonneesConferencier() {
+		fenetrePrincipale.setScene(scenePageConsulterDonneesConferencier);
+	}
+	
+	public static void setPageConsulterDonneesEmploye() {
+		fenetrePrincipale.setScene(scenePageConsulterDonneesEmploye);
+	}
+	
+	public static void setPageConsulterDonneesExposition() {
+		fenetrePrincipale.setScene(scenePageConsulterDonneesExposition);
+	}
+	
+	public static void setPageConsulterDonneesVisite() {
+		fenetrePrincipale.setScene(scenePageConsulterDonneesVisite);
 	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
 }
