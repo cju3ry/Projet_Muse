@@ -1,4 +1,4 @@
-package test;
+
 
 import java.io.*;
 import java.net.*;
@@ -19,8 +19,8 @@ public class client {
 	        Scanner entree = new Scanner(System.in);
 			String requete;  
 			
-			System.out.print("Entre le fichier que vous souhaitez : ");
-			requete = entree.nextLine();
+			
+			requete = "visite";
 			
 			writer.println(requete);
 	        

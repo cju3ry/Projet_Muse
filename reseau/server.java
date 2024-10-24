@@ -1,4 +1,4 @@
-package test;
+
 
 import java.io.*;
 import java.net.*;
@@ -13,7 +13,7 @@ public class server {
             
             try (Socket socket = serverSocket.accept()) {
                 System.out.println("Connexion établie avec " + socket.getInetAddress());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-16")); 
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8")); 
                 String chemin;
                 String requete = reader.readLine();
                 
