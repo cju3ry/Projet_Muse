@@ -22,11 +22,14 @@ public class Conferencier {
 	 * @param id l'identifiant du conférencier (doit être de 7 caractères).
 	 * @param nom le nom du conférencier.
 	 * @param prenom le prénom du conférencier.
-	 * @throws ConferencierException si l'identifiant n'est pas de 7 caractères ou est null.
+	 * @throws IllegalArgumentException si l'identifiant n'est pas de 7 caractères ou est null.
 	 */
-	public Conferencier(String id, String nom, String prenom) throws ConferencierException {
-		if (id == null || id.length() != 7) {
-			throw new ConferencierException();
+	public Conferencier(String id, String nom, String prenom) {
+		if (id == null) {
+			throw new IllegalArgumentException("L'identifiant du conférencier ne peut pas être null.");
+		}
+		if (id.length() != 7) {
+			throw new IllegalArgumentException("L'identifiant du conférencier doit être de 7 caractères.");
 		}
 		this.id = id;
 		this.nom = nom;
@@ -37,11 +40,14 @@ public class Conferencier {
 	 * Définit le numéro de téléphone du conférencier.
 	 *
 	 * @param numTel le numéro de téléphone (doit être de 10 caractères).
-	 * @throws ConferencierException si le numéro de téléphone n'est pas de 10 caractères ou est null.
+	 * @throws IllegalArgumentException si le numéro de téléphone n'est pas de 10 caractères ou est null.
 	 */
-	public void setNumTel(String numTel) throws ConferencierException {
-		if (numTel == null || numTel.length() != 10) {
-			throw new ConferencierException();
+	public void setNumTel(String numTel) {
+		if (numTel == null) {
+			throw new IllegalArgumentException("Le numéro de téléphone ne peut pas être null.");
+		}
+		if (numTel.length() != 10) {
+			throw new IllegalArgumentException("Le numéro de téléphone doit être de 10 caractères.");
 		}
 		this.numTel = numTel;
 	}
@@ -50,11 +56,11 @@ public class Conferencier {
 	 * Définit les spécialités du conférencier.
 	 *
 	 * @param specialite un tableau de spécialités (ne doit pas dépasser 6 éléments).
-	 * @throws ConferencierException si le tableau de spécialités dépasse 6 éléments.
+	 * @throws IllegalArgumentException si le tableau de spécialités dépasse 6 éléments.
 	 */
-	public void setSpecialitees(String[] specialite) throws ConferencierException {
+	public void setSpecialitees(String[] specialite) {
 		if (specialite.length > 6) {
-			throw new ConferencierException();
+			throw new IllegalArgumentException("Le nombre de spécialités ne doit pas dépasser 6 éléments.");
 		}
 		this.specialite = specialite;
 	}
@@ -72,11 +78,11 @@ public class Conferencier {
 	 * Définit les indisponibilités du conférencier.
 	 *
 	 * @param indisponibilite une liste d'indisponibilités.
-	 * @throws ConferencierException si les indisponibilités ne sont pas valides.
+	 * @throws IllegalArgumentException si les indisponibilités ne sont pas valides.
 	 */
-	public void setIndisponibilite(ArrayList<String> indisponibilite) throws ConferencierException {
+	public void setIndisponibilite(ArrayList<String> indisponibilite) {
 		if (!indisponibiliteOk(indisponibilite)) {
-			throw new ConferencierException();
+			throw new IllegalArgumentException("Les dates d'indisponibilité sont invalides ou non cohérentes.");
 		}
 		this.indisponibilite = indisponibilite;
 	}
@@ -98,11 +104,12 @@ public class Conferencier {
 
 		for (int j = 0; j < indisponibilite.size(); j += 2) {
 			try {
-				if (formatIndisponibilite.parse(indisponibilite.get(j)).getTime() > formatIndisponibilite.parse(indisponibilite.get(increment)).getTime()) {
+				if (formatIndisponibilite.parse(indisponibilite.get(j)).getTime() > 
+				    formatIndisponibilite.parse(indisponibilite.get(increment)).getTime()) {
 					return false;
 				}
 			} catch (ParseException e) {
-				System.err.println("Erreur de parsing de la date : " + e.getMessage());
+				return false;
 			}
 			increment += 2;
 		}
@@ -140,8 +147,37 @@ public class Conferencier {
 	 * Retourne une représentation sous forme de chaîne de caractères du conférencier.
 	 *
 	 * @return une chaîne de caractères représentant le conférencier.
+	 * @
 	 */
 	public String toString() {
-		return "	Conférencier/Conférencière : " + this.nom + " " + this.prenom + "\n";
+	    return "Conférencier/Conférencière : " + this.nom + " " + this.prenom + "\n";
+	}
+
+
+	/**
+	 * Retourne la liste des indisponibilités du conférencier.
+	 *
+	 * @return une liste de chaînes représentant les indisponibilités du conférencier.
+	 */
+	public ArrayList<String> getIndisponibilite() {
+		return this.indisponibilite;
+	}
+
+	/**
+	 * Retourne le tableau des spécialités du conférencier.
+	 *
+	 * @return un tableau de chaînes représentant les spécialités du conférencier.
+	 */
+	public String[] getSpecialites() {
+		return this.specialite;
+	}
+
+	/**
+	 * Retourne le numéro de téléphone du conférencier.
+	 *
+	 * @return une chaîne représentant le numéro de téléphone du conférencier.
+	 */
+	public String getNumTel() {
+		return this.numTel;
 	}
 }

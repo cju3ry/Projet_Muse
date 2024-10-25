@@ -1,21 +1,10 @@
-/*
- * Date       21/10/2024
- * IUT de Rodez
- * @copyright Tous droits réservés. Ce fichier est soumis aux termes du droit d'auteur et 
- * ne peut être reproduit, distribué, ou modifié sans l'autorisation expresse du détenteur du droit d'auteur.
- */
-
 package gestion_donnees;
 
 /**
  * Classe employé.
- * @author Cazor--Bonnet Adrian
- * @author Chesnier Quentin
- * @author Juery Clément
- * @author Ladureau Baptiste
  */
 public class Employe {
-   
+
     private String id;  
     private String nom;      
     private String prenom;   
@@ -28,20 +17,18 @@ public class Employe {
      * @param nom Le nom de l'employé.
      * @param prenom Le prénom de l'employé.
      * @param numTel Le numéro de téléphone de l'employé (doit être de 4 caractères ou null).
-     * @throws EmployeException Si l'id n'a pas une longueur de 7 caractères ou si le numéro de téléphone n'a pas une longueur de 4 caractères.
+     * @throws IllegalArgumentException Si l'id n'a pas une longueur de 7 caractères ou si le numéro de téléphone n'a pas une longueur de 4 caractères.
      */
-    public Employe(String id, String nom, String prenom, String numTel) throws EmployeException {
-    	
+    public Employe(String id, String nom, String prenom, String numTel) {
+
         // Vérifie que l'ID n'est pas null et a exactement 7 caractères
         if (id == null || id.length() != 7 ) {
-            throw new EmployeException();
+            throw new IllegalArgumentException("L'identifiant doit être de 7 caractères.");
         }
 
         // Si le numéro de téléphone n'est pas null, on vérifie qu'il a 4 caractères
-        if (numTel != null) {
-            if (numTel.length() != 4) {
-                throw new EmployeException();
-            }
+        if (numTel != null && numTel.length() != 4) {
+            throw new IllegalArgumentException("Le numéro de téléphone doit être de 4 caractères.");
         }
 
         this.id = id;
@@ -78,23 +65,22 @@ public class Employe {
     }
     
     /**
-     * Retourne le numéro de téléphonne de l'employé.
+     * Retourne le numéro de téléphone de l'employé.
      * 
-     * @return Le téléphonne de l'employé.
+     * @return Le numéro de téléphone de l'employé.
      */
     public String getNumTel() {
-		return numTel;
-	}
+        return numTel;
+    }
 
     /**
-     * Retourne le nom et le prenom de l'employé sous la forme :
+     * Retourne le nom et le prénom de l'employé sous la forme :
      * "Employé(e) : [nom] [prénom]".
      * 
      * @return Une chaîne de caractères représentant l'employé.
      */
     @Override
     public String toString() {
-        return "	Employé(e) : " + this.nom + " " + this.prenom + "\n";
+        return "Employé(e) : " + this.nom + " " + this.prenom + "\n";
     }
-	
 }
