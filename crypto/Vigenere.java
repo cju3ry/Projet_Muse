@@ -1,3 +1,4 @@
+
 package crypto;
 
 import javax.crypto.KeyAgreement;
@@ -7,56 +8,87 @@ import java.security.spec.InvalidParameterSpecException;
 import java.util.Base64;
 import java.util.Scanner;
 
+/**
+ * La classe Vigenere implémente l'algorithme de chiffrement de Vigenère
+ * en utilisant une clé générée via l'accord de clé Diffie-Hellman.
+ */
 public class Vigenere {
     private String cle;
 
+    /**
+     * Constructeur de la classe Vigenere.
+     * Génère une clé en utilisant l'accord de clé Diffie-Hellman.
+     *
+     * @throws NoSuchAlgorithmException si l'algorithme spécifié n'existe pas.
+     * @throws InvalidAlgorithmParameterException si les paramètres de l'algorithme sont invalides.
+     * @throws InvalidKeyException si la clé est invalide.
+     * @throws InvalidParameterSpecException si les spécifications des paramètres sont invalides.
+     */
     public Vigenere() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidParameterSpecException {
-        genererCle();
+        genererCleSecrete();
     }
 
-    private void genererCle() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidParameterSpecException {
-        // Paramètres Diffie-Hellman
-        int tailleCle = 2048;
-        AlgorithmParameterGenerator algoParamgen = AlgorithmParameterGenerator.getInstance("DH");
-        algoParamgen.init(tailleCle);
-        AlgorithmParameters algoParams = algoParamgen.generateParameters();
-        DHParameterSpec dhParamSpec = algoParams.getParameterSpec(DHParameterSpec.class);
+    /**
+     * Comment faire pour réaliser les étapes de l'accord de clé Diffie-Hellman
+     *
+     * 1) Choix d'un nbre premier
+     * 2) choisir un nombre générateur (voir le cours p.31)
+     * 3) Choisis un entier a et transmets g^a  	→ Alice
+     * 4) Envoie g^a					            → Alice
+     * 5) Choisis un entier b et transmets g^b		→ Bob
+     * 6) Envoie g^b					            → Bob
+     * 7) Calcule g^ba 				                → Alice
+     * 8) Calcule g^ba					            → Bob
+     */
 
-        // Générer la paire de clés pour Alice
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("DH");
-        keyPairGen.initialize(dhParamSpec);
-        KeyPair aliceKeyPair = keyPairGen.generateKeyPair();
-
-        // Générer la paire de clés pour Bob
-        KeyPair bobKeyPair = keyPairGen.generateKeyPair();
-
-        // Accord de clé entre Alice et Bob
-        KeyAgreement aliceKeyAgree = KeyAgreement.getInstance("DH");
-        aliceKeyAgree.init(aliceKeyPair.getPrivate());
-        aliceKeyAgree.doPhase(bobKeyPair.getPublic(), true);
-
-        KeyAgreement bobKeyAgree = KeyAgreement.getInstance("DH");
-        bobKeyAgree.init(bobKeyPair.getPrivate());
-        bobKeyAgree.doPhase(aliceKeyPair.getPublic(), true);
-
-        // Générer le secret partagé
-        byte[] aliceSharedSecret = aliceKeyAgree.generateSecret();
-        byte[] bobSharedSecret = bobKeyAgree.generateSecret();
-
-        // Utiliser le secret partagé comme clé
-        String sharedSecret = Base64.getEncoder().encodeToString(aliceSharedSecret).toUpperCase();
-        this.cle = sharedSecret.replaceAll("[^A-Z]", "");
-        System.out.println(this.cle);
+    /**
+     * Génère un nombre premier grâce a la méthode du crible d'erathostene.
+     *
+     * @return le nombre premier généré.
+     */
+    private static int genererPremier(int n) {
+        //TODO voir le crible d'erathostene
+        if (n % n == 0 && n / 1 == n) {
+            return n;
+        } else {
+            return genererPremier(n - 1);
+        }
     }
 
+    /**
+     * Génère une clé en utilisant l'accord de clé Diffie-Hellman.
+     */
+    private void genererCleSecrete()  {
+
+    }
+
+    /**
+     * Chiffre un message en utilisant l'algorithme de Vigenère.
+     *
+     * @param message le message à chiffrer.
+     * @return le message chiffré.
+     */
     public String chiffrer(String message) {
         return traiterMessage(message, true);
     }
 
+    /**
+     * Déchiffre un message en utilisant l'algorithme de Vigenère.
+     *
+     * @param message le message à déchiffrer.
+     * @return le message déchiffré.
+     */
     public String dechiffrer(String message) {
         return traiterMessage(message, false);
     }
 
+    /**
+     * Traite un message en le chiffrant ou en le déchiffrant.
+     *
+     * @param message le message à traiter.
+     * @param chiffrer true pour chiffrer, false pour déchiffrer.
+     * @return le message traité.
+     */
     private String traiterMessage(String message, boolean chiffrer) {
         StringBuilder messageTraite = new StringBuilder();
         message = message.toUpperCase();
@@ -85,6 +117,11 @@ public class Vigenere {
         return messageTraite.toString();
     }
 
+    /**
+     * Point d'entrée de l'application.
+     *
+     * @param args les arguments de la ligne de commande.
+     */
     public static void main(String[] args) {
         try {
             Vigenere vigenere = new Vigenere();
