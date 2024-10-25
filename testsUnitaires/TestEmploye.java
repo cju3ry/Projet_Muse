@@ -1,24 +1,19 @@
 package testsUnitaires;
 
 import gestion_donnees.Employe;
-import gestion_donnees.EmployeException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 /**
  * Classe de test pour Employe.
- * Cette classe contient des tests unitaires pour vérifier le bon fonctionnement de la classe Employe.
  */
 public class TestEmploye {
 
     private Employe employe;
 
-    /**
-     * Teste le constructeur de la classe Employe avec des paramètres valides.
-     * @throws EmployeException si une erreur survient lors de la création de l'employé.
-     */
+    // Test du constructeur avec des valeurs valides
     @Test
-    public void testConstructeurOk() throws EmployeException {
+    public void testConstructeurOk() {
         employe = new Employe("1234567", "Johnson", "Billy", "0000");
         assertEquals("1234567", employe.getId());
         assertEquals("Johnson", employe.getNom());
@@ -26,56 +21,44 @@ public class TestEmploye {
         assertEquals("0000", employe.getNumTel());
     }
 
-    /**
-     * Teste le constructeur de la classe Employe avec un identifiant invalide.
-     * Vérifie que l'exception EmployeException est bien levée.
-     */
+    // Test du constructeur avec un ID invalide (moins de 7 caractères)
     @Test
-    public void testConstructeurNOk() {
-        assertThrows(EmployeException.class, () -> {
+    public void testConstructeurIdInvalide() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Employe("12345", "Johnson", "Billy", "0000");
         });
+        assertEquals("L'identifiant doit être de 7 caractères.", exception.getMessage());
     }
 
-    /**
-     * Teste le constructeur de la classe Employe avec un identifiant null.
-     * Vérifie que l'exception EmployeException est bien levée.
-     */
+    // Test du constructeur avec un ID null
     @Test
-    public void testConstructeuridNull() {
-        assertThrows(EmployeException.class, () -> {
+    public void testConstructeurIdNull() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Employe(null, "Johnson", "Billy", "0000");
         });
+        assertEquals("L'identifiant doit être de 7 caractères.", exception.getMessage());
     }
 
-    /**
-     * Teste le constructeur de la classe Employe avec un numéro de téléphone invalide.
-     * Vérifie que l'exception EmployeException est bien levée.
-     */
+    // Test du constructeur avec un numéro de téléphone invalide (plus de 4 caractères)
     @Test
-    public void testConstructeurMauvaisTel() {
-        assertThrows(EmployeException.class, () -> {
+    public void testConstructeurNumTelInvalide() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Employe("1234567", "Johnson", "Billy", "00000");
         });
+        assertEquals("Le numéro de téléphone doit être de 4 caractères.", exception.getMessage());
     }
 
-    /**
-     * Teste le constructeur de la classe Employe avec un numéro de téléphone null.
-     * @throws EmployeException si une erreur survient lors de la création de l'employé.
-     */
+    // Test du constructeur avec un numéro de téléphone null
     @Test
-    public void testConstructeurNullTel() throws EmployeException {
+    public void testConstructeurNumTelNull() {
         employe = new Employe("1234567", "Johnson", "Billy", null);
         assertNull(employe.getNumTel());
     }
 
-    /**
-     * Teste la méthode toString de la classe Employe.
-     * @throws EmployeException si une erreur survient lors de la création de l'employé.
-     */
+    // Test de la méthode toString pour une sortie formatée correctement
     @Test
-    public void testToString() throws EmployeException {
+    public void testToString() {
         employe = new Employe("1234567", "Johnson", "Billy", "0000");
-        assertEquals("	Employé(e) : Johnson Billy\n", employe.toString());
+        assertEquals("Employé(e) : Johnson Billy\n", employe.toString());
     }
 }
