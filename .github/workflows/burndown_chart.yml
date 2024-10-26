@@ -23,7 +23,8 @@ jobs:
       # Étape 3 : Installation des dépendances
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt  # Assurez-vous que ce fichier existe
+          pip install -r scripts/requirements.txt  # Chemin mis à jour
+
 
       # Étape 4 : Lister les fichiers dans le répertoire
       - name: List files in the directory
