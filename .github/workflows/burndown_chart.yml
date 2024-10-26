@@ -12,30 +12,31 @@ jobs:
     steps:
       # Étape 1 : Récupération du dépôt
       - name: Checkout repository
-        uses: actions/checkout@v4  # Vérifiez que c'est bien v3
+        uses: actions/checkout@v3
 
-      # Étape 2 : Exécution du script Python pour générer le burndown chart
-      - name: Generate Burndown Chart
-        run: |
-          python scripts/generate_burndown.py
-
-      # Étape 3 : Téléversement de l'image en tant qu'artefact
-      - name: Upload Burndown Chart as Artifact
-        uses: actions/upload-artifact@v4  # Passage à la version 4
-        with:
-          name: burndown_chart  # Nom de l'artefact
-          path: scripts/burndown_chart.png  # Exemple si le fichier est dans le dossier scripts
-
+      # Étape 2 : Configuration de Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'  # Remplacez par la version de Python souhaitée
 
+      # Étape 3 : Installation des dépendances
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          - name: List files in the directory
-          run: ls -R
+          pip install -r requirements.txt  # Assurez-vous que ce fichier existe
 
+      # Étape 4 : Lister les fichiers dans le répertoire
+      - name: List files in the directory
+        run: ls -R
 
+      # Étape 5 : Exécution du script Python pour générer le burndown chart
+      - name: Generate Burndown Chart
+        run: |
+          python scripts/generate_burndown.py
 
+      # Étape 6 : Téléversement de l'image en tant qu'artefact
+      - name: Upload Burndown Chart as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: burndown_chart
+          path: burndown_chart.png
