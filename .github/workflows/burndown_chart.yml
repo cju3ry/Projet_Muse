@@ -26,3 +26,13 @@ jobs:
           name: burndown_chart  # Nom de l'artefact
           path: scripts/burndown_chart.png  # Exemple si le fichier est dans le dossier scripts
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Remplacez par la version de Python souhaitée
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+
