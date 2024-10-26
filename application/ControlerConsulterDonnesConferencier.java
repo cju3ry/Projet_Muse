@@ -31,21 +31,28 @@ public class ControlerConsulterDonnesConferencier {
     @FXML
     private TextArea textAreaConsultation;
     
+    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+    
     
     
     @FXML
     void initialize() {
-    	textAreaConsultation.setEditable(false);
-    	DonneesApplication donnees1 = new DonneesApplication();
-    	try {
-			donnees1.importerConferenciers(DonneesApplication.LireCsv("conferenciers.csv"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String listeConferencier = donnees1.getConferenciers().toString();
-		System.out.print(listeConferencier.toString());
-		textAreaConsultation.setText(listeConferencier.substring(1,listeConferencier.length()-1));
-    
+        textAreaConsultation.setEditable(false);
+        textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
+
+        // Déclenchement de l'événement au clic sur la TextArea
+        textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
+    }
+ // Méthode pour charger et afficher les données
+    private void afficherDonnees() {
+    	donneesChargees = ControleurImporterLocal.isDonneesConferencierChargees();
+        StringBuilder strConferencier = ControleurImporterLocal.getStrConferencier();
+        if (!donneesChargees || strConferencier == null ) { // Vérifie si les données n'ont pas déjà été chargées
+               textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+        }
+        if (donneesChargees) {
+        	textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+        }
     }
     
     

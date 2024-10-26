@@ -1,11 +1,16 @@
 package application;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import gestion_donnees.Conferencier;
 import gestion_donnees.ConferencierException;
 import gestion_donnees.DonneesApplication;
+import gestion_donnees.Employe;
 import gestion_donnees.EmployeException;
+import gestion_donnees.Exposition;
 import gestion_donnees.ExpositionException;
+import gestion_donnees.Visite;
 import gestion_donnees.VisiteException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +46,54 @@ public class ControleurImporterLocal {
 	
 	private static boolean cheminFichierVisitesChoisit = false;
 	
+	private  static StringBuilder strConferencier;
+	
+	private  static StringBuilder strEmployes;
+	
+	private  static StringBuilder strExpositions;
+	
+	private  static StringBuilder strVisites;
+	
+	private static boolean donneesConferencierChargees = false;
+	
+	private static boolean donneesEmployesChargees = false;
+	
+	private static boolean donneesExpositionsChargees = false;
+	
+	private static boolean donneesVisitesChargees = false;
+	
+	public static boolean isDonneesConferencierChargees() {
+		return donneesConferencierChargees;
+	}
+	
+	public static boolean isDonneesEmployesChargees() {
+		return donneesEmployesChargees;
+	}
+	
+	public static boolean isDonneesExpositionsChargees() {
+		return donneesExpositionsChargees;
+	}
+	
+	public static boolean isDonneesVisitesChargees() {
+		return donneesVisitesChargees;
+	}
+
+	public static StringBuilder getStrConferencier() {
+		return strConferencier;
+	}
+	
+	public static StringBuilder getStrEmployes() {
+		return strEmployes;
+	}
+	
+	public static StringBuilder getStrExpositions() {
+		return strExpositions;
+	}
+	
+	public static StringBuilder getStrVisites() {
+		return strVisites;
+	}
+
 	public static String cheminFichierEmployes;
 	public String cheminFichierConferenciers;
 	
@@ -219,7 +272,7 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierConferenciers(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
-    	
+    	strConferencier = new StringBuilder();
     	try {
 			donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
 			importationConferenciersOk = true;
@@ -229,6 +282,13 @@ public class ControleurImporterLocal {
 	    	alerteOk.showAndWait();
 	    	 // Mettre à jour l'état du bouton Visites
             mettreAJourEtatBtnVisites();
+            donneesConferencierChargees = true;
+            ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
+            strConferencier.append("\n");
+            for (int i = 0; i < listeDesConfernciers.size(); i++) {
+            	strConferencier.append("\t" + listeDesConfernciers.get(i).toString() + "\n");
+            }
+//            System.out.print("liste des conférencier to string " + strConferencier);
 
     	} catch(IllegalArgumentException e) {
 //    		System.out.print("Une erreur s'est produite avec le fichier des conférenciers");
@@ -244,7 +304,7 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierEmployes(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
-    	
+    	strEmployes = new StringBuilder();
     	try {
 			donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
 			importationEmployesOk = true;
@@ -252,9 +312,14 @@ public class ControleurImporterLocal {
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux employes, on était importées dans l'application");
 	    	alerteOk.showAndWait();
-	    	
 	    	 // Mettre à jour l'état du bouton Visites
             mettreAJourEtatBtnVisites();
+            donneesEmployesChargees = true;
+            ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
+            strEmployes.append("\n");
+            for (int i = 0; i < listeDesEmployes.size(); i++) {
+            	strEmployes.append("\t" + listeDesEmployes.get(i).toString() + "\n");
+            }
 
     	} catch(IllegalArgumentException e) {
 			Alert alerteNok = new Alert(AlertType.WARNING);
@@ -271,17 +336,22 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierExpositions(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
-    	
+    	strExpositions = new StringBuilder();
     	try {
 			donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
 			importationExpositionsOk = true;
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux expositions, on était importées dans l'application");
-	    	alerteOk.showAndWait();
-	    	
+	    	alerteOk.showAndWait();	
 	    	 // Mettre à jour l'état du bouton Visites
             mettreAJourEtatBtnVisites();
+            donneesExpositionsChargees = true;
+            ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
+            strExpositions.append("\n");
+            for (int i = 0; i < listeDesExpositions.size(); i++) {
+            	strExpositions.append("\t" + listeDesExpositions.get(i).toString() + "\n");
+            }
 
     	} catch(IllegalArgumentException e) {
 			Alert alerteNok = new Alert(AlertType.WARNING);
@@ -301,13 +371,20 @@ public class ControleurImporterLocal {
 		donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
 		donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
 		donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
-
+		strVisites = new StringBuilder();
+		
     	try {
 			donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux visites, on était importées dans l'application");
 	    	alerteOk.showAndWait();
+	    	donneesVisitesChargees = true;
+	        ArrayList<Visite> listeDesVistes = donnees.getVisites();
+	        strVisites.append("\n");
+	        for (int i = 0; i < listeDesVistes.size(); i++) {
+	        	strVisites.append("\t" + listeDesVistes.get(i).toString() + "\n");
+	        }
 
     	} catch(IllegalArgumentException e) {
 			Alert alerteNok = new Alert(AlertType.WARNING);

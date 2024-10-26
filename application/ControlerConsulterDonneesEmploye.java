@@ -30,18 +30,29 @@ public class ControlerConsulterDonneesEmploye {
     @FXML
     private TextArea textAreaConsultation;
 
+    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+    
+    
+    
     @FXML
     void initialize() {
-    	textAreaConsultation.setEditable(false);
-    	DonneesApplication donnees = new DonneesApplication();
-    	
-		try {
-			donnees.importerEmployes(DonneesApplication.LireCsv("employes.csv"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String listeEmployes = donnees.getEmployes().toString();
-		textAreaConsultation.setText(listeEmployes.substring(1,listeEmployes.length()-1));
+        textAreaConsultation.setEditable(false);
+        textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
+
+        // Déclenchement de l'événement au clic sur la TextArea
+        textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
+    }
+ // Méthode pour charger et afficher les données
+    private void afficherDonnees() {
+    	donneesChargees = ControleurImporterLocal.isDonneesEmployesChargees();
+        StringBuilder strEmployes = ControleurImporterLocal.getStrEmployes();
+        if (!donneesChargees || strEmployes == null) { // Vérifie si les données n'ont pas déjà été chargées
+               textAreaConsultation.setText("\n\n\tLes données ne sont pas encore disponibles.");
+        }
+
+        if (donneesChargees) {
+        	textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+        }
     }
     
     

@@ -33,47 +33,27 @@ public class ControlerConsulterDonneesVisite {
     @FXML
     private TextArea textAreaConsultation;
 
+    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+
     @FXML
     void initialize() {
-    	textAreaConsultation.setEditable(false);
+        textAreaConsultation.setEditable(false);
+        textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
-    	DonneesApplication donnees1 = new DonneesApplication();
-    	
-    	try {
-    		//TODO modifier pour passer le chemin choisit par l'utilisateur 
-			donnees1.importerEmployes(DonneesApplication.LireCsv("employes.csv"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	try {
-    		//TODO modifier pour passer le chemin choisit par l'utilisateur 
+        // Déclenchement de l'événement au clic sur la TextArea
+        textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
+    }
+    // Méthode pour charger et afficher les données
+    private void afficherDonnees() {
+    	donneesChargees = ControleurImporterLocal.isDonneesVisitesChargees();
+        StringBuilder strVisites = ControleurImporterLocal.getStrVisites();
+        if (!donneesChargees || strVisites == null) { // Vérifie si les données n'ont pas déjà été chargées
+               textAreaConsultation.setText("\n\n\tLes données ne sont pas encore disponibles.");
+        }
 
-			donnees1.importerExpositions(DonneesApplication.LireCsv("expositions.csv"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	try {
-    		//TODO modifier pour passer le chemin choisit par l'utilisateur 
-			donnees1.importerConferenciers(DonneesApplication.LireCsv("conferenciers.csv"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	try {
-    		//TODO modifier pour passer le chemin choisit par l'utilisateur 
-			donnees1.importerVisites(DonneesApplication.LireCsv("visites.csv"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-	
-		}
-		String listeVisites = donnees1.getVisites().toString();
-//		System.out.print(listeVisites.toString());
-		textAreaConsultation.setText(listeVisites.substring(1,listeVisites.length()-1));
-    
-    
+        if (donneesChargees) {
+        	textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+        }
     }
     
     
