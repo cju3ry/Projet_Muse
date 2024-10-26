@@ -12,7 +12,7 @@ jobs:
     steps:
       # Étape 1 : Récupération du dépôt
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Utilisation de la version 3
 
       # Étape 2 : Exécution du script Python pour générer le burndown chart
       - name: Generate Burndown Chart
@@ -21,7 +21,7 @@ jobs:
 
       # Étape 3 : Téléversement de l'image en tant qu'artefact
       - name: Upload Burndown Chart as Artifact
-        uses: actions/upload-artifact@v3  # Mise à jour vers la version 3
+        uses: actions/upload-artifact@v3  # Mise à jour vers la version 3 de l'action
         with:
           name: burndown_chart  # Nom de l'artefact
           path: burndown_chart.png  # Chemin vers l'image générée
