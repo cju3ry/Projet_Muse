@@ -5,7 +5,7 @@ import os
 
 # Variables GitHub (peut être ajoutées dans GitHub Secrets)
 TOKEN = os.getenv("GITHUB_TOKEN")
-REPO_NAME = "cju3ry/projet_Musee"  # Remplacez par le nom de votre dépôt
+REPO_NAME = "cju3ry/Projet_Musee"  # Remplacez par le nom de votre dépôt
 MILESTONE_TITLE = "Sprint 1"
 
 # Connexion à l'API GitHub
