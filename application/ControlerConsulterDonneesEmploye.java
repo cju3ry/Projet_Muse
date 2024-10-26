@@ -37,7 +37,7 @@ public class ControlerConsulterDonneesEmploye {
     	
 		try {
 			donnees.importerEmployes(DonneesApplication.LireCsv("employes.csv"));
-		} catch (EmployeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		String listeEmployes = donnees.getEmployes().toString();

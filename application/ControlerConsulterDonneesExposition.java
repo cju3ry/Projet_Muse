@@ -37,7 +37,7 @@ public class ControlerConsulterDonneesExposition {
     	DonneesApplication donnees1 = new DonneesApplication();
     	try {
 			donnees1.importerExpositions(DonneesApplication.LireCsv("expositions.csv"));
-		} catch (ExpositionException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		String listeExpositions = donnees1.getExpositions().toString();

@@ -10,6 +10,7 @@ import gestion_donnees.VisiteException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -17,12 +18,30 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterLocal {
 	
-	public static String cheminFichierEmployes;
+
 	
+	private static final String MESSAGE_FICHIER_SELECTIONNE = "     Fichier séléctionné";
+
+
 	public static String getCheminFichierEmployes() {
 		return cheminFichierEmployes;
 	}
-
+	
+	private static boolean importationConferenciersOk = false;
+	
+	private static boolean importationExpositionsOk = false;
+	
+	private static boolean importationEmployesOk = false;
+	
+	private static boolean cheminFichierConferencierChoisit = false;
+	
+	private static boolean cheminFichierEmployesChoisit = false;
+	
+	private static boolean cheminFichierExpositionsChoisit = false;
+	
+	private static boolean cheminFichierVisitesChoisit = false;
+	
+	public static String cheminFichierEmployes;
 	public String cheminFichierConferenciers;
 	
 	public String cheminFichierVisites;
@@ -63,16 +82,64 @@ public class ControleurImporterLocal {
     private Button btnRevenirArriere;
 
     @FXML
-    private Button checkExpositions;
-
-    @FXML
-    private Button checkFichierConferenciers;
-
-    @FXML
     private Button choisirFicherVisites;
 
     @FXML
     private Button choisirFichierEmployes;
+    
+    @FXML
+    private Button btnImporterFichierConferenciers;
+
+    @FXML
+    private Button btnImporterFichierEmployes;
+
+    @FXML
+    private Button btnImporterFichierExpositions;
+
+    @FXML
+    private Button btnImporterFichiervisites;
+    
+    @FXML
+    private Label labelFichierConferencier;
+
+    @FXML
+    private Label labelFichierEmployes;
+
+    @FXML
+    private Label labelFichierExpositions;
+
+    @FXML
+    private Label labelFichierVisites;
+    
+    @FXML
+    public void initialize() {
+        // Désactive le bouton d'importation des visites au démarrage
+        btnImporterFichiervisites.setDisable(true);
+        btnImporterFichierConferenciers.setDisable(true);
+        btnImporterFichierEmployes.setDisable(true);
+        btnImporterFichierExpositions.setDisable(true);
+        
+    }
+    
+    // Méthode pour mettre à jour l'état du bouton d'importation des visites
+    private void mettreAJourEtatBtnVisites() {
+        // Si les trois importations précédentes sont faites, active le bouton des visites
+        btnImporterFichiervisites.setDisable(!(importationConferenciersOk && importationExpositionsOk && importationEmployesOk && cheminFichierVisitesChoisit));
+    }
+    
+ // Méthode pour mettre à jour l'état du bouton d'importation des conférenciers
+    private void mettreAJourEtatBtnImporterConferenciers() {
+        // Si l'utilisateur n'a pas entré de chemin pour le fichier alors il ne peut pas cliquer sur le bouton importer
+        btnImporterFichierConferenciers.setDisable(!(cheminFichierConferencierChoisit));
+    }
+    
+    private void mettreAJourEtatBtnImporterEmployes() {
+        btnImporterFichierEmployes.setDisable(!(cheminFichierEmployesChoisit));
+    }
+    
+    private void mettreAJourEtatBtnImporterExpositions() {
+        btnImporterFichierExpositions.setDisable(!(cheminFichierExpositionsChoisit));
+    }
 
     @FXML
     void choisirFichierConferencier(ActionEvent event) {
@@ -81,7 +148,10 @@ public class ControleurImporterLocal {
 //    	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
     	        cheminFichierConferenciers = fichier.getAbsolutePath();
     	        System.out.print("\ncheminFichierConferenciers : " + cheminFichierConferenciers);
-    	        
+    	    	labelFichierConferencier.setText(MESSAGE_FICHIER_SELECTIONNE);
+    	    	cheminFichierConferencierChoisit = true;
+    	    	mettreAJourEtatBtnImporterConferenciers();
+
     	    }
     }
 
@@ -93,6 +163,10 @@ public class ControleurImporterLocal {
 //   	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
    	        cheminFichierEmployes = fichier.getAbsolutePath();
    	        System.out.print("\ncheminFichierEmployes : " + cheminFichierEmployes);
+	    	labelFichierEmployes.setText(MESSAGE_FICHIER_SELECTIONNE);
+	    	cheminFichierEmployesChoisit = true;
+	    	mettreAJourEtatBtnImporterEmployes();
+
    	    }
     }
 
@@ -103,7 +177,11 @@ public class ControleurImporterLocal {
    	if (fichier != null) {
 //   	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
    	        cheminFichierExpositions= fichier.getAbsolutePath();
-   	        System.out.print("\ncheminFichierExpositions : " + cheminFichierExpositions);     
+   	        System.out.print("\ncheminFichierExpositions : " + cheminFichierExpositions);
+	    	labelFichierExpositions.setText(MESSAGE_FICHIER_SELECTIONNE);
+	    	cheminFichierExpositionsChoisit = true;
+	    	mettreAJourEtatBtnImporterExpositions();
+
    	    }
     }
 
@@ -114,6 +192,10 @@ public class ControleurImporterLocal {
 //       	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
        	        cheminFichierVisites = fichier.getAbsolutePath();
        	        System.out.print("\ncheminFichierVisites : " + cheminFichierVisites);     
+    	    	labelFichierVisites.setText(MESSAGE_FICHIER_SELECTIONNE);
+    	    	cheminFichierVisitesChoisit = true;
+    	    	mettreAJourEtatBtnVisites();
+
        	    }
         }
 
@@ -133,44 +215,107 @@ public class ControleurImporterLocal {
     	Main.setPageImporter();
     }
 
+    
     @FXML
-    void importerFichiers(ActionEvent event) {
+    void importerFichierConferenciers(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
-		
-		try {
-			donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
-			donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
+    	
+    	try {
 			donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
+			importationConferenciersOk = true;
+			Alert alerteOk = new Alert(AlertType.INFORMATION);
+	    	alerteOk.setTitle("Importation réussie");
+	    	alerteOk.setHeaderText("Les données relatives aux conférenciers, on était importées dans l'application");
+	    	alerteOk.showAndWait();
+	    	 // Mettre à jour l'état du bouton Visites
+            mettreAJourEtatBtnVisites();
+
+    	} catch(IllegalArgumentException e) {
+//    		System.out.print("Une erreur s'est produite avec le fichier des conférenciers");
+			Alert alerteNok = new Alert(AlertType.WARNING);
+			alerteNok.setTitle("Importation echouée");
+			alerteNok.setHeaderText("L'importation du fichiers des conférenciers a echouée");
+		    alerteNok.setContentText(e.getMessage());
+		    alerteNok.showAndWait();
+    	}
+
+    }
+
+    @FXML
+    void importerFichierEmployes(ActionEvent event) {
+    	DonneesApplication donnees = new DonneesApplication();
+    	
+    	try {
+			donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
+			importationEmployesOk = true;
+			Alert alerteOk = new Alert(AlertType.INFORMATION);
+	    	alerteOk.setTitle("Importation réussie");
+	    	alerteOk.setHeaderText("Les données relatives aux employes, on était importées dans l'application");
+	    	alerteOk.showAndWait();
+	    	
+	    	 // Mettre à jour l'état du bouton Visites
+            mettreAJourEtatBtnVisites();
+
+    	} catch(IllegalArgumentException e) {
+			Alert alerteNok = new Alert(AlertType.WARNING);
+			alerteNok.setTitle("Importation echouée");
+			alerteNok.setHeaderText("L'importation du fichiers des employes a echouée");
+		    alerteNok.setContentText(e.getMessage());
+		    alerteNok.showAndWait();
+    	}
+
+    }
+
+    
+
+    @FXML
+    void importerFichierExpositions(ActionEvent event) {
+    	DonneesApplication donnees = new DonneesApplication();
+    	
+    	try {
+			donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
+			importationExpositionsOk = true;
+			Alert alerteOk = new Alert(AlertType.INFORMATION);
+	    	alerteOk.setTitle("Importation réussie");
+	    	alerteOk.setHeaderText("Les données relatives aux expositions, on était importées dans l'application");
+	    	alerteOk.showAndWait();
+	    	
+	    	 // Mettre à jour l'état du bouton Visites
+            mettreAJourEtatBtnVisites();
+
+    	} catch(IllegalArgumentException e) {
+			Alert alerteNok = new Alert(AlertType.WARNING);
+			alerteNok.setTitle("Importation echouée");
+			alerteNok.setHeaderText("L'importation du fichiers des expositions a echouée");
+		    alerteNok.setContentText(e.getMessage());
+		    alerteNok.showAndWait();
+    	}
+
+    }
+
+    
+
+    @FXML
+    void importerFichierVisites(ActionEvent event) {
+    	DonneesApplication donnees = new DonneesApplication();
+		donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
+		donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
+		donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
+
+    	try {
 			donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
-			System.out.print("Les fichiers sont importés dans l'application");
-			Alert alerte = new Alert(AlertType.INFORMATION);
-		    alerte.setTitle("Importation réussie");
-		    alerte.setHeaderText("Importation des fichiers réussit");
-		    alerte.setContentText("Les fichiers sont importés dans l'application");
-		    alerte.showAndWait();
-		} catch (EmployeException e) {
-			
-			
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExpositionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConferencierException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (VisiteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.print("Erreur avec le fichier des employes");
-			Alert alerte = new Alert(AlertType.WARNING);
-		    alerte.setTitle("Importation echouée");
-		    alerte.setHeaderText("L'importation des fichiers a echouée");
-		    alerte.setContentText("Les fichiers non pas été importés dans l'application");
-		    alerte.showAndWait();
-		}
-		
+			Alert alerteOk = new Alert(AlertType.INFORMATION);
+	    	alerteOk.setTitle("Importation réussie");
+	    	alerteOk.setHeaderText("Les données relatives aux visites, on était importées dans l'application");
+	    	alerteOk.showAndWait();
+
+    	} catch(IllegalArgumentException e) {
+			Alert alerteNok = new Alert(AlertType.WARNING);
+			alerteNok.setTitle("Importation echouée");
+			alerteNok.setHeaderText("L'importation du fichiers des visites a echouée");
+		    alerteNok.setContentText(e.getMessage());
+		    alerteNok.showAndWait();
+    	}
 
     }
 
@@ -192,14 +337,14 @@ public class ControleurImporterLocal {
     
     private File ouvrirFileChooser(String titre) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("file chooser");
+        fileChooser.setTitle(titre);
 
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Fichiers Texte", "*.csv"),
             new FileChooser.ExtensionFilter("Tous les fichiers", "*.*")
         );
 
-        Stage stage = (Stage) btnChoisirFichierConferenciers.getScene().getWindow(); 
+        Stage stage = (Stage) btnChoisirFichierConferenciers.getScene().getWindow(); // meme fenetre pour les 4 boutons
         return fileChooser.showOpenDialog(stage);
     }
 

@@ -42,7 +42,7 @@ public class ControlerConsulterDonneesVisite {
     	try {
     		//TODO modifier pour passer le chemin choisit par l'utilisateur 
 			donnees1.importerEmployes(DonneesApplication.LireCsv("employes.csv"));
-		} catch (EmployeException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -50,28 +50,25 @@ public class ControlerConsulterDonneesVisite {
     		//TODO modifier pour passer le chemin choisit par l'utilisateur 
 
 			donnees1.importerExpositions(DonneesApplication.LireCsv("expositions.csv"));
-		} catch (ExpositionException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	try {
     		//TODO modifier pour passer le chemin choisit par l'utilisateur 
 			donnees1.importerConferenciers(DonneesApplication.LireCsv("conferenciers.csv"));
-		} catch (ConferencierException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	try {
     		//TODO modifier pour passer le chemin choisit par l'utilisateur 
 			donnees1.importerVisites(DonneesApplication.LireCsv("visites.csv"));
-		} catch (VisiteException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (EmployeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	
 		}
-		
 		String listeVisites = donnees1.getVisites().toString();
 //		System.out.print(listeVisites.toString());
 		textAreaConsultation.setText(listeVisites.substring(1,listeVisites.length()-1));

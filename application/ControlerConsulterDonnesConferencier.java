@@ -39,7 +39,7 @@ public class ControlerConsulterDonnesConferencier {
     	DonneesApplication donnees1 = new DonneesApplication();
     	try {
 			donnees1.importerConferenciers(DonneesApplication.LireCsv("conferenciers.csv"));
-		} catch (ConferencierException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		String listeConferencier = donnees1.getConferenciers().toString();
