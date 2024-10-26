@@ -1,4 +1,0 @@
-PyGithub
-matplotlib
-pandas
-numpy
