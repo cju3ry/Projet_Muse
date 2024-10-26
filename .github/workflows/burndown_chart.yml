@@ -1,22 +1,28 @@
-name: Generate Burndown Chart for Milestone
+name: Generate Burndown Chart
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Exécution quotidienne à minuit
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # Exécution quotidienne à minuit
+  workflow_dispatch:      # Permet le déclenchement manuel du workflow
 
 jobs:
   burndown:
     runs-on: ubuntu-latest
+
     steps:
+      # Étape 1 : Récupération du dépôt
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Fetch issues and milestones
+      # Étape 2 : Exécution du script Python pour générer le burndown chart
+      - name: Generate Burndown Chart
         run: |
           python scripts/generate_burndown.py
-      - name: Upload burndown chart
+
+      # Étape 3 : Téléversement de l'image en tant qu'artefact
+      - name: Upload Burndown Chart as Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: burndown_chart
-          path: burndown_chart.png
+          name: burndown_chart  # Nom de l'artefact
+          path: burndown_chart.png  # Chemin vers l'image générée
+
