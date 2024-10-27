@@ -149,8 +149,8 @@ public class Exposition {
 		           "\tTemporaire : " + (this.estTemporaire ? "Oui" : "Non") + "\n" +
 		           "\tMots-clés : " + String.join(", ", this.motCles) + "\n" +
 		           "\tPériode : " + formatAnnee.format(this.periodeDebut) + " - " + formatAnnee.format(this.periodeFin)+ "\n" +
-		           "\tDébut de l'exposition : " + formatDate.format(this.debutExpo) + "\n" +
-		           "\tFin de l'exposition : " + formatDate.format(this.finExpo) + "\n";
+		           "\tDébut de l'exposition : " + (this.debutExpo != null ? formatDate.format(this.debutExpo) : "Non spécifiée") + "\n" +
+		           "\tFin de l'exposition : " + (this.finExpo != null ? formatDate.format(this.finExpo) : "Non spécifiée") + "\n";
 	}
 
 	// Méthode pour vérifier si une exposition est temporaire
