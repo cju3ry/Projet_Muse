@@ -81,6 +81,7 @@ public class Employe {
      */
     @Override
     public String toString() {
-        return "Employé(e) : " + this.nom + " " + this.prenom + "\n";
+        return "\tEmployé(e) : " + nom + " " + prenom + "\n" +
+               "\tNuméro de téléphone : " + this.numTel + "\n";
     }
 }

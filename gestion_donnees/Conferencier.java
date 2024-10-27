@@ -149,10 +149,22 @@ public class Conferencier {
 	 * @return une chaîne de caractères représentant le conférencier.
 	 * @
 	 */
+	@Override
 	public String toString() {
-	    return "Conférencier/Conférencière : " + this.nom + " " + this.prenom + "\n";
-	}
+	    // Conversion du tableau de spécialités dans une string
+	    String specialites = (specialite == null) ? "Aucune spécialité" : String.join(", ", specialite);
 
+	    // Conversion de la liste des indisponibilités en string
+	    String indisponibilites = (indisponibilite == null || indisponibilite.isEmpty()) 
+	        ? "Aucune indisponibilité" 
+	        : String.join(", ", indisponibilite); // mettre des virgules entre les indisponibilités
+
+	    return "\tConférencier/Conférencière : Nom : " + nom + " Prenom : " + prenom + "\n" +
+	           "\tEmployé : " + (estEmploye ? "Oui" : "Non") + "\n" +
+	           "\tNuméro de téléphone : " + this.numTel + "\n" +
+	           "\tSpécialités : " + specialites + "\n" +
+	           "\tIndisponibilités : " + indisponibilites + "\n";
+	}
 
 	/**
 	 * Retourne la liste des indisponibilités du conférencier.

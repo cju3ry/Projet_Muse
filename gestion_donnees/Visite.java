@@ -63,10 +63,26 @@ public class Visite {
 		return this.id;
 	}
 
+	/**
+	 * Retourne une représentation sous forme de chaîne de caractères de la Visite.
+	 * La chaîne contient :
+	 * - L'intitulé de la visite
+	 * - La date de la visite formatée
+	 * - L'heure de la visite formatée
+	 * - Le numéro de téléphone associé	 
+	 *
+	 * @return une chaîne de caractères représentant les détails de la visite
+	 */
 	@Override
 	public String toString() {
-		return "	Visite : " + this.intitule + "\n";
+	    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+	    SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
+	    return "\tVisite : " + this.intitule + "\n" +
+	           "\tDate de la visite : " + formatDate.format(this.dateVisite) + "\n" +
+	           "\tHeure de la visite : " + formatHeure.format(this.heureVisite) + "\n" +
+	           "\tTéléphone : " + this.telephone + "\n";
 	}
+
 
 	// Définit l'identifiant de l'exposition associée à la visite
 	public void setExpositionId(String expositionId) {

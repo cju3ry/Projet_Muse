@@ -141,7 +141,16 @@ public class Exposition {
 
 	@Override
 	public String toString() {
-		return "	Exposition : " + this.intitule + "\n";
+		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+	    SimpleDateFormat formatAnnee = new SimpleDateFormat("yyyy");
+		return "\tExposition : " + this.intitule + "\n" +
+		           "\tRésumé : " + this.resume + "\n" +
+		           "\tNombre d'œuvres : " + this.nbOeuvre + "\n" +
+		           "\tTemporaire : " + (this.estTemporaire ? "Oui" : "Non") + "\n" +
+		           "\tMots-clés : " + String.join(", ", this.motCles) + "\n" +
+		           "\tPériode : " + formatAnnee.format(this.periodeDebut) + " - " + formatAnnee.format(this.periodeFin)+ "\n" +
+		           "\tDébut de l'exposition : " + formatDate.format(this.debutExpo) + "\n" +
+		           "\tFin de l'exposition : " + formatDate.format(this.finExpo) + "\n";
 	}
 
 	// Méthode pour vérifier si une exposition est temporaire
