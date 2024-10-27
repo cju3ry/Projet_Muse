@@ -192,13 +192,16 @@ public class Main extends Application {
 //				"/resources/rules/prise1.png", "/resources/rules/prise2.png", "/resources/rules/prise3.png", 
 //				"/resources/rules/prise4.png", "/resources/rules/irregularite.png", "/resources/rules/finpartie.png", 
 //		"/resources/rules/resultat.png"};
-		String[] images = {"/images/cameleon1.jpg","/images/cameleon1.jpg","/images/cameleon1.jpg"};
+		String[] images = {"/imagesNotice/NoticeIntro.PNG", "/imagesNotice/Importer_1.PNG","/imagesNotice/Importer_1.PNG",
+				           "/imagesNotice/Importer_2.PNG","/imagesNotice/Importer_3.PNG","/imagesNotice/Importer_4.PNG" ,
+				           "/imagesNotice/Importer_5.PNG", "/imagesNotice/Consulter_1.PNG", "/imagesNotice/Consulter_2.PNG",
+				           "/imagesNotice/Consulter_3.PNG","/imagesNotice/Consulter_4.PNG"};
 		int i = 0;
 		for (String imagePath : images) {
 			Image image = new Image(images[i]);
 			ImageView imageView = new ImageView(image);
 			imageView.setPreserveRatio(true);
-			imageView.setFitWidth(400); 
+			imageView.setFitWidth(600); 
 			vbox.getChildren().add(imageView);
 			i++;
 		}

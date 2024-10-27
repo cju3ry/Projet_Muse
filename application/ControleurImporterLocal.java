@@ -268,7 +268,9 @@ public class ControleurImporterLocal {
     	Main.setPageImporter();
     }
 
-    
+    //TODO modifier dans la classe conférencier le toStrinfg pour mettre nom et prenom a la ligne
+    //TODO supprimer les # dans les spécialitée substring 
+    //TODO si 2 indisponibilité les meme 16/10/2024 et 16/10/2024 en mettre qu'une 
     @FXML
     void importerFichierConferenciers(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
@@ -286,7 +288,7 @@ public class ControleurImporterLocal {
             ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
             strConferencier.append("\n");
             for (int i = 0; i < listeDesConfernciers.size(); i++) {
-            	strConferencier.append("\t" + listeDesConfernciers.get(i).toString() + "\n");
+            	strConferencier.append(listeDesConfernciers.get(i).toString() + "\n");
             }
 //            System.out.print("liste des conférencier to string " + strConferencier);
 
@@ -300,7 +302,7 @@ public class ControleurImporterLocal {
     	}
 
     }
-
+    //TODO rajouter nom : et prenom : a la lgine dans le to String d'employes 
     @FXML
     void importerFichierEmployes(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
@@ -318,7 +320,7 @@ public class ControleurImporterLocal {
             ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
             strEmployes.append("\n");
             for (int i = 0; i < listeDesEmployes.size(); i++) {
-            	strEmployes.append("\t" + listeDesEmployes.get(i).toString() + "\n");
+            	strEmployes.append(listeDesEmployes.get(i).toString() + "\n");
             }
 
     	} catch(IllegalArgumentException e) {
@@ -332,7 +334,7 @@ public class ControleurImporterLocal {
     }
 
     
-
+    //TODO enlever les # des mots cle (toString)
     @FXML
     void importerFichierExpositions(ActionEvent event) {
     	DonneesApplication donnees = new DonneesApplication();
@@ -350,7 +352,7 @@ public class ControleurImporterLocal {
             ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
             strExpositions.append("\n");
             for (int i = 0; i < listeDesExpositions.size(); i++) {
-            	strExpositions.append("\t" + listeDesExpositions.get(i).toString() + "\n");
+            	strExpositions.append(listeDesExpositions.get(i).toString() + "\n");
             }
 
     	} catch(IllegalArgumentException e) {
@@ -383,7 +385,7 @@ public class ControleurImporterLocal {
 	        ArrayList<Visite> listeDesVistes = donnees.getVisites();
 	        strVisites.append("\n");
 	        for (int i = 0; i < listeDesVistes.size(); i++) {
-	        	strVisites.append("\t" + listeDesVistes.get(i).toString() + "\n");
+	        	strVisites.append(listeDesVistes.get(i).toString() + "\n");
 	        }
 
     	} catch(IllegalArgumentException e) {
