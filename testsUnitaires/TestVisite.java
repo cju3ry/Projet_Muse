@@ -19,7 +19,6 @@ public class TestVisite {
     public void testVisiteCreationValide() {
         Visite visite = new Visite("VIS5678", "01/12/2024", "10h00", "Visite guidée", "0987654321");
         assertEquals("VIS5678", visite.getId());
-        assertEquals("	Visite : Visite guidée\n", visite.toString());
     }
 
     // Test de création avec un ID invalide
@@ -87,10 +86,14 @@ public class TestVisite {
         assertEquals("L'identifiant de l'employé doit être de 7 caractères.", exception3.getMessage());
     }
 
-    // Test de la méthode toString
+ // Test de la méthode toString
     @Test
     public void testToString() {
-        String expected = "	Visite : Conférence sur l'art moderne\n";
+        String expected = "\tVisite : Conférence sur l'art moderne\n" +
+                          "\tDate de la visite : 25/10/2024\n" +
+                          "\tHeure de la visite : 14h30\n" +
+                          "\tTéléphone : 0123456789\n" ;
         assertEquals(expected, visite.toString());
     }
+
 }

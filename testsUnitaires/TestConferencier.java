@@ -109,7 +109,19 @@ public class TestConferencier {
     // Test de la méthode toString
     @Test
     public void testToString() {
-        String expected = "Conférencier/Conférencière : Dupont Marie\n";
+    	conferencier.setNumTel("0123456789");
+        conferencier.setEstEmploye(true);
+        String[] specialites = {"Préhisoire", "Picasso"};
+        conferencier.setSpecialitees(specialites);
+        ArrayList<String> indisponibilites = new ArrayList<>();
+        indisponibilites.add("10/10/2023");
+        indisponibilites.add("15/10/2023");
+        conferencier.setIndisponibilite(indisponibilites);
+        String expected = "\tConférencier/Conférencière : Nom : Dupont Prenom : Marie\n" +
+                		   "\tEmployé : Oui\n" +
+                		   "\tNuméro de téléphone : 0123456789\n" +
+                		   "\tSpécialités : Préhisoire, Picasso\n" +
+                		   "\tIndisponibilités : 10/10/2023, 15/10/2023\n";
         assertEquals(expected, conferencier.toString());
     }
 

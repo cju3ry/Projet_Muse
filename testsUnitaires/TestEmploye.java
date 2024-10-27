@@ -55,10 +55,11 @@ public class TestEmploye {
         assertNull(employe.getNumTel());
     }
 
-    // Test de la méthode toString pour une sortie formatée correctement
+ // Test de la méthode toString pour une sortie formatée correctement
     @Test
     public void testToString() {
         employe = new Employe("1234567", "Johnson", "Billy", "0000");
-        assertEquals("Employé(e) : Johnson Billy\n", employe.toString());
+        assertEquals("\tEmployé(e) : Johnson Billy\n" + "\tNuméro de téléphone : 0000\n", employe.toString());
     }
+
 }
