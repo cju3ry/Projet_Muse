@@ -74,14 +74,19 @@ public class Employe {
     }
 
     /**
-     * Retourne le nom et le prénom de l'employé sous la forme :
-     * "Employé(e) : [nom] [prénom]".
+     * Retourne le nom et le prénom de l'employé et le numéro de téléphone sous la forme :
+     * "Employé(e) :
+     * Nom : [nom]
+     * Prénom : [prénom]
+     * Numéro de téléphone : [numTel]"
      * 
      * @return Une chaîne de caractères représentant l'employé.
      */
     @Override
     public String toString() {
-        return "\tEmployé(e) : " + nom + " " + prenom + "\n" +
+        return "\tEmployé(e) : " + "\n" +
+               "\tNom : " + nom + "\n" +
+               "\tPrénom : " + prenom + "\n" +
                "\tNuméro de téléphone : " + this.numTel + "\n";
     }
 }

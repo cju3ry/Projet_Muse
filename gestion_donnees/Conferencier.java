@@ -3,6 +3,8 @@ package gestion_donnees;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * La classe Conferencier représente un conférencier avec ses informations personnelles et ses disponibilités.
@@ -84,7 +86,10 @@ public class Conferencier {
 		if (!indisponibiliteOk(indisponibilite)) {
 			throw new IllegalArgumentException("Les dates d'indisponibilité sont invalides ou non cohérentes.");
 		}
-		this.indisponibilite = indisponibilite;
+
+		// On vérifier que les indisponibilités sont sans duplicata (unique)
+		Set<String> uniqueIndisponibilites = new HashSet<>(indisponibilite);
+		this.indisponibilite = new ArrayList<>(uniqueIndisponibilites);
 	}
 
 	/**
@@ -159,10 +164,10 @@ public class Conferencier {
 	        ? "Aucune indisponibilité" 
 	        : String.join(", ", indisponibilite); // mettre des virgules entre les indisponibilités
 
-	    return "\tConférencier/Conférencière : Nom : " + nom + " Prenom : " + prenom + "\n" +
+	    return "\tConférencier/Conférencière : \n\tNom : " + nom + " \n\tPrenom : " + prenom + "\n" +
 	           "\tEmployé : " + (estEmploye ? "Oui" : "Non") + "\n" +
 	           "\tNuméro de téléphone : " + this.numTel + "\n" +
-	           "\tSpécialités : " + specialites + "\n" +
+	           "\tSpécialités : " + specialites.substring(1, specialites.length()-1) + "\n" +
 	           "\tIndisponibilités : " + indisponibilites + "\n";
 	}
 
