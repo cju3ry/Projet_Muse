@@ -1,38 +1,21 @@
 
 package crypto;
 
-import javax.crypto.KeyAgreement;
-import javax.crypto.spec.DHParameterSpec;
-import java.security.*;
-import java.security.spec.InvalidParameterSpecException;
-import java.util.Base64;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * La classe Vigenere implémente l'algorithme de chiffrement de Vigenère
  * en utilisant une clé générée via l'accord de clé Diffie-Hellman.
  */
 public class Vigenere {
-    private String cle;
-
-    /**
-     * Constructeur de la classe Vigenere.
-     * Génère une clé en utilisant l'accord de clé Diffie-Hellman.
-     *
-     * @throws NoSuchAlgorithmException si l'algorithme spécifié n'existe pas.
-     * @throws InvalidAlgorithmParameterException si les paramètres de l'algorithme sont invalides.
-     * @throws InvalidKeyException si la clé est invalide.
-     * @throws InvalidParameterSpecException si les spécifications des paramètres sont invalides.
-     */
-    public Vigenere() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidParameterSpecException {
-        genererCleSecrete();
-    }
 
     /**
      * Comment faire pour réaliser les étapes de l'accord de clé Diffie-Hellman
      *
-     * 1) Choix d'un nbre premier
-     * 2) choisir un nombre générateur (voir le cours p.31)
+     * 1) Choix d'un nbre premier                               → Fait
+     * 2) choisir un nombre générateur (voir le cours p.31)     s
      * 3) Choisis un entier a et transmets g^a  	→ Alice
      * 4) Envoie g^a					            → Alice
      * 5) Choisis un entier b et transmets g^b		→ Bob
@@ -47,74 +30,48 @@ public class Vigenere {
      * @return le nombre premier généré.
      */
     private static int genererPremier(int n) {
-        //TODO voir le crible d'erathostene
-        if (n % n == 0 && n / 1 == n) {
-            return n;
-        } else {
-            return genererPremier(n - 1);
+        if (n < 2) {
+            throw new IllegalArgumentException("Le nombre doit être supérieur à 2.");
         }
-    }
-
-    /**
-     * Génère une clé en utilisant l'accord de clé Diffie-Hellman.
-     */
-    private void genererCleSecrete()  {
-
-    }
-
-    /**
-     * Chiffre un message en utilisant l'algorithme de Vigenère.
-     *
-     * @param message le message à chiffrer.
-     * @return le message chiffré.
-     */
-    public String chiffrer(String message) {
-        return traiterMessage(message, true);
-    }
-
-    /**
-     * Déchiffre un message en utilisant l'algorithme de Vigenère.
-     *
-     * @param message le message à déchiffrer.
-     * @return le message déchiffré.
-     */
-    public String dechiffrer(String message) {
-        return traiterMessage(message, false);
-    }
-
-    /**
-     * Traite un message en le chiffrant ou en le déchiffrant.
-     *
-     * @param message le message à traiter.
-     * @param chiffrer true pour chiffrer, false pour déchiffrer.
-     * @return le message traité.
-     */
-    private String traiterMessage(String message, boolean chiffrer) {
-        StringBuilder messageTraite = new StringBuilder();
-        message = message.toUpperCase();
-        String cleMaj = this.cle;
-
-        for (int i = 0, j = 0; i < message.length(); i++) {
-            char lettre = message.charAt(i);
-
-            // Ignorer les espaces et les caractères non alphabétiques
-            if (lettre < 'A' || lettre > 'Z') {
-                messageTraite.append(lettre);
-                continue;
+        while (n > 1) {
+            if (estPremier(n)) {
+                return n;
             }
-
-            int cleChar = cleMaj.charAt(j) - 'A';
-            char lettreTraitee;
-            if (chiffrer) {
-                lettreTraitee = (char) (((lettre - 'A') + cleChar) % 26 + 'A');
-            } else {
-                lettreTraitee = (char) (((lettre - 'A') - cleChar + 26) % 26 + 'A');
-            }
-            messageTraite.append(lettreTraitee);
-
-            j = (j + 1) % cleMaj.length();  // Avancer dans la clé et boucler si nécessaire
+            n--;
         }
-        return messageTraite.toString();
+        return 2; // Le plus petit nombre premier
+    }
+
+    /**
+     * Vérifie si un nombre est premier.
+     * @param n le nombre à vérifier.
+     * @return true si le nombre est premier, false sinon.
+     */
+    private static boolean estPremier(int n) {
+        if (n <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Vérifie si un nombre est un générateur pour un nombre premier donné p.
+     *
+     * @param g le nombre à vérifier.
+     * @param p le nombre premier.
+     * @return true si g est un générateur pour p, false sinon.
+     */
+    public static boolean estGenerateur(int g, int p) {
+        Set<Integer> set = new HashSet<>();
+        for (int i = 1; i < p; i++) {
+            set.add((int) Math.pow(g, i) % p);
+        }
+        return set.size() == p - 1;
     }
 
     /**
@@ -123,41 +80,39 @@ public class Vigenere {
      * @param args les arguments de la ligne de commande.
      */
     public static void main(String[] args) {
+
         try {
-            Vigenere vigenere = new Vigenere();
             Scanner scanner = new Scanner(System.in);
-
-            // Choix de l'utilisateur : chiffrer ou déchiffrer
-            int choix = 0;
-            while (choix != 3) {
-                System.out.println("---- Algorithme de Vigenère ----");
-                System.out.println("1. Chiffrer un message");
-                System.out.println("2. Déchiffrer un message");
-                System.out.println("3. Quitter l'application");
-                System.out.print("Votre choix : ");
-                choix = scanner.nextInt();
-                scanner.nextLine();  // Consommer la nouvelle ligne
-
-                // Exécuter en fonction du choix de l'utilisateur
-                if (choix == 1) {
-                    System.out.print("Entrez le message : ");
-                    String message = scanner.nextLine();
-                    String messageChiffre = vigenere.chiffrer(message);
-                    System.out.println("Message chiffré : " + messageChiffre + "\n");
-                } else if (choix == 2) {
-                    System.out.print("Entrez le message : ");
-                    String message = scanner.nextLine();
-                    String messageDechiffre = vigenere.dechiffrer(message);
-                    System.out.println("Message déchiffré : " + messageDechiffre + "\n");
-                } else if (choix == 3) {
-                    System.out.print("\nMerci d'avoir choisi notre application de chiffrement de Vigenère et de Diffie-Hillman.");
-                } else {
-                    System.out.println("Choix invalide. Veuillez réessayer.\n");
-                }
-            }
+            System.out.print("Borne Max : ");
+            int borneMax = scanner.nextInt();
+            int p = genererPremier(borneMax);
+            int g = 3; // On choisit un générateur arbitrairement
             scanner.close();
-        } catch (Exception e) {
-            System.err.println("Une erreur s'est produite : " + e.getMessage());
+        } catch(IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
+
+        /*
+        int choix = 0;
+        while (choix != 3) {
+            System.out.println("---- Algorithme de Vigenère ----");
+            System.out.println("1. Chiffrer un message");
+            System.out.println("2. Déchiffrer un message");
+            System.out.println("3. Quitter l'application");
+            System.out.print("Votre choix : ");
+            choix = scanner.nextInt();
+            scanner.nextLine();
+            if (choix == 1) {
+
+            } else if (choix == 2) {
+
+            } else if (choix == 3) {
+                System.out.print("\nMerci d'avoir choisi notre application de chiffrement de Vigenère et de Diffie-Hillman.");
+            } else {
+                System.out.println("Choix invalide. Veuillez réessayer.\n");
+            }
+        }
+        scanner.close();
+        */
     }
 }
