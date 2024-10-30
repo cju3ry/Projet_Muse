@@ -48,7 +48,7 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Button fx:id="btnAfficherIp" alignment="CENTER" layoutX="588.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#afficherIp" prefHeight="60.0" prefWidth="100.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="IP">
+      <Button fx:id="btnAfficherIp" alignment="CENTER" layoutX="538.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#afficherIp" prefHeight="60.0" prefWidth="200.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="Afficher mon adresse ip">
          <font>
             <Font name="Calibri" size="17.0" />
          </font>
@@ -84,5 +84,10 @@
             <Insets />
          </opaqueInsets>
       </Button>
+      <Label fx:id="labelEcouteLancee" alignment="CENTER" layoutX="513.0" layoutY="484.0" prefHeight="30.0" prefWidth="250.0">
+         <font>
+            <Font name="Calibri" size="25.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

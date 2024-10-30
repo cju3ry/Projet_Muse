@@ -56,12 +56,12 @@
          </font>
       </Label>
       <ComboBox fx:id="conboBoxFichier" cache="true" layoutX="283.0" layoutY="234.0" prefHeight="35.0" prefWidth="180.0" promptText="Selectionnez le fichier" visibleRowCount="4" />
-      <Label layoutX="248.0" layoutY="299.0" text="Fichiers sélectionné :">
+      <Label layoutX="288.0" layoutY="279.0" text="Fichiers sélectionné :">
          <font>
             <Font name="Calibri" size="20.0" />
          </font>
       </Label>
-      <Label fx:id="labelFichierSelectionne" layoutX="441.0" layoutY="299.0" text="   ">
+      <Label fx:id="labelFichierSelectionne" alignment="CENTER" layoutX="291.0" layoutY="310.0" prefHeight="23.0" prefWidth="171.0" text="      ">
          <font>
             <Font name="Calibri" size="20.0" />
          </font>
