@@ -95,11 +95,12 @@ public class ControleurImporterLocal {
 	}
 
 	public static String cheminFichierEmployes;
-	public String cheminFichierConferenciers;
 	
-	public String cheminFichierVisites;
+	public static String cheminFichierConferenciers;
 	
-	public String cheminFichierExpositions;
+	public static String cheminFichierVisites;
+	
+	public static String cheminFichierExpositions;
 
     @FXML
     private Button btnChoisirFichierConferenciers;
@@ -222,6 +223,7 @@ public class ControleurImporterLocal {
 
    	    }
     }
+    
 
     @FXML
     void choisirFichierExpositions(ActionEvent event) {

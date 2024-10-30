@@ -21,8 +21,7 @@ public class ControleurPadeDeGarde {
     @FXML
     private Button btnConsulter;
 
-    @FXML
-    private Button btnExporter;
+    @FXML Button btnExporter;
 
     @FXML
     private Button btnImporter;

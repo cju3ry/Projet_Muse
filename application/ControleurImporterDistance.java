@@ -1,22 +1,35 @@
 package application;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterDistance {
+	
+	
+	private static boolean ipEstChoisit = false;
+	
+	private static boolean fichierEstChoisit = false;
 	
 	private String fichierSelectionne;
 	
@@ -60,6 +73,7 @@ public class ControleurImporterDistance {
     
     
     public void initialize() {
+    	btnDemanderFichier.setDisable(true);
         // Ajouter les options au ComboBox
         conboBoxFichier.getItems().clear();
         conboBoxFichier.getItems().addAll("Selectionner le fichier", "Employés", "Conférenciers", "Expositions", "Visites");
@@ -70,10 +84,16 @@ public class ControleurImporterDistance {
                 labelFichierSelectionne.setText(selectedFile);
                 fichierSelectionne = selectedFile;
                 System.out.print(fichierSelectionne);
+                fichierEstChoisit = true;
+                mettreAJourEtatBtnDemande();
             } else {
                 labelFichierSelectionne.setText(""); 
             }
         });
+    }
+    
+    private void mettreAJourEtatBtnDemande() {
+    	btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
     
 
@@ -81,6 +101,8 @@ public class ControleurImporterDistance {
     @FXML
     void recupIp(ActionEvent event) {
     	ipServ = textIpServ.getText();
+    	ipEstChoisit = true;
+    	mettreAJourEtatBtnDemande();
     	System.out.print("L'ip du sreveur est " + ipServ);
     }
     
@@ -90,18 +112,37 @@ public class ControleurImporterDistance {
         Task<Void> importTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                String serverAddress = ipServ; 
+            	//TODO faire la verification du format de l'adresse ip et faire un traitement si jamais ce n'est pas la bonne car cela va lever une ecxption
+                
+            	//TODO faire en sorte de verfier que si la connection est refusée l'utilisateur soit averti
+            	String serverAddress = ipServ; 
                 int port = 12345;
 
                 try (Socket socket = new Socket(serverAddress, port);
                      InputStream input = socket.getInputStream();
                      BufferedInputStream bufferedInput = new BufferedInputStream(input);
                      PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+                	 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
                      FileOutputStream fileOutput = new FileOutputStream(getFileName())) {
 
                     // Envoi de la requête au serveur
                     writer.println(getRequest());
-
+                    String message = reader.readLine();
+                    System.out.println("Message reçu du serveur : " + message);
+                    if ("REFUS".equals(message)) {
+                        System.out.println("Le serveur a refusé l'envoi du fichier");
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(AlertType.ERROR);
+                            alert.setHeaderText("Le serveur a refusé l'envoi du fichier");
+                            alert.showAndWait();
+                        });
+                        fileOutput.close();
+                        Files.deleteIfExists(Paths.get(getFileName()));
+                        
+                        
+                    }
+                    if ("START".equals(message)) {
+                    System.out.print("le serveur a aceppeté l'envoi");
                     byte[] buffer = new byte[4096];
                     int bytesRead;
 
@@ -111,6 +152,15 @@ public class ControleurImporterDistance {
                     }
 
                     System.out.println("Fichier reçu avec succès !");
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setHeaderText("Le fichier a été reçu");
+                        alert.showAndWait();
+                    });
+    				//TODO rajouter la posibilité d'ouvrir un filechooser pour voir ou le fichier c'est importé
+                    }
+
+                   
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
