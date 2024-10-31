@@ -31,7 +31,9 @@ public class ControlerConsulterDonnesConferencier {
     @FXML
     private TextArea textAreaConsultation;
     
-    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+    private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
+
+    private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
     
     
@@ -45,14 +47,20 @@ public class ControlerConsulterDonnesConferencier {
     }
  // Méthode pour charger et afficher les données
     private void afficherDonnees() {
-    	donneesChargees = ControleurImporterLocal.isDonneesConferencierChargees();
-        StringBuilder strConferencier = ControleurImporterLocal.getStrConferencier();
-        if (!donneesChargees || strConferencier == null ) { // Vérifie si les données n'ont pas déjà été chargées
+    	donneesChargeesLocal = ControleurImporterLocal.isDonneesConferencierChargees();
+        donnesChargeesDistance = ControleurImporterDistance.isDonneesConferencierChargees();
+        StringBuilder strConferencierLocal = ControleurImporterLocal.getStrConferencier();
+        StringBuilder strConferencierDistance = ControleurImporterDistance.getStrConferencier();
+        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+        if (donneesChargeesLocal) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+        } else if (donnesChargeesDistance) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
+        }
+        if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
                textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
-        if (donneesChargees) {
-        	textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
-        }
+
     }
     
     

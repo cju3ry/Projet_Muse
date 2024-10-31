@@ -11,8 +11,10 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import gestion_donnees.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -33,9 +35,33 @@ public class ControleurImporterDistance {
 	
 	private String fichierSelectionne;
 	
-	private String fichierRecu;
+	private String fichierRecu = "";
 	
 	private String ipServ;
+
+    private static StringBuilder strConferencier;
+
+    private  static StringBuilder strEmployes;
+
+    private  static StringBuilder strExpositions;
+
+    private  static StringBuilder strVisites;
+
+    private static boolean donneesConferencierChargees = false;
+
+    private static boolean donneesEmployesChargees = false;
+
+    private static boolean donneesExpositionsChargees = false;
+
+    private static boolean donneesVisitesChargees = false;
+
+    private String cheminFichierConferenciers;
+
+    private String cheminFichierEmployes;
+
+    private String cheminFichierExpositions;
+
+    private String cheminFichierVisites;
 
     @FXML
     private Button btnConsulter;
@@ -70,8 +96,37 @@ public class ControleurImporterDistance {
 
     @FXML
     private TextField textIpServ;
-    
-    
+
+    public static StringBuilder getStrConferencier() {
+        return strConferencier;
+    }
+    public static StringBuilder getStrEmployes() {
+        return strEmployes;
+    }
+
+    public static StringBuilder getStrExpositions() {
+        return strExpositions;
+    }
+
+    public static StringBuilder getStrVisites() {
+        return strVisites;
+    }
+    public static boolean isDonneesConferencierChargees() {
+        return donneesConferencierChargees;
+    }
+    public static boolean isDonneesEmployesChargees() {
+        return donneesEmployesChargees;
+    }
+
+    public static boolean isDonneesExpositionsChargees() {
+        return donneesExpositionsChargees;
+    }
+
+    public static boolean isDonneesVisitesChargees() {
+        return donneesVisitesChargees;
+    }
+
+    private DonneesApplication donnees = new DonneesApplication();
     public void initialize() {
     	btnDemanderFichier.setDisable(true);
         // Ajouter les options au ComboBox
@@ -152,7 +207,13 @@ public class ControleurImporterDistance {
                     }
 
                     System.out.println("Fichier reçu avec succès !");
-                    Platform.runLater(() -> {
+                    //importerFichierConferenciers();
+                        System.out.println("avant avoir appelé importerFichierSelonSelection()");
+                        System.out.print("le nom du fichier requete est " + getRequest());
+                        fichierRecu = getRequest();
+                        importerFichierSelonSelection();
+                        System.out.println("Après avoir appelé importerFichierSelonSelection()");
+                        Platform.runLater(() -> {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setHeaderText("Le fichier a été reçu");
                         alert.showAndWait();
@@ -171,6 +232,32 @@ public class ControleurImporterDistance {
         // Lancer le Task dans un nouveau thread
         new Thread(importTask).start();
     }
+    private void importerFichierSelonSelection() {
+        System.out.println("Début de importerFichierSelonSelection");
+        System.out.print("le nom du fichier est " + fichierRecu);
+        switch (fichierRecu) {
+            case "employes":
+                System.out.println("Appel de importerFichierEmployes");
+                importerFichierEmployes();
+                break;
+            case "conferenciers":
+                System.out.println("Appel de importerFichierConferenciers");
+                importerFichierConferenciers();
+                break;
+            case "expositions":
+                System.out.println("Appel de importerFichierExpositions");
+                importerFichierExpositions();
+                break;
+            case "visites":
+                System.out.println("Appel de importerFichierVisites");
+                importerFichierVisites();
+                break;
+            default:
+                System.out.println("Fichier non reconnu");
+                break;
+        }
+        System.out.println("Fin de importerFichierSelonSelection");
+    }
 
     // Méthode pour obtenir la requête en fonction du fichier sélectionné
     private String getRequest() {
@@ -185,16 +272,102 @@ public class ControleurImporterDistance {
 
     // Méthode pour obtenir le nom du fichier de sortie en fonction du fichier sélectionné
     private String getFileName() {
+        String userHome = System.getProperty("user.home");
+        String downloadDir = userHome + "/Downloads/";
         switch (fichierSelectionne) {
-            case "Employés": return "employesRecu.csv";
-            case "Conférenciers": return "conferenciersRecu.csv";
-            case "Expositions": return "expositionsRecu.csv";
-            case "Visites": return "visitesRecu.csv";
-            default: return "fichierRecu.csv";
+            case "Employés": return downloadDir + "employesRecu.csv";
+            case "Conférenciers": return downloadDir + "conferenciersRecu.csv";
+            case "Expositions": return downloadDir + "expositionsRecu.csv";
+            case "Visites": return downloadDir + "visitesRecu.csv";
+            default: return downloadDir + "fichierRecu.csv";
         }
     }
-    
-    
+
+
+    void importerFichierConferenciers() {
+
+        strConferencier = new StringBuilder();
+        String userHome = System.getProperty("user.home");
+        cheminFichierConferenciers = userHome + "/Downloads/conferenciersRecu.csv";
+        try {
+            donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
+            donneesConferencierChargees = true;
+            ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
+            strConferencier.append("\n");
+            for (int i = 0; i < listeDesConfernciers.size(); i++) {
+                strConferencier.append(listeDesConfernciers.get(i).toString() + "\n");
+            }
+        } catch (IllegalArgumentException e) {
+            Alert alerteNok = new Alert(AlertType.WARNING);
+            alerteNok.setTitle("Importation échouée");
+            alerteNok.setHeaderText("L'importation du fichier des conférenciers a échoué");
+            alerteNok.setContentText(e.getMessage());
+            alerteNok.showAndWait();
+        }
+    }
+    void importerFichierEmployes() {
+        strEmployes = new StringBuilder();
+        String userHome = System.getProperty("user.home");
+        cheminFichierEmployes = userHome + "/Downloads/employesRecu.csv";
+        try {
+            donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
+            donneesEmployesChargees = true;
+            ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
+            strEmployes.append("\n");
+            for (int i = 0; i < listeDesEmployes.size(); i++) {
+                strEmployes.append(listeDesEmployes.get(i).toString() + "\n");
+            }
+        } catch (IllegalArgumentException e) {
+            Alert alerteNok = new Alert(AlertType.WARNING);
+            alerteNok.setTitle("Importation échouée");
+            alerteNok.setHeaderText("L'importation du fichier des employés a échoué");
+            alerteNok.setContentText(e.getMessage());
+            alerteNok.showAndWait();
+        }
+    }
+    void importerFichierVisites() {
+
+
+        strVisites = new StringBuilder();
+        String userHome = System.getProperty("user.home");
+        cheminFichierVisites = userHome + "/Downloads/visitesRecu.csv";
+        try {
+            donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
+            donneesVisitesChargees = true;
+            ArrayList<Visite> listeDesVisites = donnees.getVisites();
+            strVisites.append("\n");
+            for (int i = 0; i < listeDesVisites.size(); i++) {
+                strVisites.append(listeDesVisites.get(i).toString() + "\n");
+            }
+        } catch (IllegalArgumentException e) {
+            Alert alerteNok = new Alert(AlertType.WARNING);
+            alerteNok.setTitle("Importation échouée");
+            alerteNok.setHeaderText("L'importation du fichier des visites a échoué");
+            alerteNok.setContentText(e.getMessage());
+            alerteNok.showAndWait();
+        }
+    }
+    void importerFichierExpositions() {
+        strExpositions = new StringBuilder();
+        String userHome = System.getProperty("user.home");
+        String cheminFichierExpositions = userHome + "/Downloads/expositionsRecu.csv";
+        try {
+            donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
+            donneesExpositionsChargees = true;
+            ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
+            strExpositions.append("\n");
+            for (int i = 0; i < listeDesExpositions.size(); i++) {
+                strExpositions.append(listeDesExpositions.get(i).toString() + "\n");
+            }
+        } catch (IllegalArgumentException e) {
+            Alert alerteNok = new Alert(AlertType.WARNING);
+            alerteNok.setTitle("Importation échouée");
+            alerteNok.setHeaderText("L'importation du fichier des expositions a échoué");
+            alerteNok.setContentText(e.getMessage());
+            alerteNok.showAndWait();
+        }
+    }
+
     
     @FXML
     void importer(ActionEvent event) {

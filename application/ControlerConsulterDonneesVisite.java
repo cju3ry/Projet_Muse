@@ -33,7 +33,9 @@ public class ControlerConsulterDonneesVisite {
     @FXML
     private TextArea textAreaConsultation;
 
-    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+    private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
+
+    private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
 
     @FXML
     void initialize() {
@@ -45,14 +47,18 @@ public class ControlerConsulterDonneesVisite {
     }
     // Méthode pour charger et afficher les données
     private void afficherDonnees() {
-    	donneesChargees = ControleurImporterLocal.isDonneesVisitesChargees();
-        StringBuilder strVisites = ControleurImporterLocal.getStrVisites();
-        if (!donneesChargees || strVisites == null) { // Vérifie si les données n'ont pas déjà été chargées
-               textAreaConsultation.setText("\n\n\tLes données ne sont pas encore disponibles.");
+        donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
+        donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
+        StringBuilder strVisitesLocal = ControleurImporterLocal.getStrVisites();
+        StringBuilder strVisitesDistance = ControleurImporterDistance.getStrVisites();
+        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+        if (donneesChargeesLocal) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+        } else if (donnesChargeesDistance) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
         }
-
-        if (donneesChargees) {
-        	textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+        if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+            textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
     }
     

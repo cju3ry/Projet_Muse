@@ -30,7 +30,9 @@ public class ControlerConsulterDonneesEmploye {
     @FXML
     private TextArea textAreaConsultation;
 
-    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+    private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
+
+    private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
     
     
@@ -42,16 +44,20 @@ public class ControlerConsulterDonneesEmploye {
         // Déclenchement de l'événement au clic sur la TextArea
         textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
     }
- // Méthode pour charger et afficher les données
+    // Méthode pour charger et afficher les données
     private void afficherDonnees() {
-    	donneesChargees = ControleurImporterLocal.isDonneesEmployesChargees();
-        StringBuilder strEmployes = ControleurImporterLocal.getStrEmployes();
-        if (!donneesChargees || strEmployes == null) { // Vérifie si les données n'ont pas déjà été chargées
-               textAreaConsultation.setText("\n\n\tLes données ne sont pas encore disponibles.");
+        donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
+        donnesChargeesDistance = ControleurImporterDistance.isDonneesEmployesChargees();
+        StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
+        StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
+        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+        if (donneesChargeesLocal) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+        } else if (donnesChargeesDistance) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
         }
-
-        if (donneesChargees) {
-        	textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+            textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
     }
     

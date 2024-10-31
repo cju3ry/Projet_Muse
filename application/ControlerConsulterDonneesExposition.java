@@ -30,8 +30,10 @@ public class ControlerConsulterDonneesExposition {
 
     @FXML
     private TextArea textAreaConsultation;
-    
-    private boolean donneesChargees; // Pour vérifier si les données sont déjà chargées
+
+    private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
+
+    private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
 
     @FXML
     void initialize() {
@@ -41,16 +43,20 @@ public class ControlerConsulterDonneesExposition {
         // Déclenchement de l'événement au clic sur la TextArea
         textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
     }
- // Méthode pour charger et afficher les données
+    // Méthode pour charger et afficher les données
     private void afficherDonnees() {
-    	donneesChargees = ControleurImporterLocal.isDonneesExpositionsChargees();
-        StringBuilder strExpositions = ControleurImporterLocal.getStrExpositions();
-        if (!donneesChargees || strExpositions == null) { // Vérifie si les données n'ont pas déjà été chargées
-               textAreaConsultation.setText("\n\n\tLes données ne sont pas encore disponibles.");
+        donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
+        donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
+        StringBuilder strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
+        StringBuilder strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
+        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+        if (donneesChargeesLocal) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+        } else if (donnesChargeesDistance) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
         }
-
-        if (donneesChargees) {
-        	textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+        if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+            textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
     }
     

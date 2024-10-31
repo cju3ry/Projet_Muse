@@ -45,7 +45,9 @@ public class ControleurImporterLocal {
 	private static boolean cheminFichierExpositionsChoisit = false;
 	
 	private static boolean cheminFichierVisitesChoisit = false;
-	
+
+
+
 	private  static StringBuilder strConferencier;
 	
 	private  static StringBuilder strEmployes;
@@ -65,7 +67,7 @@ public class ControleurImporterLocal {
 	public static boolean isDonneesConferencierChargees() {
 		return donneesConferencierChargees;
 	}
-	
+
 	public static boolean isDonneesEmployesChargees() {
 		return donneesEmployesChargees;
 	}
