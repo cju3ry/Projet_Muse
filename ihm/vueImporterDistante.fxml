@@ -93,5 +93,30 @@
          </font>
       </Label>
       <TextField fx:id="textIpServ" layoutX="763.0" layoutY="235.0" prefHeight="30.0" prefWidth="180.0" promptText="000.000.000.000" />
+      <Label layoutX="528.0" layoutY="235.0" text="Fichiers importés : ">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelEmployesImporte" alignment="CENTER" layoutX="525.0" layoutY="267.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelVisitesImporte" alignment="CENTER" layoutX="525.0" layoutY="327.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelConferencierImporte" alignment="CENTER" layoutX="525.0" layoutY="287.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelExpositionsImporte" alignment="CENTER" layoutX="525.0" layoutY="307.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
