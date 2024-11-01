@@ -136,5 +136,30 @@
             <Font name="Calibri" size="20.0" />
          </font>
       </Label>
+      <Label layoutX="242.0" layoutY="517.0" text="Fichiers importés : ">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelEmployesImporte" alignment="CENTER" layoutX="239.0" layoutY="549.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelVisitesImporte" alignment="CENTER" layoutX="239.0" layoutY="609.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelConferencierImporte" alignment="CENTER" layoutX="239.0" layoutY="569.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelExpositionsImporte" alignment="CENTER" layoutX="239.0" layoutY="589.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

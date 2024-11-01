@@ -50,11 +50,6 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Label alignment="CENTER" layoutX="215.0" layoutY="125.0" prefHeight="30.0" prefWidth="845.0" text="Quel fichier souhaitez-vous importer depuis le serveur ?">
-         <font>
-            <Font name="Calibri" size="25.0" />
-         </font>
-      </Label>
       <ComboBox fx:id="conboBoxFichier" cache="true" layoutX="283.0" layoutY="234.0" prefHeight="35.0" prefWidth="180.0" promptText="Selectionnez le fichier" visibleRowCount="4" />
       <Label layoutX="288.0" layoutY="279.0" text="Fichiers sélectionné :">
          <font>

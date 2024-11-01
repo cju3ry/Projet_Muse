@@ -63,20 +63,20 @@
       </Label>
       <Label alignment="CENTER" layoutX="353.0" layoutY="285.0" prefHeight="30.0" prefWidth="227.0" text="Ip de l'ordinateur :">
          <font>
-            <Font name="Calibri" size="20.0" />
+            <Font name="Calibri" size="15.0" />
          </font>
       </Label>
       <Label fx:id="textAffichageIp" alignment="CENTER" layoutX="561.0" layoutY="285.0" prefHeight="30.0" prefWidth="227.0">
          <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="215.0" layoutY="338.0" prefHeight="30.0" prefWidth="845.0" text="Ecouter les demandes de fichiers                                            Arreter d'ecouter les demandes de fichiers">
+         <font>
             <Font name="Calibri" size="20.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="215.0" layoutY="338.0" prefHeight="30.0" prefWidth="845.0" text="Cliquez ici pour ecouter les demandes de fichiers">
-         <font>
-            <Font name="Calibri" size="25.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnEcouterDemandeFichiers" layoutX="513.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ecouterDemandeFichiers" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="Ecouter">
+      <Button fx:id="btnEcouterDemandeFichiers" layoutX="257.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ecouterDemandeFichiers" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: #2E9CCA;" text="Ecouter">
          <font>
             <Font name="Calibri" size="25.0" />
          </font>
@@ -84,10 +84,18 @@
             <Insets />
          </opaqueInsets>
       </Button>
-      <Label fx:id="labelEcouteLancee" alignment="CENTER" layoutX="513.0" layoutY="484.0" prefHeight="30.0" prefWidth="250.0">
+      <Label fx:id="labelEcouteLancee" alignment="CENTER" layoutX="513.0" layoutY="525.0" prefHeight="30.0" prefWidth="250.0">
          <font>
             <Font name="Calibri" size="25.0" />
          </font>
       </Label>
+      <Button fx:id="btnArreterEcouter" layoutX="769.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#arreterEcouter" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: F76C6C;" text="Arreter">
+         <font>
+            <Font name="Calibri" size="25.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Button>
    </children>
 </AnchorPane>
