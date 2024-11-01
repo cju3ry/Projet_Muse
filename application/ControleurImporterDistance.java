@@ -143,7 +143,7 @@ public class ControleurImporterDistance {
     private DonneesApplication donnees = new DonneesApplication();
     public void initialize() {
     	btnDemanderFichier.setDisable(true);
-        // Ajouter les options au ComboBox
+
         conboBoxFichier.getItems().clear();
         conboBoxFichier.getItems().addAll("Selectionner le fichier", "Employés", "Conférenciers", "Expositions", "Visites");
         conboBoxFichier.getSelectionModel().select("Selectionner le fichier");
@@ -169,15 +169,37 @@ public class ControleurImporterDistance {
     
     @FXML
     void recupIp(ActionEvent event) {
-    	ipServ = textIpServ.getText();
-    	ipEstChoisit = true;
-    	mettreAJourEtatBtnDemande();
-    	System.out.print("L'ip du sreveur est " + ipServ);
+        String ipPattern =
+                "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        ipServ = textIpServ.getText();
+        if (ipServ.matches(ipPattern)) {
+            ipEstChoisit = true;
+            mettreAJourEtatBtnDemande();
+            System.out.print("L'ip du serveur est " + ipServ);
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText("Adresse IP invalide");
+            alert.setContentText("Veuillez entrer une adresse IP valide.\nExemple : 192.168.1.22 " +
+                                 "\nLe format a respecter est : xxx.xxx.xxx.xxx");
+            alert.showAndWait();
+        }
     }
     
     @FXML
 
     void demanderFichier(ActionEvent event) {
+        // Vérifier si le fichier demandé a déjà été importé
+        if (("employes".equals(getRequest()) && donneesEmployesChargees) ||
+                ("conferenciers".equals(getRequest()) && donneesConferencierChargees) ||
+                ("expositions".equals(getRequest()) && donneesExpositionsChargees) ||
+                ("visites".equals(getRequest()) && donneesVisitesChargees)) {
+
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setHeaderText("Fichier déjà importé");
+            alert.setContentText("Le fichier \"" + fichierSelectionne + "\" a déjà été importé.");
+            alert.showAndWait();
+            return;
+        }
         //si l'utilisateur n'a pas choisi les fichiers des conférenciers, employés et expositions avant visites il ne peut pas importer les visites
         if ("visites".equals(getRequest()) && !verifierImportationsPrealables()) {
             Alert alert = new Alert(AlertType.WARNING);
@@ -190,10 +212,7 @@ public class ControleurImporterDistance {
         Task<Void> importTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-            	//TODO faire la verification du format de l'adresse ip et faire un traitement si jamais ce n'est pas la bonne car cela va lever une ecxption
-                
-            	//TODO faire en sorte de verfier que si la connection est refusée l'utilisateur soit averti
-            	String serverAddress = ipServ; 
+            	String serverAddress = ipServ;
                 int port = 12345;
 
                 try (Socket socket = new Socket(serverAddress, port);
@@ -205,6 +224,12 @@ public class ControleurImporterDistance {
 
                     // Envoi de la requête au serveur
                     writer.println(getRequest());
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setHeaderText("Demande envoyée");
+                        alert.setContentText("Votre demande a été envoyée au serveur.");
+                        alert.showAndWait();
+                    });
                     String message = reader.readLine();
                     System.out.println("Message reçu du serveur : " + message);
                     if ("REFUS".equals(message)) {
@@ -238,14 +263,20 @@ public class ControleurImporterDistance {
                         System.out.println("Après avoir appelé importerFichierSelonSelection()");
                         Platform.runLater(() -> {
                         Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setHeaderText("Le fichier a été reçu");
+                        alert.setHeaderText("Le fichier a été reçu et les données ont été importées avec succès.");
                         alert.showAndWait();
                     });
-    				//TODO rajouter la posibilité d'ouvrir un filechooser pour voir ou le fichier c'est importé
                     }
 
                    
                 } catch (IOException e) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setHeaderText("Erreur de connexion");
+                        alert.setContentText("Impossible de se connecter au serveur. Veuillez vérifier " +
+                                             "l'adresse IP et le port.\nVérifiez également que le serveur est en écoute.");
+                        alert.showAndWait();
+                    });
                     e.printStackTrace();
                 }
                 return null;
@@ -339,6 +370,7 @@ public class ControleurImporterDistance {
         try {
             donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
             donneesEmployesChargees = true;
+            Platform.runLater(() -> labelEmployesImporte.setText("Employés"));
             ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
             strEmployes.append("\n");
             for (int i = 0; i < listeDesEmployes.size(); i++) {
@@ -361,6 +393,7 @@ public class ControleurImporterDistance {
         try {
             donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
             donneesVisitesChargees = true;
+            Platform.runLater(() -> labelVisitesImporte.setText("Visites"));
             ArrayList<Visite> listeDesVisites = donnees.getVisites();
             strVisites.append("\n");
             for (int i = 0; i < listeDesVisites.size(); i++) {
@@ -381,6 +414,7 @@ public class ControleurImporterDistance {
         try {
             donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
             donneesExpositionsChargees = true;
+            Platform.runLater(() -> labelExpositionsImporte.setText("Expositions"));
             ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
             strExpositions.append("\n");
             for (int i = 0; i < listeDesExpositions.size(); i++) {

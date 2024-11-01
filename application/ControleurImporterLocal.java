@@ -12,6 +12,7 @@ import gestion_donnees.Exposition;
 import gestion_donnees.ExpositionException;
 import gestion_donnees.Visite;
 import gestion_donnees.VisiteException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -166,8 +167,24 @@ public class ControleurImporterLocal {
 
     @FXML
     private Label labelFichierVisites;
-    
-    @FXML
+
+	@FXML
+	private Label labelConferencierImporte;
+
+	@FXML
+	private Label labelEmployesImporte;
+
+	@FXML
+	private Label labelExpositionsImporte;
+
+
+	@FXML
+	private Label labelVisitesImporte;
+
+	private DonneesApplication donnees = new DonneesApplication();
+
+
+	@FXML
     public void initialize() {
         // Désactive le bouton d'importation des visites au démarrage
         btnImporterFichiervisites.setDisable(true);
@@ -277,11 +294,12 @@ public class ControleurImporterLocal {
     //TODO si 2 indisponibilité les meme 16/10/2024 et 16/10/2024 en mettre qu'une 
     @FXML
     void importerFichierConferenciers(ActionEvent event) {
-    	DonneesApplication donnees = new DonneesApplication();
     	strConferencier = new StringBuilder();
     	try {
 			donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
 			importationConferenciersOk = true;
+			labelConferencierImporte.setText("Conférenciers");
+
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux conférenciers, on était importées dans l'application");
@@ -309,11 +327,11 @@ public class ControleurImporterLocal {
     //TODO rajouter nom : et prenom : a la lgine dans le to String d'employes 
     @FXML
     void importerFichierEmployes(ActionEvent event) {
-    	DonneesApplication donnees = new DonneesApplication();
-    	strEmployes = new StringBuilder();
+		strEmployes = new StringBuilder();
     	try {
 			donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
 			importationEmployesOk = true;
+			labelEmployesImporte.setText("Employés");
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux employes, on était importées dans l'application");
@@ -341,11 +359,11 @@ public class ControleurImporterLocal {
     //TODO enlever les # des mots cle (toString)
     @FXML
     void importerFichierExpositions(ActionEvent event) {
-    	DonneesApplication donnees = new DonneesApplication();
-    	strExpositions = new StringBuilder();
+		strExpositions = new StringBuilder();
     	try {
 			donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
 			importationExpositionsOk = true;
+			labelExpositionsImporte.setText("Expositions");
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
 	    	alerteOk.setTitle("Importation réussie");
 	    	alerteOk.setHeaderText("Les données relatives aux expositions, on était importées dans l'application");
@@ -373,10 +391,6 @@ public class ControleurImporterLocal {
 
     @FXML
     void importerFichierVisites(ActionEvent event) {
-    	DonneesApplication donnees = new DonneesApplication();
-		donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
-		donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
-		donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
 		strVisites = new StringBuilder();
 		
     	try {
@@ -386,7 +400,8 @@ public class ControleurImporterLocal {
 	    	alerteOk.setHeaderText("Les données relatives aux visites, on était importées dans l'application");
 	    	alerteOk.showAndWait();
 	    	donneesVisitesChargees = true;
-	        ArrayList<Visite> listeDesVistes = donnees.getVisites();
+			labelVisitesImporte.setText("Visites");
+			ArrayList<Visite> listeDesVistes = donnees.getVisites();
 	        strVisites.append("\n");
 	        for (int i = 0; i < listeDesVistes.size(); i++) {
 	        	strVisites.append(listeDesVistes.get(i).toString() + "\n");

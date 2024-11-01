@@ -46,6 +46,9 @@ public class ControleurExporter {
 	    @FXML
 	    private Button btnRevenirArriere;
 
+		@FXML
+		private Button btnArreterEcouter;
+
 	    @FXML
 	    private Label textAffichageIp;
 	    
@@ -56,8 +59,10 @@ public class ControleurExporter {
 	    private Label labelEcouteLancee;
 	    
 	    private Thread serverThread;
-	    
-		@FXML
+
+		private ServerSocket serverSocket;
+
+	@FXML
 		void ecouterDemandeFichiers(ActionEvent event) {
 			if (!ControleurImporterLocal.isDonneesConferencierChargees()
 					|| !ControleurImporterLocal.isDonneesEmployesChargees()
@@ -69,11 +74,13 @@ public class ControleurExporter {
 			                        + "sur votre poste avant de pouvoir les exporter");
 				alert.showAndWait();
 			} else {
-				btnEcouterDemandeFichiers.setDisable(true);
 				labelEcouteLancee.setText("L'écoute est lancée");
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setHeaderText("L'écoute a été lancée");
+				alert.showAndWait();
 				int port = 12345; // Port d'écoute
 				serverThread = new Thread(() -> {
-					try (ServerSocket serverSocket = new ServerSocket(port)) {
+					try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
 						System.out.println("Serveur en attente de connexion...");
 						while (true) {
 							// Attente d'une connexion
@@ -141,8 +148,6 @@ public class ControleurExporter {
 		                    output.write("START\n".getBytes(StandardCharsets.UTF_8));
 		                    output.flush();
 		                    sendFile(socket, cheminFinal); // Envoyer le fichier si l'utilisateur accepte
-		                    btnEcouterDemandeFichiers.setDisable(false);
-		                    labelEcouteLancee.setText("Aucune écoute en cours");
 	                	} catch (IOException e) {
 	                        e.printStackTrace();
 	                    }
@@ -155,8 +160,6 @@ public class ControleurExporter {
 	                    output.write("REFUS".getBytes(StandardCharsets.UTF_8));
 	                    output.flush();
 	                    System.out.println("Demande refusée par l'utilisateur.");
-	                    btnEcouterDemandeFichiers.setDisable(false);
-	                    labelEcouteLancee.setText("Aucune écoute en cours");
 	                    socket.close(); // Fermer la connexion si refusé
 	                    } catch (IOException e) {
 	                        e.printStackTrace();
@@ -218,7 +221,27 @@ public class ControleurExporter {
 
     }
 
-    @FXML
+	@FXML
+	void arreterEcouter(ActionEvent event) {
+		if (serverThread != null && serverThread.isAlive()) {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			serverThread.interrupt();
+			serverThread = null;
+			labelEcouteLancee.setText("Aucune écoute en cours");
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setHeaderText("L'écoute a été arrêtée");
+			alert.showAndWait();
+
+		}
+	}
+
+
+
+		@FXML
     void choisirFichierConferencier(ActionEvent event) {
 
     }
