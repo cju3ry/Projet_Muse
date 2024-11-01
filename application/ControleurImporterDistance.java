@@ -92,6 +92,20 @@ public class ControleurImporterDistance {
     
     @FXML
     private Button btnOkIP;
+
+
+    @FXML
+    private Label labelConferencierImporte;
+
+    @FXML
+    private Label labelEmployesImporte;
+
+    @FXML
+    private Label labelExpositionsImporte;
+
+
+    @FXML
+    private Label labelVisitesImporte;
     
 
     @FXML
@@ -162,7 +176,16 @@ public class ControleurImporterDistance {
     }
     
     @FXML
+
     void demanderFichier(ActionEvent event) {
+        //si l'utilisateur n'a pas choisi les fichiers des conférenciers, employés et expositions avant visites il ne peut pas importer les visites
+        if ("visites".equals(getRequest()) && !verifierImportationsPrealables()) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setHeaderText("Importation impossible");
+            alert.setContentText("Vous devez d'abord importer les fichiers des conférenciers, employés et expositions.");
+            alert.showAndWait();
+            return;
+        }
         // Créer un Task pour l'importation
         Task<Void> importTask = new Task<>() {
             @Override
@@ -232,6 +255,9 @@ public class ControleurImporterDistance {
         // Lancer le Task dans un nouveau thread
         new Thread(importTask).start();
     }
+    private boolean verifierImportationsPrealables() {
+        return donneesConferencierChargees && donneesEmployesChargees && donneesExpositionsChargees;
+    }
     private void importerFichierSelonSelection() {
         System.out.println("Début de importerFichierSelonSelection");
         System.out.print("le nom du fichier est " + fichierRecu);
@@ -292,6 +318,7 @@ public class ControleurImporterDistance {
         try {
             donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
             donneesConferencierChargees = true;
+            Platform.runLater(() -> labelConferencierImporte.setText("Conférenciers"));
             ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
             strConferencier.append("\n");
             for (int i = 0; i < listeDesConfernciers.size(); i++) {
