@@ -60,6 +60,16 @@ public class DonneesApplication {
 	 * @throws EmployeException si une erreur survient lors de l'importation.
 	 */
 	public static void importerEmployes(ArrayList<String> arraysEmployes) {
+		String[] verifEntete = arraysEmployes.get(0).split(";");
+		System.out.println(verifEntete[0]);
+		System.out.println(verifEntete[1]);
+		System.out.println(verifEntete[2]);
+		System.out.println(verifEntete[3]);
+		if (verifEntete.length == 4 && verifEntete[0].trim().equalsIgnoreCase("Ident") && verifEntete[1].trim().equalsIgnoreCase("Nom") && verifEntete[2].trim().equalsIgnoreCase("Prenom") && verifEntete[3].trim().equalsIgnoreCase("Telephone")) {
+			//Empty body car si la ligne est correcte, on ne fait rien
+		} else {
+			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
+		}
 		//initialisesDonnees();
 	    for (int i = 1; i < arraysEmployes.size(); i++) {
 	        String[] tempEmployes = arraysEmployes.get(i).split(";");
@@ -95,7 +105,17 @@ public class DonneesApplication {
 	 * @throws ConferencierException si une erreur survient lors de l'importation.
 	 */
 	public void importerConferenciers(ArrayList<String> arraysConferenciers) {
-		//initialisesDonnees();
+		String[] verifEntete = arraysConferenciers.get(0).split(";");
+		if (verifEntete.length < 7 || !verifEntete[0].trim().equalsIgnoreCase("Ident")
+				|| !verifEntete[1].trim().equalsIgnoreCase("Nom")
+				|| !verifEntete[2].trim().equalsIgnoreCase("Prenom")
+				|| !verifEntete[3].trim().equalsIgnoreCase("Specialité")
+				|| !verifEntete[4].trim().equalsIgnoreCase("Telephone")
+				|| !verifEntete[5].trim().equalsIgnoreCase("Employe")
+				|| !verifEntete[6].trim().equalsIgnoreCase("Indisponibilite")) {
+			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
+		}
+
 		boolean estEmployes = false;
 	    for (int i = 1; i < arraysConferenciers.size(); i++) {
 	        String[] tempConferenciers = arraysConferenciers.get(i).split(";");
@@ -147,6 +167,18 @@ public class DonneesApplication {
 	 * @throws ExpositionException si une erreur survient lors de l'importation.
 	 */
 	public static void importerExpositions(ArrayList<String> arraysExpositions) {
+		String[] verifEntete = arraysExpositions.get(0).split(";");
+		if (verifEntete.length != 9 || !verifEntete[0].trim().equalsIgnoreCase("Ident")
+				|| !verifEntete[1].trim().equalsIgnoreCase("Intitulé")
+				|| !verifEntete[2].trim().equalsIgnoreCase("PériodeDeb")
+				|| !verifEntete[3].trim().equalsIgnoreCase("PériodeFin")
+				|| !verifEntete[4].trim().equalsIgnoreCase("nombre")
+				|| !verifEntete[5].trim().equalsIgnoreCase("motclé")
+				|| !verifEntete[6].trim().equalsIgnoreCase("résumé")
+				|| !verifEntete[7].trim().equalsIgnoreCase("Début")
+				|| !verifEntete[8].trim().equalsIgnoreCase("Fin")) {
+			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
+		}
 		//initialisesDonnees();
 		boolean estTemporaire = false;
 	    for (int i = 1; i < arraysExpositions.size(); i++) {
@@ -217,6 +249,19 @@ public class DonneesApplication {
 	 * @throws EmployeException si une erreur survient lors de l'importation.
 	 */
 	public static void importerVisites(ArrayList<String> arraysVisites)  {
+		String[] verifEntete = arraysVisites.get(0).split(";");
+		if (verifEntete.length != 10
+				|| !verifEntete[0].trim().equalsIgnoreCase("Ident")
+				|| !verifEntete[1].trim().equalsIgnoreCase("Exposition")
+				|| !verifEntete[2].trim().equalsIgnoreCase("Conférencier")
+				|| !verifEntete[3].trim().equalsIgnoreCase("Employé")
+				|| !verifEntete[4].trim().equalsIgnoreCase("date")
+				|| !verifEntete[5].trim().equalsIgnoreCase("heuredebut")
+				|| !verifEntete[6].trim().equalsIgnoreCase("Intitulé")
+				|| !verifEntete[7].trim().equalsIgnoreCase("Téléphone")
+				|| !verifEntete[8].trim().equalsIgnoreCase("")) {
+			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
+		}
 		//initialisesDonnees();
 		boolean	estVisite = false;
 		for (int i = 1; i < arraysVisites.size(); i++) {
