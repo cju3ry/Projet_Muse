@@ -75,6 +75,15 @@ public class Exposition {
 	public String getId() {
 		return this.id;
 	}
+	
+	/**
+	 * Retourne l'intitule de l'exposition.
+	 *
+	 * @return l'intitule de l'exposition.
+	 */
+	public String getIntitule() {
+		return this.intitule;
+	}
 
 	/**
 	 * Définit la période de l'exposition.
