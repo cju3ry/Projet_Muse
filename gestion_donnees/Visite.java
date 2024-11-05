@@ -62,6 +62,26 @@ public class Visite {
 	public String getId() {
 		return this.id;
 	}
+	
+	// Retourne l'intitule de la visite
+	public String getIntitule() {
+		return this.intitule;
+	}
+	
+	// Retourne le numéro de téléphone de la visite
+	public String getNumTel() {
+		return this.telephone;
+	}
+	
+	// Retourne la date de la visite
+	public Date getDateVisite() {
+		return this.dateVisite;
+	}
+	
+	// Retourne l'heure de la visite
+	public Date getheureVisite() {
+		return this.heureVisite;
+	}
 
 	/**
 	 * Retourne une représentation sous forme de chaîne de caractères de la Visite.

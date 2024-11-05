@@ -197,4 +197,13 @@ public class Conferencier {
 	public String getNumTel() {
 		return this.numTel;
 	}
+	
+	/**
+	 * Retourne le booléen pour savoir si le conférencier est interne ou externe.
+	 *
+	 * @return un booléen pour savoir si le conférencier est interne ou externe.
+	 */
+	public boolean getEstEmploye() {
+		return this.estEmploye;
+	}
 }
