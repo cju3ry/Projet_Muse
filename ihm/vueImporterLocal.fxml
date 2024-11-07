@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControleurImporterLocal">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="60.0" layoutX="20.0" layoutY="16.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="1040.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="20.0" layoutY="102.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="150.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="214.0" layoutY="102.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 40; -fx-arc-width: 40;" width="845.0" />
+      <Button fx:id="btnImporter" layoutX="35.0" layoutY="123.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importer" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font></Button>
+      <Button fx:id="btnQuitter" layoutX="35.0" layoutY="651.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#quitter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #F76C6C;" text="Quitter">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font></Button>
+      <Label layoutX="455.0" layoutY="31.0" text="DATA BRIDGE">
+         <font>
+            <Font name="Calibri Bold" size="26.0" />
+         </font>
+      </Label>
+      <Text layoutX="438.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Slectionnez les 4 fichiers csv à importer">
+         <font>
+            <Font name="Calibri" size="25.0" />
+         </font>
+      </Text>
+      <Button fx:id="btnExporter" layoutX="35.0" layoutY="186.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exporter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Exporter">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnConsulter" layoutX="35.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#consulter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Consulter">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnNotice" layoutX="35.0" layoutY="312.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#notice" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Notice">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRevenirArriere" layoutX="778.0" layoutY="603.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#revenirArriere" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: F76C6C;" text="Revenir en arrière">
+         <font>
+            <Font name="Calibri" size="25.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Button>
+      <Text layoutX="409.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(conférencier, expositions, visites, employés)">
+         <font>
+            <Font name="Calibri" size="25.0" />
+         </font>
+      </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff1c" height="232.0" layoutX="640.0" layoutY="229.0" stroke="#ffffff00" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="200.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff1c" height="232.0" layoutX="431.0" layoutY="229.0" stroke="#ffffff00" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="200.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff1c" height="232.0" layoutX="849.0" layoutY="229.0" stroke="#ffffff00" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="200.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff1c" height="232.0" layoutX="224.0" layoutY="229.0" stroke="#ffffff00" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="200.0" />
+      <Button fx:id="btnImporterFichierConferenciers" layoutX="252.0" layoutY="404.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importerFichierConferenciers" prefHeight="34.0" prefWidth="140.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnChoisirFichierConferenciers" layoutX="249.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierConferencier" prefHeight="25.0" prefWidth="150.0" style="-fx-background-radius: 5; -fx-background-color: #d7dbdd;" text="Choisir un fichier">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelFichierConferencier" layoutX="261.0" layoutY="348.0" text="Fichier non séléctionné">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Label>
+      <Line endX="78.0" layoutX="319.0" layoutY="374.0" startX="-81.0" />
+      <Button fx:id="btnChoisirFichierEmployes" layoutX="456.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierEmployes" prefHeight="25.0" prefWidth="150.0" style="-fx-background-radius: 5; -fx-background-color: #d7dbdd;" text="Choisir un fichier">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnImporterFichierEmployes" layoutX="458.0" layoutY="404.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importerFichierEmployes" prefHeight="34.0" prefWidth="140.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelFichierEmployes" layoutX="467.0" layoutY="347.0" text="Fichier non séléctionné" />
+      <Line endX="78.0" layoutX="532.0" layoutY="374.0" startX="-81.0" />
+      <Button fx:id="btnChoisirFichierExpositions" layoutX="660.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierExpositions" prefHeight="25.0" prefWidth="150.0" style="-fx-background-radius: 5; -fx-background-color: #d7dbdd;" text="Choisir un fichier">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnImporterFichiervisites" layoutX="879.0" layoutY="404.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importerFichierVisites" prefHeight="34.0" prefWidth="140.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelFichierExpositions" layoutX="679.0" layoutY="347.0" text="Fichier non séléctionné" />
+      <Line endX="78.0" layoutX="741.0" layoutY="374.0" startX="-81.0" />
+      <Button fx:id="btnChoisirFichierVisites" layoutX="875.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#choisirFichierVisites" prefHeight="25.0" prefWidth="150.0" style="-fx-background-radius: 5; -fx-background-color: #d7dbdd;" text="Choisir un fichier">
+         <font>
+            <Font name="Calibri" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnImporterFichierExpositions" layoutX="670.0" layoutY="402.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importerFichierExpositions" prefHeight="34.0" prefWidth="140.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelFichierVisites" layoutX="886.0" layoutY="346.0" text="Fichier non séléctionné" />
+      <Line endX="78.0" layoutX="951.0" layoutY="373.0" startX="-81.0" />
+      <Label alignment="CENTER" layoutX="231.0" layoutY="250.0" prefHeight="34.0" prefWidth="186.0" style="-fx-background-color: #83C7EA; -fx-background-radius: 5;" text="Conférencier">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="857.0" layoutY="250.0" prefHeight="34.0" prefWidth="186.0" style="-fx-background-color: #83C7EA; -fx-background-radius: 5;" text="Visites">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="647.0" layoutY="250.0" prefHeight="34.0" prefWidth="186.0" style="-fx-background-color: #83C7EA; -fx-background-radius: 5;" text="Expositions">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="438.0" layoutY="250.0" prefHeight="34.0" prefWidth="186.0" style="-fx-background-color: #83C7EA; -fx-background-radius: 5;" text="Employés">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="242.0" layoutY="517.0" text="Fichiers importés : ">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelEmployesImporte" alignment="CENTER" layoutX="239.0" layoutY="549.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelVisitesImporte" alignment="CENTER" layoutX="239.0" layoutY="609.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelConferencierImporte" alignment="CENTER" layoutX="239.0" layoutY="569.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelExpositionsImporte" alignment="CENTER" layoutX="239.0" layoutY="589.0" prefHeight="18.0" prefWidth="155.0">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
