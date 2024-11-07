@@ -32,6 +32,7 @@ public class Exposition {
 		}
 		this.id = id;
 		this.intitule = intitule;
+		this.estTemporaire = false;
 	}
 
 	/**
@@ -65,6 +66,7 @@ public class Exposition {
 
 		this.id = id;
 		this.intitule = intitule;
+		this.estTemporaire = true;
 	}
 
 	/**

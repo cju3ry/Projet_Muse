@@ -336,18 +336,6 @@ public class DonneesApplication {
 		return visites;
 	}
 
-	public static void importerConferenciers() {
-	}
-
-	public static void importerEmployes() {
-	}
-
-	public static void importerExpositions() {
-	}
-
-	public static void importerVisites() {
-	}
-
 	/**
 	 * Ajoute un employé à la liste des employés.
 	 *

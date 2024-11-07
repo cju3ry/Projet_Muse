@@ -79,7 +79,7 @@ public class Visite {
 	}
 	
 	// Retourne l'heure de la visite
-	public Date getheureVisite() {
+	public Date getHeureVisite() {
 		return this.heureVisite;
 	}
 
