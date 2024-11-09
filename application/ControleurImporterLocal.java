@@ -27,6 +27,11 @@ public class ControleurImporterLocal {
 
 	
 	private static final String MESSAGE_FICHIER_SELECTIONNE = "     Fichier séléctionné";
+	private static String initialFilePath = null;
+
+	public static String getInitialFilePath() {
+		return initialFilePath;
+	}
 
 
 	public static String getCheminFichierEmployes() {
@@ -46,8 +51,6 @@ public class ControleurImporterLocal {
 	private static boolean cheminFichierExpositionsChoisit = false;
 	
 	private static boolean cheminFichierVisitesChoisit = false;
-
-
 
 	private  static StringBuilder strConferencier;
 	
@@ -214,65 +217,65 @@ public class ControleurImporterLocal {
         btnImporterFichierExpositions.setDisable(!(cheminFichierExpositionsChoisit));
     }
 
-    @FXML
-    void choisirFichierConferencier(ActionEvent event) {
-    	File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux conférenciers");
-    	 if (fichier != null) {
-//    	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
-    	        cheminFichierConferenciers = fichier.getAbsolutePath();
-    	        System.out.print("\ncheminFichierConferenciers : " + cheminFichierConferenciers);
-    	    	labelFichierConferencier.setText(MESSAGE_FICHIER_SELECTIONNE);
-    	    	cheminFichierConferencierChoisit = true;
-    	    	mettreAJourEtatBtnImporterConferenciers();
+	@FXML
+	void choisirFichierConferencier(ActionEvent event) {
+		File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux conférenciers");
+		if (fichier != null) {
+			cheminFichierConferenciers = fichier.getAbsolutePath();
+			if (initialFilePath == null) {
+				initialFilePath = cheminFichierConferenciers;
+				System.out.println("Initial file path set to: " + initialFilePath);
+			}
+			labelFichierConferencier.setText(MESSAGE_FICHIER_SELECTIONNE);
+			cheminFichierConferencierChoisit = true;
+			mettreAJourEtatBtnImporterConferenciers();
+		}
+	}
 
-    	    }
-    }
+	@FXML
+	void choisirFichierEmployes(ActionEvent event) {
+		File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux employés");
+		if (fichier != null) {
+			cheminFichierEmployes = fichier.getAbsolutePath();
+			if (initialFilePath == null) {
+				initialFilePath = cheminFichierEmployes;
+				System.out.println("Initial file path set to: " + initialFilePath);
+			}
+			labelFichierEmployes.setText(MESSAGE_FICHIER_SELECTIONNE);
+			cheminFichierEmployesChoisit = true;
+			mettreAJourEtatBtnImporterEmployes();
+		}
+	}
 
-    @FXML
-    void choisirFichierEmployes(ActionEvent event) {
-    	
-    File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux employés");
-   	if (fichier != null) {
-//   	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
-   	        cheminFichierEmployes = fichier.getAbsolutePath();
-   	        System.out.print("\ncheminFichierEmployes : " + cheminFichierEmployes);
-	    	labelFichierEmployes.setText(MESSAGE_FICHIER_SELECTIONNE);
-	    	cheminFichierEmployesChoisit = true;
-	    	mettreAJourEtatBtnImporterEmployes();
+	@FXML
+	void choisirFichierExpositions(ActionEvent event) {
+		File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux expositions");
+		if (fichier != null) {
+			cheminFichierExpositions = fichier.getAbsolutePath();
+			if (initialFilePath == null) {
+				initialFilePath = cheminFichierExpositions;
+				System.out.println("Initial file path set to: " + initialFilePath);
+			}
+			labelFichierExpositions.setText(MESSAGE_FICHIER_SELECTIONNE);
+			cheminFichierExpositionsChoisit = true;
+			mettreAJourEtatBtnImporterExpositions();
+		}
+	}
 
-   	    }
-    }
-    
-
-    @FXML
-    void choisirFichierExpositions(ActionEvent event) {
-
-    File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux expositions");
-   	if (fichier != null) {
-//   	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
-   	        cheminFichierExpositions= fichier.getAbsolutePath();
-   	        System.out.print("\ncheminFichierExpositions : " + cheminFichierExpositions);
-	    	labelFichierExpositions.setText(MESSAGE_FICHIER_SELECTIONNE);
-	    	cheminFichierExpositionsChoisit = true;
-	    	mettreAJourEtatBtnImporterExpositions();
-
-   	    }
-    }
-
-    @FXML
-    void choisirFichierVisites(ActionEvent event) {
-        File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux visites");
-       	if (fichier != null) {
-//       	        System.out.println("Fichier sélectionné : " + fichier.getAbsolutePath());
-       	        cheminFichierVisites = fichier.getAbsolutePath();
-       	        System.out.print("\ncheminFichierVisites : " + cheminFichierVisites);     
-    	    	labelFichierVisites.setText(MESSAGE_FICHIER_SELECTIONNE);
-    	    	cheminFichierVisitesChoisit = true;
-    	    	mettreAJourEtatBtnVisites();
-
-       	    }
-        }
-
+	@FXML
+	void choisirFichierVisites(ActionEvent event) {
+		File fichier = ouvrirFileChooser("Choisissez le fichier correspondant aux visites");
+		if (fichier != null) {
+			cheminFichierVisites = fichier.getAbsolutePath();
+			if (initialFilePath == null) {
+				initialFilePath = cheminFichierVisites;
+				System.out.println("Initial file path set to: " + initialFilePath);
+			}
+			labelFichierVisites.setText(MESSAGE_FICHIER_SELECTIONNE);
+			cheminFichierVisitesChoisit = true;
+			mettreAJourEtatBtnVisites();
+		}
+	}
 
     @FXML
     void consulter(ActionEvent event) {
@@ -436,6 +439,14 @@ public class ControleurImporterLocal {
     private File ouvrirFileChooser(String titre) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(titre);
+
+		if (initialFilePath != null) {
+			File initialFile = new File(initialFilePath);
+			fileChooser.setInitialDirectory(initialFile.getParentFile());
+		} else {
+			File userDirectory = new File(System.getProperty("user.home"));
+			fileChooser.setInitialDirectory(userDirectory);
+		}
 
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Fichiers Texte", "*.csv"),

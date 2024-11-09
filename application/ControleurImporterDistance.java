@@ -6,7 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import gestion_donnees.*;
 import javafx.application.Platform;
@@ -105,6 +106,8 @@ public class ControleurImporterDistance {
     @FXML
     private TextField textIpServ;
 
+    long cleCommuneLong = 0;
+
     public static StringBuilder getStrConferencier() {
         return strConferencier;
     }
@@ -159,7 +162,33 @@ public class ControleurImporterDistance {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
 
+    private String dechiffreMessage(String cleCommune) {
+        System.out.print("\ncleCommune est " + cleCommune);
+        cleCommuneLong = Long.parseLong(cleCommune);
+        String messageCrypte = "";
+        try (BufferedReader reader2 = new BufferedReader(new FileReader(getFileName()))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader2.readLine()) != null) {
+                sb.append(line);
+            }
+            messageCrypte = sb.toString();
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier crypté : " + e.getMessage());
+        }
 
+        Crypto vigenere = new Crypto();
+        vigenere.setCleCommune(cleCommuneLong);
+        String messageDechiffre = vigenere.dechiffrerVigenere(messageCrypte);
+        messageDechiffre = messageDechiffre.substring(1, messageDechiffre.length() - 1);
+        //messageDechiffre = messageDechiffre.replaceAll("(?<!;),", "");
+        messageDechiffre = messageDechiffre.replaceAll(",\\sN", "N");
+        messageDechiffre = messageDechiffre.replaceAll(",\\sC", "C");
+        messageDechiffre = messageDechiffre.replaceAll(",\\sE", "E");
+        messageDechiffre = messageDechiffre.replaceAll(",\\sR", "R");
+
+        return messageDechiffre;
+    }
 
     @FXML
     void recupIp(ActionEvent event) {
@@ -173,14 +202,16 @@ public class ControleurImporterDistance {
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText("Adresse IP invalide");
-            alert.setContentText("Veuillez entrer une adresse IP valide.\nExemple : 192.168.1.22 " +
-                    "\nLe format a respecter est : xxx.xxx.xxx.xxx");
+            alert.setContentText("""
+                    Veuillez entrer une adresse IP valide.
+                    Exemple : 192.168.1.22 \
+                   \s
+                    Le format a respecter est : xxx.xxx.xxx.xxx""");
             alert.showAndWait();
         }
     }
 
     @FXML
-
     void demanderFichier(ActionEvent event) {
         // Vérifier si le fichier demandé a déjà été importé
         if (("employes".equals(getRequest()) && donneesEmployesChargees) ||
@@ -205,7 +236,7 @@ public class ControleurImporterDistance {
         // Créer un Task pour l'importation
         Task<Void> importTask = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 String serverAddress = ipServ;
                 int port = 12345;
 
@@ -241,9 +272,6 @@ public class ControleurImporterDistance {
                     }
                     if ("START".equals(message)) {
                     	System.out.print("\nle serveur a accepté l'envoi");
-                        System.out.print("\ncleCommune est " + cleCommune);
-                        long cleCommuneLong = Long.parseLong(cleCommune);
-                        System.out.print("le serveur a aceppeté l'envoi");
                         byte[] buffer = new byte[4096];
                         int bytesRead;
 
@@ -252,27 +280,7 @@ public class ControleurImporterDistance {
                             fileOutput.write(buffer, 0, bytesRead);
                         }
 
-                      String messageCrypte = "";
-						try (BufferedReader reader2 = new BufferedReader(new FileReader(getFileName()))) {
-							StringBuilder sb = new StringBuilder();
-							String line;
-							while ((line = reader2.readLine()) != null) {
-								sb.append(line);
-							}
-							messageCrypte = sb.toString();
-						} catch (IOException e) {
-							System.err.println("Erreur lors de la lecture du fichier crypté : " + e.getMessage());
-						}
-
-                        Crypto vigenere = new Crypto();
-                        vigenere.setCleCommune(cleCommuneLong);
-						String messageDechiffre = vigenere.dechiffrerVigenere(messageCrypte);
-                        messageDechiffre = messageDechiffre.substring(1, messageDechiffre.length() - 1);
-                        //messageDechiffre = messageDechiffre.replaceAll("(?<!;),", "");
-                        messageDechiffre = messageDechiffre.replaceAll(",\\sN", "N");
-                        messageDechiffre = messageDechiffre.replaceAll(",\\sC", "C");
-                        messageDechiffre = messageDechiffre.replaceAll(",\\sE", "E");
-                        messageDechiffre = messageDechiffre.replaceAll(",\\sR", "R");
+                        String messageDechiffre = dechiffreMessage(cleCommune);
 
                         System.out.print("\nLe message déchiffré est : " + messageDechiffre);
                         try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(getFileName()))) {
@@ -305,7 +313,7 @@ public class ControleurImporterDistance {
                                 "l'adresse IP et le port.\nVérifiez également que le serveur est en écoute.");
                         alert.showAndWait();
                     });
-                    e.printStackTrace();
+                    Logger.getLogger(ControleurImporterDistance.class.getName()).log(Level.SEVERE, "Erreur de connexion au serveur", e);
                 }
                 return null;
             }
@@ -346,26 +354,26 @@ public class ControleurImporterDistance {
 
     // Méthode pour obtenir la requête en fonction du fichier sélectionné
     private String getRequest() {
-        switch (fichierSelectionne) {
-            case "Employés": return "employes";
-            case "Conférenciers": return "conferenciers";
-            case "Expositions": return "expositions";
-            case "Visites": return "visites";
-            default: return "";
-        }
+	    return switch (fichierSelectionne) {
+		    case "Employés" -> "employes";
+		    case "Conférenciers" -> "conferenciers";
+		    case "Expositions" -> "expositions";
+		    case "Visites" -> "visites";
+		    default -> "";
+	    };
     }
 
     // Méthode pour obtenir le nom du fichier de sortie en fonction du fichier sélectionné
     private String getFileName() {
         String userHome = System.getProperty("user.home");
         String downloadDir = userHome + "/Downloads/";
-        switch (fichierSelectionne) {
-            case "Employés": return downloadDir + "employesRecu.csv";
-            case "Conférenciers": return downloadDir + "conferenciersRecu.csv";
-            case "Expositions": return downloadDir + "expositionsRecu.csv";
-            case "Visites": return downloadDir + "visitesRecu.csv";
-            default: return downloadDir + "fichierRecu.csv";
-        }
+	    return switch (fichierSelectionne) {
+		    case "Employés" -> downloadDir + "employesRecu.csv";
+		    case "Conférenciers" -> downloadDir + "conferenciersRecu.csv";
+		    case "Expositions" -> downloadDir + "expositionsRecu.csv";
+		    case "Visites" -> downloadDir + "visitesRecu.csv";
+		    default -> downloadDir + "fichierRecu.csv";
+	    };
     }
 
 
@@ -380,9 +388,9 @@ public class ControleurImporterDistance {
             Platform.runLater(() -> labelConferencierImporte.setText("Conférenciers"));
             ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
             strConferencier.append("\n");
-            for (int i = 0; i < listeDesConfernciers.size(); i++) {
-                strConferencier.append(listeDesConfernciers.get(i).toString() + "\n");
-            }
+	        for (Conferencier listeDesConferncier : listeDesConfernciers) {
+		        strConferencier.append(listeDesConferncier.toString()).append("\n");
+	        }
         } catch (IllegalArgumentException e) {
             Alert alerteNok = new Alert(AlertType.WARNING);
             alerteNok.setTitle("Importation échouée");
@@ -396,14 +404,14 @@ public class ControleurImporterDistance {
         String userHome = System.getProperty("user.home");
         cheminFichierEmployes = userHome + "/Downloads/employesRecu.csv";
         try {
-            donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
+            DonneesApplication.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
             donneesEmployesChargees = true;
             Platform.runLater(() -> labelEmployesImporte.setText("Employés"));
             ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
             strEmployes.append("\n");
-            for (int i = 0; i < listeDesEmployes.size(); i++) {
-                strEmployes.append(listeDesEmployes.get(i).toString() + "\n");
-            }
+	        for (Employe listeDesEmploye : listeDesEmployes) {
+		        strEmployes.append(listeDesEmploye.toString()).append("\n");
+	        }
         } catch (IllegalArgumentException e) {
             Alert alerteNok = new Alert(AlertType.WARNING);
             alerteNok.setTitle("Importation échouée");
@@ -419,14 +427,14 @@ public class ControleurImporterDistance {
         String userHome = System.getProperty("user.home");
         cheminFichierVisites = userHome + "/Downloads/visitesRecu.csv";
         try {
-            donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
+            DonneesApplication.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
             donneesVisitesChargees = true;
             Platform.runLater(() -> labelVisitesImporte.setText("Visites"));
             ArrayList<Visite> listeDesVisites = donnees.getVisites();
             strVisites.append("\n");
-            for (int i = 0; i < listeDesVisites.size(); i++) {
-                strVisites.append(listeDesVisites.get(i).toString() + "\n");
-            }
+	        for (Visite listeDesVisite : listeDesVisites) {
+		        strVisites.append(listeDesVisite.toString()).append("\n");
+	        }
         } catch (IllegalArgumentException e) {
             Alert alerteNok = new Alert(AlertType.WARNING);
             alerteNok.setTitle("Importation échouée");
@@ -440,14 +448,14 @@ public class ControleurImporterDistance {
         String userHome = System.getProperty("user.home");
         String cheminFichierExpositions = userHome + "/Downloads/expositionsRecu.csv";
         try {
-            donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
+            DonneesApplication.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
             donneesExpositionsChargees = true;
             Platform.runLater(() -> labelExpositionsImporte.setText("Expositions"));
             ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
             strExpositions.append("\n");
-            for (int i = 0; i < listeDesExpositions.size(); i++) {
-                strExpositions.append(listeDesExpositions.get(i).toString() + "\n");
-            }
+	        for (Exposition listeDesExposition : listeDesExpositions) {
+		        strExpositions.append(listeDesExposition.toString()).append("\n");
+	        }
         } catch (IllegalArgumentException e) {
             Alert alerteNok = new Alert(AlertType.WARNING);
             alerteNok.setTitle("Importation échouée");
