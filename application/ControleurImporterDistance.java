@@ -1,12 +1,6 @@
 package application;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,17 +21,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterDistance {
-	
-	
-	private static boolean ipEstChoisit = false;
-	
-	private static boolean fichierEstChoisit = false;
-	
-	private String fichierSelectionne;
-	
-	private String fichierRecu = "";
-	
-	private String ipServ;
+
+
+    private static boolean ipEstChoisit = false;
+
+    private static boolean fichierEstChoisit = false;
+
+    private String fichierSelectionne;
+
+    private String fichierRecu = "";
+
+    private String ipServ;
 
     private static StringBuilder strConferencier;
 
@@ -80,16 +74,16 @@ public class ControleurImporterDistance {
 
     @FXML
     private Button btnRevenirArriere;
-    
+
     @FXML
     private Label labelFichierSelectionne;
 
     @FXML
     private ComboBox<String> conboBoxFichier;
-    
+
     @FXML
     private Button btnDemanderFichier;
-    
+
     @FXML
     private Button btnOkIP;
 
@@ -106,7 +100,7 @@ public class ControleurImporterDistance {
 
     @FXML
     private Label labelVisitesImporte;
-    
+
 
     @FXML
     private TextField textIpServ;
@@ -142,7 +136,7 @@ public class ControleurImporterDistance {
 
     private DonneesApplication donnees = new DonneesApplication();
     public void initialize() {
-    	btnDemanderFichier.setDisable(true);
+        btnDemanderFichier.setDisable(true);
 
         conboBoxFichier.getItems().clear();
         conboBoxFichier.getItems().addAll("Selectionner le fichier", "Employés", "Conférenciers", "Expositions", "Visites");
@@ -156,17 +150,17 @@ public class ControleurImporterDistance {
                 fichierEstChoisit = true;
                 mettreAJourEtatBtnDemande();
             } else {
-                labelFichierSelectionne.setText(""); 
+                labelFichierSelectionne.setText("");
             }
         });
     }
-    
-    private void mettreAJourEtatBtnDemande() {
-    	btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
-    }
-    
 
-    
+    private void mettreAJourEtatBtnDemande() {
+        btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
+    }
+
+
+
     @FXML
     void recupIp(ActionEvent event) {
         String ipPattern =
@@ -180,11 +174,11 @@ public class ControleurImporterDistance {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText("Adresse IP invalide");
             alert.setContentText("Veuillez entrer une adresse IP valide.\nExemple : 192.168.1.22 " +
-                                 "\nLe format a respecter est : xxx.xxx.xxx.xxx");
+                    "\nLe format a respecter est : xxx.xxx.xxx.xxx");
             alert.showAndWait();
         }
     }
-    
+
     @FXML
 
     void demanderFichier(ActionEvent event) {
@@ -212,14 +206,14 @@ public class ControleurImporterDistance {
         Task<Void> importTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-            	String serverAddress = ipServ;
+                String serverAddress = ipServ;
                 int port = 12345;
 
                 try (Socket socket = new Socket(serverAddress, port);
                      InputStream input = socket.getInputStream();
                      BufferedInputStream bufferedInput = new BufferedInputStream(input);
                      PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                	 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
                      FileOutputStream fileOutput = new FileOutputStream(getFileName())) {
 
                     // Envoi de la requête au serveur
@@ -231,6 +225,7 @@ public class ControleurImporterDistance {
                         alert.showAndWait();
                     });
                     String message = reader.readLine();
+                    String cleCommune = reader.readLine();
                     System.out.println("Message reçu du serveur : " + message);
                     if ("REFUS".equals(message)) {
                         System.out.println("Le serveur a refusé l'envoi du fichier");
@@ -241,40 +236,73 @@ public class ControleurImporterDistance {
                         });
                         fileOutput.close();
                         Files.deleteIfExists(Paths.get(getFileName()));
-                        
-                        
+
+
                     }
                     if ("START".equals(message)) {
-                    System.out.print("le serveur a aceppeté l'envoi");
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
+                    	System.out.print("\nle serveur a accepté l'envoi");
+                        System.out.print("\ncleCommune est " + cleCommune);
+                        long cleCommuneLong = Long.parseLong(cleCommune);
+                        System.out.print("le serveur a aceppeté l'envoi");
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
 
-                    // Lecture et écriture des données reçues
-                    while ((bytesRead = bufferedInput.read(buffer)) != -1) {
-                        fileOutput.write(buffer, 0, bytesRead);
-                    }
+                        // Lecture et écriture des données reçues
+                        while ((bytesRead = bufferedInput.read(buffer)) != -1) {
+                            fileOutput.write(buffer, 0, bytesRead);
+                        }
 
-                    System.out.println("Fichier reçu avec succès !");
-                    //importerFichierConferenciers();
+                      String messageCrypte = "";
+						try (BufferedReader reader2 = new BufferedReader(new FileReader(getFileName()))) {
+							StringBuilder sb = new StringBuilder();
+							String line;
+							while ((line = reader2.readLine()) != null) {
+								sb.append(line);
+							}
+							messageCrypte = sb.toString();
+						} catch (IOException e) {
+							System.err.println("Erreur lors de la lecture du fichier crypté : " + e.getMessage());
+						}
+
+                        Crypto vigenere = new Crypto();
+                        vigenere.setCleCommune(cleCommuneLong);
+						String messageDechiffre = vigenere.dechiffrerVigenere(messageCrypte);
+                        messageDechiffre = messageDechiffre.substring(1, messageDechiffre.length() - 1);
+                        //messageDechiffre = messageDechiffre.replaceAll("(?<!;),", "");
+                        messageDechiffre = messageDechiffre.replaceAll(",\\sN", "N");
+                        messageDechiffre = messageDechiffre.replaceAll(",\\sC", "C");
+                        messageDechiffre = messageDechiffre.replaceAll(",\\sE", "E");
+                        messageDechiffre = messageDechiffre.replaceAll(",\\sR", "R");
+
+                        System.out.print("\nLe message déchiffré est : " + messageDechiffre);
+                        try (BufferedWriter writer2 = new BufferedWriter(new FileWriter(getFileName()))) {
+                            writer2.write(messageDechiffre);
+                            writer2.flush();
+                        } catch (IOException e) {
+                            System.err.println("Erreur lors de l'écriture du fichier déchiffré : " + e.getMessage());
+                        }
+
+                        System.out.println("Fichier reçu avec succès !");
+                        //importerFichierConferenciers();
                         System.out.println("avant avoir appelé importerFichierSelonSelection()");
                         System.out.print("le nom du fichier requete est " + getRequest());
                         fichierRecu = getRequest();
                         importerFichierSelonSelection();
                         System.out.println("Après avoir appelé importerFichierSelonSelection()");
                         Platform.runLater(() -> {
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setHeaderText("Le fichier a été reçu et les données ont été importées avec succès.");
-                        alert.showAndWait();
-                    });
+                            Alert alert = new Alert(AlertType.INFORMATION);
+                            alert.setHeaderText("Le fichier a été reçu et les données ont été importées avec succès.");
+                            alert.showAndWait();
+                        });
                     }
 
-                   
+
                 } catch (IOException e) {
                     Platform.runLater(() -> {
                         Alert alert = new Alert(AlertType.ERROR);
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Impossible de se connecter au serveur. Veuillez vérifier " +
-                                             "l'adresse IP et le port.\nVérifiez également que le serveur est en écoute.");
+                                "l'adresse IP et le port.\nVérifiez également que le serveur est en écoute.");
                         alert.showAndWait();
                     });
                     e.printStackTrace();
@@ -429,10 +457,10 @@ public class ControleurImporterDistance {
         }
     }
 
-    
+
     @FXML
     void importer(ActionEvent event) {
-    	Main.setPageImporter();
+        Main.setPageImporter();
     }
 
     @FXML
@@ -441,24 +469,24 @@ public class ControleurImporterDistance {
     }
     @FXML
     void exporter(ActionEvent event) {
-    	Main.setPageExporter();
+        Main.setPageExporter();
     }
     @FXML
     void notice(ActionEvent event) {
-    	Main.afficherNotice();
+        Main.afficherNotice();
     }
     @FXML
     void consulter(ActionEvent event) {
-    	Main.setPageConsulter();
+        Main.setPageConsulter();
     }
     @FXML
     void quitter(ActionEvent event) {
-    	System.exit(0);
+        System.exit(0);
     }
 
     @FXML
     void revenirArriere(ActionEvent event) {
-    	Main.setPageImporter();
+        Main.setPageImporter();
 
     }
 
