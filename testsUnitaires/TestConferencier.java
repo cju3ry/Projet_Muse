@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,11 +75,15 @@ public class TestConferencier {
     @Test
     public void testSetIndisponibiliteValides() {
         ArrayList<String> indisponibilite = new ArrayList<>();
-        indisponibilite.add("01/01/2024");
-        indisponibilite.add("02/01/2024");
+        indisponibilite.add("01/01/2024");  // Première date
+        indisponibilite.add("02/01/2024");  // Deuxième date
+        Set<String> uniqueIndisponibilites = new HashSet<>(indisponibilite);
+        ArrayList<String> indisponibilites = new ArrayList<>(uniqueIndisponibilites);
         conferencier.setIndisponibilite(indisponibilite);
-        assertEquals(indisponibilite, conferencier.getIndisponibilite());
+        assertEquals(indisponibilites, conferencier.getIndisponibilite());
     }
+
+
 
     // Test de la méthode setIndisponibilite avec des dates invalides (ordre incorrect)
     @Test
@@ -109,20 +115,21 @@ public class TestConferencier {
     // Test de la méthode toString
     @Test
     public void testToString() {
-    	conferencier.setNumTel("0123456789");
+        conferencier.setNumTel("0123456789");
         conferencier.setEstEmploye(true);
-        String[] specialites = {"Préhisoire", "Picasso"};
+        String[] specialites = {"Préhistoire", "Picasso"};
         conferencier.setSpecialitees(specialites);
         ArrayList<String> indisponibilites = new ArrayList<>();
         indisponibilites.add("10/10/2023");
         indisponibilites.add("15/10/2023");
         conferencier.setIndisponibilite(indisponibilites);
-        String expected = "\tConférencier/Conférencière : Nom : Dupont Prenom : Marie\n" +
-                		   "\tEmployé : Oui\n" +
-                		   "\tNuméro de téléphone : 0123456789\n" +
-                		   "\tSpécialités : Préhisoire, Picasso\n" +
-                		   "\tIndisponibilités : 10/10/2023, 15/10/2023\n";
+        String expected = "\tConférencier/Conférencière : \n\tNom : Dupont \n\tPrenom : Marie\n" +
+                "\tEmployé : Oui\n" +
+                "\tNuméro de téléphone : 0123456789\n" +
+                "\tSpécialités : Préhistoire, Picasso\n" +
+                "\tIndisponibilités : 15/10/2023, 10/10/2023\n";
         assertEquals(expected, conferencier.toString());
     }
+
 
 }

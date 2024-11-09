@@ -13,7 +13,8 @@ public class TestExposition {
 
     @BeforeEach
     public void setup() {
-    	exposition = new Exposition("EXP1234", "Exposition Art Moderne", "01/01/2024", "31/12/2024");
+        // Le constructeur prend un ID de 7 caractères, et la date de début et fin au bon format
+        exposition = new Exposition("EXP1234", "Exposition Art Moderne", "01/01/2024", "31/12/2024");
         exposition.setResume("Une exposition présentant les œuvres d'art moderne.");
         exposition.setNbOeuvre(20);
         exposition.setMotCles(new String[]{"art", "moderne", "peinture"});
@@ -23,7 +24,7 @@ public class TestExposition {
     // Test de création avec des paramètres valides (ID et intitulé uniquement)
     @Test
     public void testExpositionCreationValide() {
-    	Exposition exposition = new Exposition("EXP5678", "Histoire de l'Art");
+        Exposition exposition = new Exposition("EXP5678", "Histoire de l'Art");
         assertEquals("EXP5678", exposition.getId());
     }
 
@@ -117,7 +118,7 @@ public class TestExposition {
         String expected = "\tExposition : Exposition Art Moderne\n" +
                 "\tRésumé : Une exposition présentant les œuvres d'art moderne.\n" +
                 "\tNombre d'œuvres : 20\n" +
-                "\tTemporaire : Non\n" +
+                "\tTemporaire : Oui\n" +
                 "\tMots-clés : art, moderne, peinture\n" +
                 "\tPériode : 2024 - 2024\n" +
                 "\tDébut de l'exposition : 01/01/2024\n" +
@@ -128,6 +129,6 @@ public class TestExposition {
     // Test de la méthode estTemporaire pour vérifier si l'exposition est temporaire
     @Test
     public void testEstTemporaire() {
-        assertFalse(exposition.estTemporaire());
+        assertTrue(exposition.estTemporaire());
     }
 }

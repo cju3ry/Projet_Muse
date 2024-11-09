@@ -52,14 +52,21 @@ public class TestEmploye {
     @Test
     public void testConstructeurNumTelNull() {
         employe = new Employe("1234567", "Johnson", "Billy", null);
-        assertNull(employe.getNumTel());
+        assertNull(employe.getNumTel());  // Vérifie que le numéro de téléphone est bien null
     }
 
- // Test de la méthode toString pour une sortie formatée correctement
+    // Test de la méthode toString pour une sortie formatée correctement
     @Test
     public void testToString() {
         employe = new Employe("1234567", "Johnson", "Billy", "0000");
+        // Teste que la méthode toString affiche bien les valeurs avec le bon format
         assertEquals("\tEmployé(e) : Johnson Billy\n" + "\tNuméro de téléphone : 0000\n", employe.toString());
     }
 
+    // Test de la méthode toString quand le numéro de téléphone est null
+    @Test
+    public void testToStringNumTelNull() {
+        employe = new Employe("1234567", "Johnson", "Billy", null);
+        assertEquals("\tEmployé(e) : Johnson Billy\n" + "\tNuméro de téléphone : Non spécifié\n", employe.toString());
+    }
 }
