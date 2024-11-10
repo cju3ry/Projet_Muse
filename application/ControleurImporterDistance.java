@@ -104,42 +104,75 @@ public class ControleurImporterDistance {
     @FXML
     private TextField textIpServ;
 
-    // Getters pour les données importées des conférenciers
+    /** Getters pour les données importées des conférenciers
+     * @return strConferencier la liste des conférenciers importés
+     * */
     public static StringBuilder getStrConferencier() {
         return strConferencier;
     }
-    // Getters pour les données importées des employés
+    /** Getters pour les données importées des employés
+     * @return strEmployes la liste des employés importés
+     * */
     public static StringBuilder getStrEmployes() {
         return strEmployes;
     }
 
-    // Getters pour les données importées des expositions
+    /** Getters pour les données importées des expositions
+     * @return strExpositions la liste des expositions importées
+     * */
     public static StringBuilder getStrExpositions() {
         return strExpositions;
     }
 
-    // Getters pour les données importées des visites
+    /** Getters pour les données importées des visites
+     * @return strVisites la liste des visites importées
+     * */
     public static StringBuilder getStrVisites() {
         return strVisites;
     }
 
-    // boolean pour vérifier si les données des conférenciers ont été importées
+    /**
+     * Getters pour vérifier si les données des conférenciers ont été importées
+     * @return donneesConferencierChargees true si les données des conférenciers ont été importées
+     * */
     public static boolean isDonneesConferencierChargees() {
         return donneesConferencierChargees;
     }
+
+    /**
+     * Getters pour vérifier si les données des employés ont été importées
+     * @return donneesEmployesChargees true si les données des employés ont été importées
+     * */
     public static boolean isDonneesEmployesChargees() {
         return donneesEmployesChargees;
     }
-
+    /**
+     * Getters pour vérifier si les données des expositions ont été importées
+     * @return donneesExpositionsChargees true si les données des expositions ont été importées
+     * */
     public static boolean isDonneesExpositionsChargees() {
         return donneesExpositionsChargees;
     }
 
+    /**
+     * Getters pour vérifier si les données des visites ont été importées
+     * @return donneesVisitesChargees true si les données des visites ont été importées
+     * */
     public static boolean isDonneesVisitesChargees() {
         return donneesVisitesChargees;
     }
 
+    /**
+     * Getters pour le chemin du fichier des conférenciers
+     * @return cheminFichierConferenciers le chemin du fichier des conférenciers
+     * * */
     private DonneesApplication donnees = new DonneesApplication();
+
+    /**
+     * Socket pour la connexion au serveur
+     * */
+    private Socket socket;
+
     public void initialize() {
         btnDemanderFichier.setDisable(true);
 
@@ -160,14 +193,19 @@ public class ControleurImporterDistance {
         });
     }
 
+    /**
+     * Méthode pour mettre à jour l'état du bouton "Demander fichier"
+     */
     private void mettreAJourEtatBtnDemande() {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
 
 
 
+
     @FXML
     void recupIp(ActionEvent event) {
+        // Vérifier si l'adresse IP est valide
         String ipPattern =
                 "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
         ipServ = textIpServ.getText();
@@ -185,7 +223,6 @@ public class ControleurImporterDistance {
     }
 
     @FXML
-
     void demanderFichier(ActionEvent event) {
         // Vérifier si le fichier demandé a déjà été importé
         if (("employes".equals(getRequest()) && donneesEmployesChargees) ||
@@ -212,7 +249,7 @@ public class ControleurImporterDistance {
             @Override
             protected Void call() throws Exception {
                 String serverAddress = ipServ;
-                int port = 12345;
+                int port = 65412;
 
                 try (Socket socket = new Socket(serverAddress, port);
                      InputStream input = socket.getInputStream();
@@ -230,7 +267,6 @@ public class ControleurImporterDistance {
                         alert.showAndWait();
                     });
                     String message = reader.readLine();
-                    //String cleCommune = reader.readLine();
                     System.out.println("Message reçu du serveur : " + message);
                     if ("REFUS".equals(message)) {
                         System.out.println("Le serveur a refusé l'envoi du fichier");
@@ -336,6 +372,11 @@ public class ControleurImporterDistance {
                             alert.setHeaderText("Le fichier a été reçu et les données ont été importées avec succès.");
                             alert.showAndWait();
                         });
+                        // Fermer le socket, le thread et la tâche
+                        if (socket != null && !socket.isClosed()) {
+                            socket.close();
+                        }
+                        this.cancel(); // arrête la tâche
                     }
 
 
@@ -356,9 +397,17 @@ public class ControleurImporterDistance {
         // Lance le Task dans un nouveau thread
         new Thread(importTask).start();
     }
+
+    /**
+     * Vérifie si les données des conférenciers, employés et expositions ont été importées
+     */
     private boolean verifierImportationsPrealables() {
         return donneesConferencierChargees && donneesEmployesChargees && donneesExpositionsChargees;
     }
+
+    /**
+     * Importe les données du fichier reçu
+     * */
     private void importerFichierSelonSelection() {
         //System.out.println("Début de importerFichierSelonSelection");
         System.out.print("le nom du fichier est " + fichierRecu);
@@ -386,7 +435,10 @@ public class ControleurImporterDistance {
         System.out.println("Fin de importerFichierSelonSelection");
     }
 
-    // Méthode pour obtenir la requête en fonction du fichier sélectionné
+    /**
+     * Getters pour la requête en fonction du fichier sélectionné
+     * @return la requête en fonction du fichier sélectionné
+     */
     private String getRequest() {
         switch (fichierSelectionne) {
             case "Employés": return "employes";
@@ -397,7 +449,10 @@ public class ControleurImporterDistance {
         }
     }
 
-    // Méthode pour obtenir le nom du fichier de sortie en fonction du fichier sélectionné
+    /**
+     * Getters pour le nom du fichier de sortie en fonction du fichier sélectionné
+     * @return le nom du fichier de sortie en fonction du fichier sélectionné
+     */
     private String getFileName() {
         String userHome = System.getProperty("user.home");
         String downloadDir = userHome + "/Downloads/";
@@ -410,7 +465,9 @@ public class ControleurImporterDistance {
         }
     }
 
-
+    /**
+     * Importe les données des conférenciers
+     */
     void importerFichierConferenciers() {
 
         strConferencier = new StringBuilder();
@@ -433,6 +490,10 @@ public class ControleurImporterDistance {
             alerteNok.showAndWait();
         }
     }
+
+    /**
+     * Importe les données des employés
+     */
     void importerFichierEmployes() {
         strEmployes = new StringBuilder();
         String userHome = System.getProperty("user.home");
@@ -446,6 +507,8 @@ public class ControleurImporterDistance {
             for (int i = 0; i < listeDesEmployes.size(); i++) {
                 strEmployes.append(listeDesEmployes.get(i).toString() + "\n");
             }
+
+
         } catch (IllegalArgumentException e) {
             Alert alerteNok = new Alert(AlertType.WARNING);
             alerteNok.setTitle("Importation échouée");
@@ -454,9 +517,11 @@ public class ControleurImporterDistance {
             alerteNok.showAndWait();
         }
     }
+
+    /**
+     * Importe les données des expositions
+     */
     void importerFichierVisites() {
-
-
         strVisites = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierVisites = userHome + "/Downloads/visitesRecu.csv";
@@ -477,6 +542,10 @@ public class ControleurImporterDistance {
             alerteNok.showAndWait();
         }
     }
+
+    /**
+     * Importe les données des expositions
+     */
     void importerFichierExpositions() {
         strExpositions = new StringBuilder();
         String userHome = System.getProperty("user.home");

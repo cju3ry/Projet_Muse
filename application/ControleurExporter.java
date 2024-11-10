@@ -77,6 +77,7 @@ public class ControleurExporter {
 	@FXML
 	private Button btnCleCommune;
 
+
 	private Thread serverThread;
 
 	private ServerSocket serverSocket;
@@ -100,7 +101,7 @@ public class ControleurExporter {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setHeaderText("L'écoute a été lancée");
 			alert.showAndWait();
-			int port = 12345; // Port d'écoute
+			int port = 65412; // Port d'écoute
 			serverThread = new Thread(() -> {
 				try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
 					System.out.println("Serveur en attente de connexion...");
@@ -121,38 +122,42 @@ public class ControleurExporter {
 		}
 	}
 
+	/**
+	 * Gère une requête de fichier entrante.
+	 * @param socket le socket de connexion.
+	 */
 	private void handleRequest(Socket socket) {
 		final String cheminFinal;
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
+			// Lire la requête du client
 			String requete = reader.readLine();
-//	        System.out.print("la requete est "+ requete);
-//	        String chemin = requete + ".csv";
 			String chemin = "";
-//	        System.out.print("Le chemin du fichier employé est : " + ControleurImporterLocal.cheminFichierEmployes);
+
+			// Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("employes".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierEmployes;
-//	          	System.out.print("\nchemin dans le if " + chemin);
 			}
 
+            // Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("conferenciers".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierConferenciers;
-//	           	System.out.print("\nchemin dans le if " + chemin);
 			}
 
+			// Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("expositions".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierExpositions;
-//	   	    	System.out.print("\nchemin dans le if " + chemin);
 			}
 
+			// Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("visites".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierVisites;
-//	           	System.out.print("\nchemin dans le if " + chemin);
 			}
 			cheminFinal = chemin;
 			System.out.print("le chemin final est " + cheminFinal);
 
 			// Crée un CountDownLatch pour synchroniser l'envoi du fichier avec la réponse de l'utilisateur
 			CountDownLatch latch = new CountDownLatch(1);
+
 			// Afficher une alerte pour demander l'autorisation d'envoi
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -160,12 +165,17 @@ public class ControleurExporter {
 				alert.setHeaderText("Demande de fichier reçue");
 				alert.setContentText("Une demande de fichier \"" + cheminFinal + "\" a été reçue. Voulez-vous l'accepter ?");
 				Optional<ButtonType> result = alert.showAndWait();
+
+				// Si l'utilisateur accepte, on crypte et envoie le fichier
 				if (result.get() == ButtonType.OK &&  result.isPresent()) {
 					try {
 						BufferedReader reader2 = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 						System.out.println("Demande aceptée par l'utilisateur.");
 
+						// Creation d'un flux
 						OutputStream output = socket.getOutputStream();
+
+						// Envoie START pour indiquer le début de la communication
 						output.write("START\n".getBytes(StandardCharsets.UTF_8));
 						int min = 0;
 						int max = 8000;
@@ -174,24 +184,25 @@ public class ControleurExporter {
 
 						// Création de l'objet Crypto avec une borne max aléatoire
 						Crypto vigenere = new Crypto(borneMax);
+
 						int a = (int) (Math.random() * range) + min;
 						int p = vigenere.getP();
 						int g = vigenere.getG();
 
-						// envoie de p
+						// envoie de p dans le flux
 						output.write((p + "\n").getBytes(StandardCharsets.UTF_8));
 						System.out.print("\np envoyé : " + p);
 
-						// envoye de g
+						// envoye de g dans le flux
 						output.write((g + "\n").getBytes(StandardCharsets.UTF_8));
 						System.out.print("\ng envoyé : " + g);
 
-						// création et envoie de g ^ a
+						// création et envoie de g ^ a dans le flux
 						long gA = vigenere.genererGA(g,a,p);
 						output.write((gA + "\n").getBytes(StandardCharsets.UTF_8));
 						System.out.print("\ng ^ a envoyé : " + gA);
 
-						// recoit g ^ b
+						// recoit g ^ b du client par le flux
 						String gBstr = reader2.readLine();
 						Long gB = Long.parseLong(gBstr);
 						System.out.println("\ng ^ b reçu du client : " + gB);
@@ -203,6 +214,8 @@ public class ControleurExporter {
 						long gABserv;
 
 						long gBAclient;
+
+						// Reception de g ^ ba du client
 						String cleClient = reader2.readLine();
 						long cleB  = Long.parseLong(cleClient);
 						System.out.println("\nla clee du client : " + cleClient);
@@ -211,13 +224,13 @@ public class ControleurExporter {
 
 						gABserv = cleCommune;
 
+						// Comparaison des clés communes du serveur et du client
 						if (gABserv != gBAclient) {
 							throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat du serv est : " + gABserv + "\n Le résultat du client est : " + gBAclient);
 						} else {
 							System.out.println("\nParfait, il ont tous les 2, ce résultat : " + gABserv);
 						}
 						System.out.println("\nLa clé commune est : " + gABserv);
-
 						vigenere.setCleCommune(gABserv);
 						output.flush();
 
@@ -236,11 +249,12 @@ public class ControleurExporter {
 						output.write((vigenere.getCleCommune()+"\n").getBytes(StandardCharsets.UTF_8));
 						output.flush();
 						//sendFile(socket, cheminFinal); // sans cryptage
-						sendFile(socket, cheminFichierCrypte); // Envoyer le fichier crypté si l'utilisateur accepte
+						// Envoyer le fichier crypté au client
+						sendFile(socket, cheminFichierCrypte);
 					} catch (IOException e) {
 						System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
 					}
-
+				// Si l'utilisateur refuse, on envoie un message de refus
 				} else {
 
 					try {System.out.println("Demande refusée par l'utilisateur.");
@@ -261,7 +275,11 @@ public class ControleurExporter {
 			Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 		}
 	}
-
+	/**
+	 * Envoie un fichier au client.
+	 * @param socket le socket de connexion.
+	 * @param chemin le chemin du fichier à envoyer.
+	 */
 	private void sendFile(Socket socket, String chemin) {
 		try (OutputStream output = socket.getOutputStream();
 			 BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
@@ -307,19 +325,22 @@ public class ControleurExporter {
 	void arreterEcouter(ActionEvent event) {
 		if (serverThread != null && serverThread.isAlive()) {
 			try {
-				serverSocket.close();
-			} catch (IOException e) {
+				if (serverSocket != null && !serverSocket.isClosed()) {
+					serverSocket.close();
+				}
+				serverThread.interrupt();
+				serverThread.join(); // Attendre que le thread se termine
+			} catch (IOException | InterruptedException e) {
 				Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la fermeture du serveur", e);
+			} finally {
+				serverThread = null;
+				labelEcouteLancee.setText("Aucune écoute en cours");
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setHeaderText("L'écoute a été arrêtée");
+				alert.showAndWait();
 			}
-			serverThread.interrupt();
-			serverThread = null;
-			labelEcouteLancee.setText("Aucune écoute en cours");
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("L'écoute a été arrêtée");
-			alert.showAndWait();
 		}
 	}
-
 	@FXML
 	void choisirFichierConferencier(ActionEvent event) {
 
