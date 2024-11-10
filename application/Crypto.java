@@ -308,7 +308,7 @@ public class Crypto {
     }
 
     /**
-     * Déchiffre un message en utilisant l'algorithme de Vigenère.
+     * Déchiffre un message en utilisant l'algorithme de Vigenère
      *
      * @param message le message à déchiffrer.
      * @return le message déchiffré.
