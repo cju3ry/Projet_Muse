@@ -345,6 +345,8 @@ public class ControleurImporterDistance {
 						String messageDechiffre = vigenere.dechiffrerVigenere(messageCrypte);
                         // enlever les caractères inutiles / en trop avant le contenu du fichier, ainsi que [
                         messageDechiffre = messageDechiffre.replaceAll(".*Ident;", "Ident;");
+                        // remplacer le caractère oe qui se transforme en S lors du cryptage
+                        messageDechiffre = messageDechiffre.replaceAll("Suvres", "œuvres");
                         // enlever le dernier caractère qui est un ]
                         messageDechiffre = messageDechiffre.substring(0, messageDechiffre.length() - 1);
                         // enlever les virgules et les espaces inutiles en debut de ligne
