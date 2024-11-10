@@ -23,37 +23,37 @@ public class Crypto {
     private int g;
 
     /**
-     * Le nombre aléatoire d'Alice.
+     * Le nombre aléatoire a.
      */
     private int a;
 
     /**
-     * Le nombre aléatoire de Bob.
+     * Le nombre aléatoire n.
      */
     private int b;
 
     /**
-     * Le résultat de l'étape 1 pour Alice.
+     * Le résultat de l'étape 1 pour calculer gA.
      */
-    private long resultatAliceEtape1;
+    private long gA;
 
     /**
-     * Le résultat de l'étape 1 pour Bob.
+     * Le résultat de l'étape 1 pour calculer gB.
      */
-    private long resulatBobEtape1;
+    private long gB;
 
     /**
-     * Le résultat de l'étape 2 pour Alice.
+     * Le résultat de l'étape 2 pour calculer gAB.
      */
-    private static long resultatAliceEtape2;
+    private static long gAB;
 
     /**
-     * Le résultat de l'étape 2 pour Bob.
+     * Le résultat de l'étape 2 pour calculer gBA.
      */
-    private static long resultatBobEtape2;
+    private static long gBA;
 
     /**
-     * La clé commune partagée par Alice et Bob.
+     * La clé commune.
      */
     private long cleCommune;
 
@@ -85,6 +85,14 @@ public class Crypto {
     }
 
     /**
+     * Définit la valeur de p.
+     * @param p la nouvelle valeur de p.
+     */
+    public void setP(int p) {
+        this.p = p;
+    }
+
+    /**
      * Recupère la valeur de g.
      * @return la valeur de g.
      */
@@ -93,61 +101,53 @@ public class Crypto {
     }
 
     /**
-     * Recupère la valeur de resultatAliceEtape1.
-     * @return la valeur de resultatAliceEtape1.
+     * Génère la clé gA.
+     * @param g le générateur
+     * @param a le nombre aléatoire
+     * @param p le nombre premier
+     * @return la clé générée gA.
      */
-    public long getResultatAliceEtape1() {
-        return resultatAliceEtape1;
-    }
-
-    /**
-     * Recupère la valeur de resulatBobEtape1.
-     * @return la valeur de resulatBobEtape1.
-     */
-    public long getResulatBobEtape1() {
-        return resulatBobEtape1;
-    }
-
-    /**
-     * Génère la clé pour Alice.
-     *
-     * @param a le nombre aléatoire d'Alice.
-     * @return la clé générée pour Alice.
-     */
-    public int genererCleAlice(int a) {
+    public long genererGA(int g, int a, int p) {
         this.a = a;
-        this.resultatAliceEtape1 = exponentiationModulaire(g, a, p);
-        return a;
+        this.gA = exponentiationModulaire(g, a, p);
+        return gA;
     }
 
     /**
-     * Génère la clé pour Bob.
-     *
-     * @param b le nombre aléatoire de Bob.
-     * @return la clé générée pour Bob.
+     * Génère la clé gB.
+     * @param b le nombre aléatoire
+     * @param g le générateur
+     * @param p le nombre premier
+     * @return la clé générée gB
      */
-    public int genererCleBob(int b) {
+    public long genererGB(int g,int b,int p) {
         this.b = b;
-        this.resulatBobEtape1 = exponentiationModulaire(g, b, p);
-        return b;
+        this.gB = exponentiationModulaire(g, b, p);
+        return gB;
     }
 
     /**
-     * Affecte la valeur de resultatAliceEtape2.
-     * @return la valeur de resultatAliceEtape2.
+     * Génère la clé gAB.
+     * @param gB la clé générée
+     * @param a le nombre aléatoire
+     * @param p le nombre premier
+     * @return la clé générée gAB (la clé commune)
      */
-    public long setResultatAliceEtape2() {
-        resultatAliceEtape2 = exponentiationModulaire((int) resulatBobEtape1, a, p);
-        return resultatAliceEtape2;
+    public long genererGAB(long gB, int a, int p) {
+        gAB = exponentiationModulaire((int) gB, a, p);
+        return gAB;
     }
 
     /**
-     * Affecte la valeur de resultatBobEtape2.
-     * @return la valeur de resultatBobEtape2.
+     * Génère la clé gBA.
+     * @param gA la clé générée
+     * @param b le nombre aléatoire
+     * @param p le nombre premier
+     * @return la clé générée gBA (la clé commune)
      */
-    public long setResultatBobEtape2() {
-        resultatBobEtape2 = exponentiationModulaire((int) resultatAliceEtape1, b, p);
-        return resultatBobEtape2;
+    public long genererGBA(long gA, int b , int p) {
+        gBA = exponentiationModulaire((int) gA, b, p);
+        return gBA;
     }
 
     /**
@@ -327,58 +327,5 @@ public class Crypto {
             resultat.append(caractere);
         }
         return resultat.toString();
-    }
-
-    /**
-     * Point d'entrée de l'application.
-     *
-     * @param args les arguments de la ligne de commande.
-     * @throws IllegalArgumentException si la borne maximale est inférieure à 2.
-     */
-    public static void main(String[] args) {
-
-        try {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Entrez la borne maximale pour générer un nombre premier : ");
-            int borneMax = scanner.nextInt();
-
-            Crypto vigenere = new Crypto(borneMax);
-            System.out.println("Le nombre premier généré est : " + vigenere.getP());
-            System.out.println("Le générateur généré est : " + vigenere.getG());
-
-            System.out.print("Entrez le nombre entier a pour Alice : ");
-            int a = scanner.nextInt();
-            scanner.nextLine();
-            vigenere.genererCleAlice(a);
-            System.out.println("Alice a généré : " + vigenere.getResultatAliceEtape1());
-
-            System.out.print("Entrez le nombre entier b pour Bob : ");
-            int b = scanner.nextInt();
-            scanner.nextLine();
-            vigenere.genererCleBob(b);
-            System.out.println("Bob a généré : " + vigenere.getResulatBobEtape1());
-
-            resultatAliceEtape2 = vigenere.setResultatAliceEtape2();
-            resultatBobEtape2 = vigenere.setResultatBobEtape2();
-
-            if (resultatAliceEtape2 != resultatBobEtape2) {
-                throw new IllegalArgumentException("Il y a eu un problème\nLe résultat d'Alice est : " + resultatAliceEtape2 + "\n Le résultat de Bob est : " + resultatBobEtape2);
-            } else {
-                System.out.println("Parfait, il ont tous les 2, ce résultat : " + resultatAliceEtape2);
-            }
-
-            System.out.println("La clé commune est : " + resultatAliceEtape2);
-            vigenere.setCleCommune(resultatAliceEtape2);
-
-            String message = String.valueOf(DonneesApplication.LireCsv("conferencierCrypte.csv"));
-            //String messageChiffre = vigenere.chiffrerVigenere(message);
-            //System.out.println("Le message chiffré est : " + messageChiffre);
-
-            String messageDechiffre = vigenere.dechiffrerVigenere(message);
-            System.out.println("Le message déchiffré est : " + messageDechiffre);
-
-        } catch(IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

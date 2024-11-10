@@ -81,37 +81,8 @@ public class ControleurExporter {
 
 	private ServerSocket serverSocket;
 
-	private Crypto vigenere ;
-
-	String cheminFinal = "";
 
 
-	private String chiffrerMessage() {
-		int min = 0;
-		int max = 8000;
-		int range = max - min + 1;
-		int borneMax = (int) (Math.random() * range) + min;
-		vigenere = new Crypto(borneMax);
-		int p = vigenere.getP();
-		int g = vigenere.getG();
-		int a = (int) (Math.random() * range) + min;
-		int b = (int) (Math.random() * range) + min;
-		vigenere.genererCleAlice(a);
-		vigenere.genererCleBob(b);
-		long resultatAliceEtape2;
-		resultatAliceEtape2 = vigenere.setResultatAliceEtape2();
-		long resultatBobEtape2;
-		resultatBobEtape2 = vigenere.setResultatBobEtape2();
-		if (resultatAliceEtape2 != resultatBobEtape2) {
-			throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat d'Alice est : " + resultatAliceEtape2 + "\n Le résultat de Bob est : " + resultatBobEtape2);
-		} else {
-			System.out.println("\nParfait, il ont tous les 2, ce résultat : " + resultatAliceEtape2);
-		}
-		System.out.println("\nLa clé commune est : " + resultatAliceEtape2);
-		vigenere.setCleCommune(resultatAliceEtape2);
-		String message = String.valueOf(DonneesApplication.LireCsv(cheminFinal));
-		return vigenere.chiffrerVigenere(message);
-	}
 
 	@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
@@ -151,7 +122,7 @@ public class ControleurExporter {
 	}
 
 	private void handleRequest(Socket socket) {
-
+		final String cheminFinal;
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
 			String requete = reader.readLine();
 //	        System.out.print("la requete est "+ requete);
@@ -191,11 +162,70 @@ public class ControleurExporter {
 				Optional<ButtonType> result = alert.showAndWait();
 				if (result.get() == ButtonType.OK &&  result.isPresent()) {
 					try {
+						BufferedReader reader2 = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 						System.out.println("Demande aceptée par l'utilisateur.");
+
 						OutputStream output = socket.getOutputStream();
 						output.write("START\n".getBytes(StandardCharsets.UTF_8));
-						String messageChiffre = chiffrerMessage();
+						int min = 0;
+						int max = 8000;
+						int range = max - min + 1;
+						int borneMax = (int) (Math.random() * range) + min;
+
+						// Création de l'objet Crypto avec une borne max aléatoire
+						Crypto vigenere = new Crypto(borneMax);
+						int a = (int) (Math.random() * range) + min;
+						int p = vigenere.getP();
+						int g = vigenere.getG();
+
+						// envoie de p
+						output.write((p + "\n").getBytes(StandardCharsets.UTF_8));
+						System.out.print("\np envoyé : " + p);
+
+						// envoye de g
+						output.write((g + "\n").getBytes(StandardCharsets.UTF_8));
+						System.out.print("\ng envoyé : " + g);
+
+						// création et envoie de g ^ a
+						long gA = vigenere.genererGA(g,a,p);
+						output.write((gA + "\n").getBytes(StandardCharsets.UTF_8));
+						System.out.print("\ng ^ a envoyé : " + gA);
+
+						// recoit g ^ b
+						String gBstr = reader2.readLine();
+						Long gB = Long.parseLong(gBstr);
+						System.out.println("\ng ^ b reçu du client : " + gB);
+
+						// calcul de g ^ ab
+						long cleCommune = vigenere.genererGAB(gB,a,p);
+						System.out.print("\nLa clé commune pour serv est : " + cleCommune);
+
+						long gABserv;
+
+						long gBAclient;
+						String cleClient = reader2.readLine();
+						long cleB  = Long.parseLong(cleClient);
+						System.out.println("\nla clee du client : " + cleClient);
+
+						gBAclient = cleB;
+
+						gABserv = cleCommune;
+
+						if (gABserv != gBAclient) {
+							throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat du serv est : " + gABserv + "\n Le résultat du client est : " + gBAclient);
+						} else {
+							System.out.println("\nParfait, il ont tous les 2, ce résultat : " + gABserv);
+						}
+						System.out.println("\nLa clé commune est : " + gABserv);
+
+						vigenere.setCleCommune(gABserv);
+						output.flush();
+
+						String message = String.valueOf(DonneesApplication.LireCsv(cheminFinal));
+
+						String messageChiffre = vigenere.chiffrerVigenere(message);
 						String cheminFichierCrypte = cheminFinal.replace(".csv", "Crypte.csv");
+
 						// ecriture du fichier crypté
 						try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichierCrypte))) {
 							writer.write(messageChiffre);
@@ -213,7 +243,11 @@ public class ControleurExporter {
 
 				} else {
 
-					try {System.out.println("Demande refusée par l'utilisateur.");OutputStream output = socket.getOutputStream();output.write("REFUS".getBytes(StandardCharsets.UTF_8));output.flush();System.out.println("Demande refusée par l'utilisateur.");socket.close(); // Fermer la connexion si refusé
+					try {System.out.println("Demande refusée par l'utilisateur.");
+						OutputStream output = socket.getOutputStream();
+						output.write("REFUS".getBytes(StandardCharsets.UTF_8));
+						output.flush();System.out.println("Demande refusée par l'utilisateur.");
+						socket.close(); // Fermer la connexion si refusé
 					} catch (IOException e) {
 						Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 					}
