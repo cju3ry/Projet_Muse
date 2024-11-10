@@ -40,6 +40,16 @@ public class testCryptoSurFichiers {
             "E000005;Doisneau et la magazine Vogue;1948;1953;35;#photo, reportage, actualité#;Cette exposition montre les photos les plus emblématiques prises par Doisneau lorsqu'il a travaillé pour le magazine Vogue;01/10/2024;07/12/2024\n" +
             "E000006;L'impressionnisme selon Berthe Morisot;1863;1880;14;#impressionnisme, couleurs, paysages, scénes intérieur#;Magnifiques tableaux présentant aussi bien des scénes de vie familiale que des paysages;02/10/2024;05/04/2025";
 
+
+    private final String contenuExpositionsSansOe = "Ident;Intitulé;PériodeDeb;PériodeFin;nombre;motclé;résumé;Début;Fin\n" +
+            "E000001;Les paysages impressionnistes;1880;1895;20;#paysage, impressionnisme, Monet, Pissaro, Sysley, Signac#;Très belle exposition mettant en évidence les approches différentes de grands peintres du mouvement impressionniste;05/11/2024;14/12/2024\n" +
+            "E000002;Les Suvres majeures de Pierre Soulages;1979;2015;15;#outrenoir, lumière, abstraction, monopigmentaire, art contemporain#;Cette exposition présente des Suvres majeures représentatives de la période outrenoir de Pierre Soulages;;\n" +
+            "E000003;Période bleue de Picasso;1901;1904;12;#art moderne, couleurs, bleu, mélancolie#;Tableaux significatifs de cette période, avec aussi 2 Suvres de la période rose qui suivra la période bleue;;\n" +
+            "E000004;L'Inde vue par Henri Cartier-Bresson;1947;1951;32;#photo, Inde, reportage#;Très belles photos d'Henri Cartier-Bresson qui montrent l'Inde autour de 1950;10/10/2024;31/12/2024\n" +
+            "E000005;Doisneau et la magazine Vogue;1948;1953;35;#photo, reportage, actualité#;Cette exposition montre les photos les plus emblématiques prises par Doisneau lorsqu'il a travaillé pour le magazine Vogue;01/10/2024;07/12/2024\n" +
+            "E000006;L'impressionnisme selon Berthe Morisot;1863;1880;14;#impressionnisme, couleurs, paysages, scénes intérieur#;Magnifiques tableaux présentant aussi bien des scénes de vie familiale que des paysages;02/10/2024;05/04/2025";
+
+
     private final String contenuVisites = "Ident;Exposition;Conférencier;Employé;date;heuredebut;Intitulé;Téléphone;;\n" +
             "R000001;E000002;C000003;N000001;08/11/2024;10h00;Mme Noémie Legendre;0600000000;;\n" +
             "R000002;E000002;C000003;N000002;23/11/2024;15h00;M. Leroux association Temps Libre 12;0611111111;;\n" +
@@ -201,6 +211,50 @@ public class testCryptoSurFichiers {
 
         // Compare le contenu du fichier visites crypté avec le contenu attendu
         assertEquals(contenuCrypteVisites, donneesCrypteesVisites);
+
+    }
+
+
+    @Test
+    public void testDecryptage() throws IOException {
+
+        // Lit le contenu du fichier employes crypté
+        String encryptedContent;
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichierEncrypte))) {
+            encryptedContent = reader.readLine();
+        }
+
+        // Déchiffre le contenu du fichier employes crypté
+        String decryptedContent = crypto.dechiffrerVigenere(encryptedContent);
+
+        // Compare le contenu déchiffré avec le contenu attendu
+        assertEquals(contenuEmployes, decryptedContent);
+
+        // Lit le contenu du fichier conferenciers crypté
+        String encryptedContentConferenciers;
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichierEncrypteConferencier))) {
+            encryptedContentConferenciers = reader.readLine();
+        }
+        // Compare le contenu déchiffré avec le contenu attendu
+        assertEquals(contenuConferenciers, crypto.dechiffrerVigenere(encryptedContentConferenciers));
+
+        // Lit le contenu du fichier expositions crypté
+        String encryptedContentExpositions;
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichierEncrypteExpositions))) {
+            encryptedContentExpositions = reader.readLine();
+        }
+        // Compare le contenu déchiffré avec le contenu attendu
+        assertEquals(contenuExpositionsSansOe, crypto.dechiffrerVigenere(encryptedContentExpositions));
+
+        // Lit le contenu du fichier visites crypté
+        String encryptedContentVisites;
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichierEncrypteVisites))) {
+            encryptedContentVisites = reader.readLine();
+        }
+        // Compare le contenu déchiffré avec le contenu attendu
+        assertEquals(contenuVisites, crypto.dechiffrerVigenere(encryptedContentVisites));
+
+
 
     }
 
