@@ -84,9 +84,9 @@ public class Employe {
      */
     @Override
     public String toString() {
-        String tel = (this.numTel == null) ? "Non spécifié" : this.numTel;
-        return "\tEmployé(e) : " + this.nom + " " + this.prenom + "\n" +
-                "\tNuméro de téléphone : " + tel + "\n";
+        return "\tEmployé(e) : " + "\n" +
+               "\tNom : " + nom + "\n" +
+               "\tPrénom : " + prenom + "\n" +
+               "\tNuméro de téléphone : " + this.numTel + "\n";
     }
-
 }

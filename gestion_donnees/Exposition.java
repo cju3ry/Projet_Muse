@@ -77,7 +77,7 @@ public class Exposition {
 	public String getId() {
 		return this.id;
 	}
-	
+
 	/**
 	 * Retourne l'intitule de l'exposition.
 	 *
@@ -148,6 +148,10 @@ public class Exposition {
 			throw new IllegalArgumentException("Le résumé ne doit pas être null.");
 		}
 		this.resume = resume;
+	}
+
+	public void setEstTemporaire(boolean tempo) {
+		this.estTemporaire = tempo;
 	}
 
 	@Override
