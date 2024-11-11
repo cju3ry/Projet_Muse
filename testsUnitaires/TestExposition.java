@@ -13,8 +13,7 @@ public class TestExposition {
 
     @BeforeEach
     public void setup() {
-        // Le constructeur prend un ID de 7 caractères, et la date de début et fin au bon format
-        exposition = new Exposition("EXP1234", "Exposition Art Moderne", "01/01/2024", "31/12/2024");
+    	exposition = new Exposition("EXP1234", "Exposition Art Moderne", "01/01/2024", "31/12/2024");
         exposition.setResume("Une exposition présentant les œuvres d'art moderne.");
         exposition.setNbOeuvre(20);
         exposition.setMotCles(new String[]{"art", "moderne", "peinture"});
@@ -24,7 +23,7 @@ public class TestExposition {
     // Test de création avec des paramètres valides (ID et intitulé uniquement)
     @Test
     public void testExpositionCreationValide() {
-        Exposition exposition = new Exposition("EXP5678", "Histoire de l'Art");
+    	Exposition exposition = new Exposition("EXP5678", "Histoire de l'Art");
         assertEquals("EXP5678", exposition.getId());
     }
 
