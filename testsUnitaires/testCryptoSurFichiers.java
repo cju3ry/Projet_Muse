@@ -12,10 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class testCryptoSurFichiers {
 
     private Crypto crypto;
-    private static final String cheminFichierEncrypte = "testsUnitaires/employesCrypte.csv";
-    private static final String cheminFichierEncrypteConferencier = "testsUnitaires/conferencierCrypte.csv";
-    private static final String cheminFichierEncrypteExpositions = "testsUnitaires/expositionsCrypte.csv";
-    private static final String cheminFichierEncrypteVisites = "testsUnitaires/visitesCrypte.csv";
+    private static final String cheminFichierEncrypte = "src\\testsUnitaires\\employesCrypte.csv";
+    private static final String cheminFichierEncrypteConferencier = "src\\testsUnitaires\\conferencierCrypte.csv";
+    private static final String cheminFichierEncrypteExpositions = "src\\testsUnitaires\\expositionsCrypte.csv";
+    private static final String cheminFichierEncrypteVisites = "src\\testsUnitaires\\visitesCrypte.csv";
+
 
     private final String contenuEmployes = "Ident;Nom;Prenom;Telephone\n" +
             "N000001;Legendre;Hector;2614\n" +
