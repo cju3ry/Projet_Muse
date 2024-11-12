@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 public class Main extends Application {
@@ -52,7 +51,6 @@ public class Main extends Application {
 	
 	private static FXMLLoader chargeurFxmlPageConsulter = new FXMLLoader();
 	
-	
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesConferencier = new FXMLLoader();
 	
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesEmploye = new FXMLLoader();
@@ -63,70 +61,58 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-
-		
 		try {
 		chargeurFxmlPageDeGarde.setLocation(getClass().getResource("/ihm/vuePageDeGarde.fxml"));
 		conteneur = chargeurFxmlPageDeGarde.load();
 		scenePageDeGarde = new Scene(conteneur);
 		scenePageDeGarde.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
 		chargeurFxmlPageImporter.setLocation(getClass().getResource("/ihm/vueImporter.fxml"));
 		conteneur = chargeurFxmlPageImporter.load();
 		scenePageImporter = new Scene(conteneur);
 		scenePageImporter.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
 		
 		chargeurFxmlPageImporterLocal.setLocation(getClass().getResource("/ihm/vueImporterLocal.fxml"));
 		conteneur = chargeurFxmlPageImporterLocal.load();
 		scenePageImporterLocal = new Scene(conteneur);
 		scenePageImporterLocal.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
 		chargeurFxmlPageImporterDistance.setLocation(getClass().getResource("/ihm/vueImporterDistante.fxml"));
 		conteneur = chargeurFxmlPageImporterDistance.load();
 		scenePageImporterDistance = new Scene(conteneur);
 		scenePageImporterDistance.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
 		
 		chargeurFxmlPageExporter.setLocation(getClass().getResource("/ihm/vueExporter.fxml"));
 		conteneur = chargeurFxmlPageExporter.load();
 		scenePageExporter = new Scene(conteneur);
 		scenePageExporter.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
 		chargeurFxmlPageConsulter.setLocation(getClass().getResource("/ihm/vueConsulter.fxml"));
 		conteneur = chargeurFxmlPageConsulter.load();
 		scenePageConsulter = new Scene(conteneur);
 		scenePageConsulter.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-	
 		chargeurFxmlPageConsulterDonneesConferencier.setLocation(getClass().getResource("/ihm/vueConsulterDonneesConferencier.fxml"));
 		conteneur = chargeurFxmlPageConsulterDonneesConferencier.load();
 		scenePageConsulterDonneesConferencier = new Scene(conteneur);
 		scenePageConsulterDonneesConferencier.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
 		chargeurFxmlPageConsulterDonneesEmploye.setLocation(getClass().getResource("/ihm/vueConsulterDonneesEmploye.fxml"));
 		conteneur = chargeurFxmlPageConsulterDonneesEmploye.load();
 		scenePageConsulterDonneesEmploye = new Scene(conteneur);
 		scenePageConsulterDonneesEmploye.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
 		chargeurFxmlPageConsulterDonneesExposition.setLocation(getClass().getResource("/ihm/vueConsulterDonneesExposition.fxml"));
 		conteneur = chargeurFxmlPageConsulterDonneesExposition.load();
 		scenePageConsulterDonneesExposition = new Scene(conteneur);
 		scenePageConsulterDonneesExposition.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
 		
 		chargeurFxmlPageConsulterDonneesVisite.setLocation(getClass().getResource("/ihm/vueConsulterDonneesVisite.fxml"));
 		conteneur = chargeurFxmlPageConsulterDonneesVisite.load();
 		scenePageConsulterDonneesVisite = new Scene(conteneur);
 		scenePageConsulterDonneesVisite.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		
-		primaryStage.setTitle("PadeDeGarde");
+		primaryStage.setTitle("Data Bridge");
 		primaryStage.setScene(scenePageDeGarde);
 //		primaryStage.initStyle(StageStyle.UNDECORATED);
 		fenetrePrincipale = primaryStage;
@@ -187,11 +173,6 @@ public class Main extends Application {
 		VBox vbox = new VBox();
 		vbox.setSpacing(10);
 
-
-//		String[] images = {"/resources/rules/materiel.png", "/resources/rules/pieces1.png", "/resources/rules/pieces2.png", 
-//				"/resources/rules/prise1.png", "/resources/rules/prise2.png", "/resources/rules/prise3.png", 
-//				"/resources/rules/prise4.png", "/resources/rules/irregularite.png", "/resources/rules/finpartie.png", 
-//		"/resources/rules/resultat.png"};
 		String[] images = {"/imagesNotice/NoticeIntro.PNG", "/imagesNotice/Importer_1.PNG","/imagesNotice/Importer_1.PNG",
 				           "/imagesNotice/Importer_2.PNG","/imagesNotice/Importer_3.PNG","/imagesNotice/Importer_4.PNG" ,
 				           "/imagesNotice/Importer_5.PNG", "/imagesNotice/Consulter_1.PNG", "/imagesNotice/Consulter_2.PNG",

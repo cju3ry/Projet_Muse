@@ -1,10 +1,7 @@
 package application;
 
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
@@ -13,11 +10,16 @@ import java.util.logging.Logger;
 
 
 import gestion_donnees.DonneesApplication;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class ControleurExporter {
 	@FXML
@@ -51,6 +53,9 @@ public class ControleurExporter {
 	private Button btnRevenirArriere;
 
 	@FXML
+	private ImageView imageSpinner;
+
+	@FXML
 	private Button btnArreterEcouter;
 
 	@FXML
@@ -77,13 +82,16 @@ public class ControleurExporter {
 	@FXML
 	private Button btnCleCommune;
 
+	private RotateTransition rotateTransition;
 
 	private Thread serverThread;
 
 	private ServerSocket serverSocket;
 
-
-
+	@FXML
+	void initialize() {
+		imageSpinner.setVisible(false);
+	}
 
 	@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
@@ -98,9 +106,14 @@ public class ControleurExporter {
 			alert.showAndWait();
 		} else {
 			labelEcouteLancee.setText("L'écoute est lancée");
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("L'écoute a été lancée");
-			alert.showAndWait();
+			// Initialiser et démarrer la rotation de l'image
+			rotateTransition = new RotateTransition(Duration.seconds(1), imageSpinner);
+			rotateTransition.setByAngle(360);
+			rotateTransition.setCycleCount(Timeline.INDEFINITE);
+			rotateTransition.setInterpolator(Interpolator.LINEAR);
+			rotateTransition.play();
+			imageSpinner.setVisible(true);
+
 			int port = 65412; // Port d'écoute
 			serverThread = new Thread(() -> {
 				try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
@@ -307,15 +320,17 @@ public class ControleurExporter {
 
 	@FXML
 	void afficherIp(ActionEvent event) {
-		String adresseIPLocale ;
-
+		String adresseIPLocale = "";
 		try {
-			InetAddress inetadr = InetAddress.getLocalHost();
-			//adresse ip sur le réseau
-			adresseIPLocale = inetadr.getHostAddress();
-			System.out.println("Adresse IP locale = "+adresseIPLocale );
+			InetAddress[] allInetAddresses = InetAddress.getAllByName(InetAddress.getLocalHost().getHostName());
+			for (InetAddress inetAddress : allInetAddresses) {
+				if (inetAddress instanceof Inet4Address && inetAddress.getHostAddress().startsWith("10.")) {
+					adresseIPLocale = inetAddress.getHostAddress();
+					break;
+				}
+			}
+			System.out.println("Adresse IP locale = " + adresseIPLocale);
 			textAffichageIp.setText(adresseIPLocale);
-
 		} catch (UnknownHostException e) {
 			Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération de l'adresse IP locale", e);
 		}
@@ -335,11 +350,13 @@ public class ControleurExporter {
 			} finally {
 				serverThread = null;
 				labelEcouteLancee.setText("Aucune écoute en cours");
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText("L'écoute a été arrêtée");
-				alert.showAndWait();
 			}
 		}
+		// Arrêter la rotation et cacher l'image
+		if (rotateTransition != null) {
+			rotateTransition.stop();
+		}
+		imageSpinner.setVisible(false);
 	}
 	@FXML
 	void choisirFichierConferencier(ActionEvent event) {
