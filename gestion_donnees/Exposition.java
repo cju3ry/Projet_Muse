@@ -77,7 +77,7 @@ public class Exposition {
 	public String getId() {
 		return this.id;
 	}
-	
+
 	/**
 	 * Retourne l'intitule de l'exposition.
 	 *
@@ -150,20 +150,24 @@ public class Exposition {
 		this.resume = resume;
 	}
 
+	public void setEstTemporaire(boolean tempo) {
+		this.estTemporaire = tempo;
+	}
+
 	@Override
 	public String toString() {
 		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-	    SimpleDateFormat formatAnnee = new SimpleDateFormat("yyyy");
+		SimpleDateFormat formatAnnee = new SimpleDateFormat("yyyy");
 		String motsCles = (this.motCles == null) ? "Aucun mots clés" : String.join(", ", this.motCles);
 
 		return "\tExposition : " + this.intitule + "\n" +
-		           "\tRésumé : " + this.resume + "\n" +
-		           "\tNombre d'œuvres : " + this.nbOeuvre + "\n" +
-		           "\tTemporaire : " + (this.estTemporaire ? "Oui" : "Non") + "\n" +
-		           "\tMots-clés : " + motsCles.substring(1, motsCles.length()-1) + "\n" +
-		           "\tPériode : " + formatAnnee.format(this.periodeDebut) + " - " + formatAnnee.format(this.periodeFin)+ "\n" +
-		           "\tDébut de l'exposition : " + (this.debutExpo != null ? formatDate.format(this.debutExpo) : "Non spécifiée") + "\n" +
-		           "\tFin de l'exposition : " + (this.finExpo != null ? formatDate.format(this.finExpo) : "Non spécifiée") + "\n";
+				"\tRésumé : " + this.resume + "\n" +
+				"\tNombre d'œuvres : " + this.nbOeuvre + "\n" +
+				"\tTemporaire : " + (this.estTemporaire ? "Oui" : "Non") + "\n" +
+				"\tMots-clés : " + motsCles + "\n" +  // Suppression du substring()
+				"\tPériode : " + formatAnnee.format(this.periodeDebut) + " - " + formatAnnee.format(this.periodeFin) + "\n" +
+				"\tDébut de l'exposition : " + (this.debutExpo != null ? formatDate.format(this.debutExpo) : "Non spécifiée") + "\n" +
+				"\tFin de l'exposition : " + (this.finExpo != null ? formatDate.format(this.finExpo) : "Non spécifiée") + "\n";
 	}
 
 	// Méthode pour vérifier si une exposition est temporaire

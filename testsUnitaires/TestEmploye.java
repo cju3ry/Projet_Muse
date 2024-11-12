@@ -59,7 +59,7 @@ public class TestEmploye {
     @Test
     public void testToString() {
         employe = new Employe("1234567", "Johnson", "Billy", "0000");
-        assertEquals("\tEmployé(e) : Johnson Billy\n" + "\tNuméro de téléphone : 0000\n", employe.toString());
+        assertEquals("\tEmployé(e) : \n\tNom : Johnson\n\tPrénom : Billy\n" + "\tNuméro de téléphone : 0000\n", employe.toString());
     }
 
 }
