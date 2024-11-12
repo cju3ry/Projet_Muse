@@ -167,7 +167,7 @@ public class Conferencier {
 	    return "\tConférencier/Conférencière : \n\tNom : " + nom + " \n\tPrenom : " + prenom + "\n" +
 	           "\tEmployé : " + (estEmploye ? "Oui" : "Non") + "\n" +
 	           "\tNuméro de téléphone : " + this.numTel + "\n" +
-	           "\tSpécialités : " + specialites.substring(1, specialites.length()-1) + "\n" +
+	           "\tSpécialités : " + specialites + "\n" +
 	           "\tIndisponibilités : " + indisponibilites + "\n";
 	}
 

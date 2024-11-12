@@ -62,22 +62,22 @@ public class Visite {
 	public String getId() {
 		return this.id;
 	}
-	
+
 	// Retourne l'intitule de la visite
 	public String getIntitule() {
 		return this.intitule;
 	}
-	
+
 	// Retourne le numéro de téléphone de la visite
 	public String getNumTel() {
 		return this.telephone;
 	}
-	
+
 	// Retourne la date de la visite
 	public Date getDateVisite() {
 		return this.dateVisite;
 	}
-	
+
 	// Retourne l'heure de la visite
 	public Date getHeureVisite() {
 		return this.heureVisite;
@@ -95,12 +95,12 @@ public class Visite {
 	 */
 	@Override
 	public String toString() {
-	    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-	    SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
-	    return "\tVisite : " + this.intitule + "\n" +
-	           "\tDate de la visite : " + formatDate.format(this.dateVisite) + "\n" +
-	           "\tHeure de la visite : " + formatHeure.format(this.heureVisite) + "\n" +
-	           "\tTéléphone : " + this.telephone + "\n";
+		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
+		return "\tVisite : " + this.intitule + "\n" +
+				"\tDate de la visite : " + formatDate.format(this.dateVisite) + "\n" +
+				"\tHeure de la visite : " + formatHeure.format(this.heureVisite) + "\n" +
+				"\tTéléphone : " + this.telephone + "\n";
 	}
 
 

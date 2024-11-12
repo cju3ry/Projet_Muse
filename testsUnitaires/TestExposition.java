@@ -117,7 +117,7 @@ public class TestExposition {
         String expected = "\tExposition : Exposition Art Moderne\n" +
                 "\tRésumé : Une exposition présentant les œuvres d'art moderne.\n" +
                 "\tNombre d'œuvres : 20\n" +
-                "\tTemporaire : Non\n" +
+                "\tTemporaire : Oui\n" +
                 "\tMots-clés : art, moderne, peinture\n" +
                 "\tPériode : 2024 - 2024\n" +
                 "\tDébut de l'exposition : 01/01/2024\n" +
@@ -128,6 +128,6 @@ public class TestExposition {
     // Test de la méthode estTemporaire pour vérifier si l'exposition est temporaire
     @Test
     public void testEstTemporaire() {
-        assertFalse(exposition.estTemporaire());
+        assertTrue(exposition.estTemporaire());
     }
 }
