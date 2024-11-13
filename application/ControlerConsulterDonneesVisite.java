@@ -62,6 +62,8 @@ public class ControlerConsulterDonneesVisite {
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
+	
+	private boolean donnesChargeesSauvegarder;
 
 	@FXML
 	private Button btnFiltre;
@@ -119,6 +121,9 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	private Button btnLancerFiltre;
+	
+	@FXML
+    private Button btnSauvegarder;
 
 	private ToggleGroup categorieToggleGroup;
 
@@ -164,17 +169,22 @@ public class ControlerConsulterDonneesVisite {
 
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
+		donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
 		StringBuilder strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		StringBuilder strVisitesDistance = ControleurImporterDistance.getStrVisites();
+		StringBuilder strVisitesSave = ControleurPadeDeGarde.getStrVisites();
 		System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
-		}
+		} else if (donnesChargeesSauvegarder) {
+	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrVisites().toString());
+	    }
 
-		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
+				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 
@@ -439,6 +449,11 @@ public class ControlerConsulterDonneesVisite {
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
 		Main.setPageConsulter();
+	}
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
 	}
 
 }

@@ -27,6 +27,9 @@ public class ControlerConsulterDonnesConferencier {
 
     @FXML
     private Button btnRevenir;
+    
+    @FXML
+	private Button btnSauvegarder;
 
     @FXML
     private TextArea textAreaConsultation;
@@ -34,6 +37,8 @@ public class ControlerConsulterDonnesConferencier {
     private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
+    
+    private boolean donnesChargeesSauvegarder;
     
     
     
@@ -49,20 +54,30 @@ public class ControlerConsulterDonnesConferencier {
     private void afficherDonnees() {
     	donneesChargeesLocal = ControleurImporterLocal.isDonneesConferencierChargees();
         donnesChargeesDistance = ControleurImporterDistance.isDonneesConferencierChargees();
+        donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
         StringBuilder strConferencierLocal = ControleurImporterLocal.getStrConferencier();
         StringBuilder strConferencierDistance = ControleurImporterDistance.getStrConferencier();
+        StringBuilder strConferencierSave = ControleurPadeDeGarde.getStrConferencier();
         System.out.print("Donnes Charge distance" + donnesChargeesDistance);
         if (donneesChargeesLocal) {
             textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
         } else if (donnesChargeesDistance) {
             textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
-        }
-        if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+        } else if (donnesChargeesSauvegarder) {
+	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrConferencier().toString());
+	    }
+        if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
+        		&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
                textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
 
     }
     
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
     
     @FXML
     void consulter(ActionEvent event) {
