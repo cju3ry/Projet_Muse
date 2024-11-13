@@ -34,16 +34,19 @@ public class ControlerConsulterDonneesEmploye {
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
-    
+    private boolean premierAffichageOk;
     
     @FXML
     void initialize() {
         textAreaConsultation.setEditable(false);
         textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
+        premierAffichageOk = false;
+        
         // Déclenchement de l'événement au clic sur la TextArea
         textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
     }
+    
     // Méthode pour charger et afficher les données
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
@@ -51,16 +54,19 @@ public class ControlerConsulterDonneesEmploye {
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
         System.out.print("Donnes Charge distance" + donnesChargeesDistance);
-        if (donneesChargeesLocal) {
-            textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
-        } else if (donnesChargeesDistance) {
-            textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
-        }
+        
         if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
             textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
+        
+        if (donneesChargeesLocal && !premierAffichageOk) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+            premierAffichageOk = true;
+        } else if (donnesChargeesDistance && !premierAffichageOk) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
+            premierAffichageOk = true;
+        }
     }
-    
     
     @FXML
     void consulter(ActionEvent event) {

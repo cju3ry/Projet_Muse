@@ -37,6 +37,8 @@ public class ControlerConsulterDonneesVisite {
 	private DonneesApplication donnees = new DonneesApplication();
 
 	private Filtre filtres = new Filtre();
+	
+	private boolean premierAffichageOk;
 
 	@FXML
 	private Button btnConsulter;
@@ -119,6 +121,13 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	private Button btnLancerFiltre;
+	
+	@FXML
+	private Button btnReinitialiserFiltre;
+	
+	private StringBuilder strVisitesLocal;
+	
+	private StringBuilder strVisitesDistance;
 
 	private ToggleGroup categorieToggleGroup;
 
@@ -126,12 +135,15 @@ public class ControlerConsulterDonneesVisite {
 	void initialize() {
 		textAreaConsultation.setEditable(false);
 		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
-
+		
+		premierAffichageOk = false;
 		// Déclenchement de l'événement au clic sur la TextArea
 		textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
 
-		// Par défaut, cacher le panneau de filtres
+		// Par défaut, cacher le panneau et boutons des filtres
 		scrollPaneFiltres.setVisible(false);
+		btnLancerFiltre.setVisible(false);
+		btnReinitialiserFiltre.setVisible(false);
 
 		// Initialiser ToggleGroup pour les RadioButton
 		categorieToggleGroup = new ToggleGroup();
@@ -141,21 +153,27 @@ public class ControlerConsulterDonneesVisite {
 		categorieToggleGroup = new ToggleGroup();
 		expoPerm.setToggleGroup(categorieToggleGroup);
 		expoTemp.setToggleGroup(categorieToggleGroup);
+		
+		visiteDate.setEditable(false);
+		visiteDateDebut.setEditable(false);
+		visiteDateFin.setEditable(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
+		btnReinitialiserFiltre.setOnAction(event -> reinitialiserFiltre());
 	}
 
 	private void toggleFiltrePanel() {
 		// Basculer la visibilité du panneau de filtres
 		boolean isVisible = scrollPaneFiltres.isVisible();
 		scrollPaneFiltres.setVisible(!isVisible);
-		
-		// TODO reset les filtres
+		btnLancerFiltre.setVisible(!isVisible);
+		btnReinitialiserFiltre.setVisible(!isVisible);
 	}
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
+		boolean listeFiltreOk;
 		ArrayList<String> nomsConf = new ArrayList<>();
 		ArrayList<String> nomsEmploye = new ArrayList<>();
 		ArrayList<String> IntituleExpo = new ArrayList<>();
@@ -164,103 +182,97 @@ public class ControlerConsulterDonneesVisite {
 
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
-		StringBuilder strVisitesLocal = ControleurImporterLocal.getStrVisites();
-		StringBuilder strVisitesDistance = ControleurImporterDistance.getStrVisites();
-		System.out.print("Donnes Charge distance" + donnesChargeesDistance);
-
-		if (donneesChargeesLocal) {
-			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
-		} else if (donnesChargeesDistance) {
-			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
-		}
+		strVisitesLocal = ControleurImporterLocal.getStrVisites();
+		strVisitesDistance = ControleurImporterDistance.getStrVisites();
+		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+		
+		listeFiltreOk = true;
 
 		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
-
-		for (Conferencier conferencier : donnees.getConferenciers()) {
-			if (!nomsConf.contains(conferencier.getNom())) {
-				nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
-			}
-		}
-
-		for (Employe employe : donnees.getEmployes()) {
-			if (!nomsEmploye.contains(employe.getNom())) {
-				nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
-			}
-		}
-
-		for (Exposition exposition : donnees.getExpositions()) {
-			if (!IntituleExpo.contains(exposition.getIntitule())) {
-				IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
-			}
-		}
-
-		for (Visite visite : donnees.getVisites()) {
-			if (!IntituleVisites.contains(visite.getIntitule())) {
-				IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
-			}
-		}
-
-		for (Visite visite : donnees.getVisites()) {
-			if (!numtels.contains(visite.getNumTel())) {
-				numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
-			}
-		}
-
-		Collections.sort(nomsConf);
-		Collections.sort(nomsEmploye);
-		Collections.sort(IntituleExpo);
-		Collections.sort(IntituleVisites);
-		Collections.sort(numtels);
-
-		nomConf.setItems(FXCollections.observableArrayList(nomsConf)); 
-		nomPrenomEmploye.setItems(FXCollections.observableArrayList(nomsEmploye));
-		intituleExpo.setItems(FXCollections.observableArrayList(IntituleExpo));
-		intituleVisite.setItems(FXCollections.observableArrayList(IntituleVisites));
-		numTel.setItems(FXCollections.observableArrayList(numtels));
-
-		heurePrecise.setItems(FXCollections.observableArrayList(
-				"8h00", "8h30", "9h00",
-				"9h30", "10h00", "10h30",
-				"11h00", "11h30", "12h00", 
-				"12h30", "13h30", "13h30",
-				"14h00", "14h30", "15h00", 
-				"15h30","16h00", "16h30", "17h00"
-				));
-
-		heureDebut.setItems(FXCollections.observableArrayList(
-				"8h00", "8h30", "9h00",
-				"9h30", "10h00", "10h30",
-				"11h00", "11h30", "12h00", 
-				"12h30", "13h30", "13h30",
-				"14h00", "14h30", "15h00", 
-				"15h30","16h00", "16h30", "17h00"
-				));
-
-		heureFin.setItems(FXCollections.observableArrayList(
-				"8h00", "8h30", "9h00",
-				"9h30", "10h00", "10h30",
-				"11h00", "11h30", "12h00", 
-				"12h30", "13h30", "13h30",
-				"14h00", "14h30", "15h00", 
-				"15h30","16h00", "16h30", "17h00"
-				));
 		
-		visiteDate.getEditor().clear();
-		visiteDate.setValue(null);
+		if (donneesChargeesLocal && !premierAffichageOk) {
+			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		} else if (donnesChargeesDistance && !premierAffichageOk) {
+			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		}
 		
-		visiteDateDebut.getEditor().clear();
-		visiteDateDebut.setValue(null);
-		
-		visiteDateFin.getEditor().clear();
-		visiteDateFin.setValue(null);
-		
-		confInterne.setSelected(false);
-		confExterne.setSelected(false);
-		
-		expoPerm.setSelected(false);
-		expoTemp.setSelected(false);
+		if (premierAffichageOk && !listeFiltreOk) {
+			listeFiltreOk = true;
+			for (Conferencier conferencier : donnees.getConferenciers()) {
+				if (!nomsConf.contains(conferencier.getNom())) {
+					nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+				}
+			}
+	
+			for (Employe employe : donnees.getEmployes()) {
+				if (!nomsEmploye.contains(employe.getNom())) {
+					nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+				}
+			}
+	
+			for (Exposition exposition : donnees.getExpositions()) {
+				if (!IntituleExpo.contains(exposition.getIntitule())) {
+					IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
+				}
+			}
+	
+			for (Visite visite : donnees.getVisites()) {
+				if (!IntituleVisites.contains(visite.getIntitule())) {
+					IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
+				}
+			}
+	
+			for (Visite visite : donnees.getVisites()) {
+				if (!numtels.contains(visite.getNumTel())) {
+					numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
+				}
+			}
+	
+			Collections.sort(nomsConf);
+			Collections.sort(nomsEmploye);
+			Collections.sort(IntituleExpo);
+			Collections.sort(IntituleVisites);
+			Collections.sort(numtels);
+	
+			nomConf.setItems(FXCollections.observableArrayList(nomsConf)); 
+			nomPrenomEmploye.setItems(FXCollections.observableArrayList(nomsEmploye));
+			intituleExpo.setItems(FXCollections.observableArrayList(IntituleExpo));
+			intituleVisite.setItems(FXCollections.observableArrayList(IntituleVisites));
+			numTel.setItems(FXCollections.observableArrayList(numtels));
+	
+			heurePrecise.setItems(FXCollections.observableArrayList(
+					"8h00", "8h30", "9h00",
+					"9h30", "10h00", "10h30",
+					"11h00", "11h30", "12h00", 
+					"12h30", "13h30", "13h30",
+					"14h00", "14h30", "15h00", 
+					"15h30","16h00", "16h30", "17h00"
+					));
+	
+			heureDebut.setItems(FXCollections.observableArrayList(
+					"8h00", "8h30", "9h00",
+					"9h30", "10h00", "10h30",
+					"11h00", "11h30", "12h00", 
+					"12h30", "13h30", "13h30",
+					"14h00", "14h30", "15h00", 
+					"15h30","16h00", "16h30", "17h00"
+					));
+	
+			heureFin.setItems(FXCollections.observableArrayList(
+					"8h00", "8h30", "9h00",
+					"9h30", "10h00", "10h30",
+					"11h00", "11h30", "12h00", 
+					"12h30", "13h30", "13h30",
+					"14h00", "14h30", "15h00", 
+					"15h30","16h00", "16h30", "17h00"
+					));
+		}
 	}
 
 	@FXML 
@@ -397,7 +409,7 @@ public class ControlerConsulterDonneesVisite {
 			filtres.conferencierExterne();
 		}
 
-		if (!filtres.getListeVisite().isEmpty()) {
+		if (!filtres.getListeVisite().isEmpty() && !(filtres.getListeVisite().size() == 18)) {
 			for (Visite visite : filtres.getListeVisite()) {
 				aAfficher += visite + "\n\n";
 			}
@@ -409,9 +421,120 @@ public class ControlerConsulterDonneesVisite {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}
 	}
+	
+	@FXML
+	void reinitialiserFiltre() {
+		ArrayList<String> nomsConf = new ArrayList<>();
+		ArrayList<String> nomsEmploye = new ArrayList<>();
+		ArrayList<String> IntituleExpo = new ArrayList<>();
+		ArrayList<String> IntituleVisites = new ArrayList<>();
+		ArrayList<String> numtels = new ArrayList<>();
+		
+		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
+		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
+		strVisitesLocal = ControleurImporterLocal.getStrVisites();
+		strVisitesDistance = ControleurImporterDistance.getStrVisites();
+		// System.out.print("Données Charge distance" + donnesChargeesDistance);
+		
+		if (donneesChargeesLocal) {
+			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+		} else if (donnesChargeesDistance) {
+			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
+		}
+
+		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
+		
+		for (Conferencier conferencier : donnees.getConferenciers()) {
+			if (!nomsConf.contains(conferencier.getNom())) {
+				nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+			}
+		}
+
+		for (Employe employe : donnees.getEmployes()) {
+			if (!nomsEmploye.contains(employe.getNom())) {
+				nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+			}
+		}
+
+		for (Exposition exposition : donnees.getExpositions()) {
+			if (!IntituleExpo.contains(exposition.getIntitule())) {
+				IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
+			}
+		}
+
+		for (Visite visite : donnees.getVisites()) {
+			if (!IntituleVisites.contains(visite.getIntitule())) {
+				IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
+			}
+		}
+
+		for (Visite visite : donnees.getVisites()) {
+			if (!numtels.contains(visite.getNumTel())) {
+				numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
+			}
+		}
+
+		Collections.sort(nomsConf);
+		Collections.sort(nomsEmploye);
+		Collections.sort(IntituleExpo);
+		Collections.sort(IntituleVisites);
+		Collections.sort(numtels);
+
+		nomConf.setItems(FXCollections.observableArrayList(nomsConf)); 
+		nomPrenomEmploye.setItems(FXCollections.observableArrayList(nomsEmploye));
+		intituleExpo.setItems(FXCollections.observableArrayList(IntituleExpo));
+		intituleVisite.setItems(FXCollections.observableArrayList(IntituleVisites));
+		numTel.setItems(FXCollections.observableArrayList(numtels));
+
+		heurePrecise.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00", 
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00", 
+				"15h30","16h00", "16h30", "17h00"
+				));
+
+		heureDebut.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00", 
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00", 
+				"15h30","16h00", "16h30", "17h00"
+				));
+
+		heureFin.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00", 
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00", 
+				"15h30","16h00", "16h30", "17h00"
+				));
+		
+		visiteDate.getEditor().clear();
+		visiteDate.setValue(null);
+		
+		visiteDateDebut.getEditor().clear();
+		visiteDateDebut.setValue(null);
+		
+		visiteDateFin.getEditor().clear();
+		visiteDateFin.setValue(null);
+		
+		confInterne.setSelected(false);
+		confExterne.setSelected(false);
+		
+		expoPerm.setSelected(false);
+		expoTemp.setSelected(false);
+	}
 
 	@FXML
 	void consulter(ActionEvent event) {
+		reinitialiserFiltre();
+		filtres.reset();
 		Main.setPageConsulter();
 	}
 
@@ -438,6 +561,8 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
+		reinitialiserFiltre();
+		filtres.reset();
 		Main.setPageConsulter();
 	}
 
