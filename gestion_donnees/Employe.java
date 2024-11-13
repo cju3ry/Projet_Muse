@@ -1,9 +1,11 @@
 package gestion_donnees;
 
+import java.io.Serializable;
+
 /**
  * Classe employé.
  */
-public class Employe {
+public class Employe implements Serializable  {
 
     private String id;  
     private String nom;      
@@ -19,7 +21,7 @@ public class Employe {
      * @param numTel Le numéro de téléphone de l'employé (doit être de 4 caractères ou null).
      * @throws IllegalArgumentException Si l'id n'a pas une longueur de 7 caractères ou si le numéro de téléphone n'a pas une longueur de 4 caractères.
      */
-    public Employe(String id, String nom, String prenom, String numTel) {
+    public Employe(String id, String nom, String prenom, String numTel)  {
 
         // Vérifie que l'ID n'est pas null et a exactement 7 caractères
         if (id == null || id.length() != 7 ) {

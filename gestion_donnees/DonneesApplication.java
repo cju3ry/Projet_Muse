@@ -4,8 +4,12 @@ package gestion_donnees;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -335,6 +339,22 @@ public class DonneesApplication {
 	public ArrayList<Visite> getVisites() {
 		return visites;
 	}
+	
+	public void setEmployes(ArrayList<Employe> employe) {
+		employes = employe;
+	}
+	
+	public void setConferenciers(ArrayList<Conferencier> conferencier) {
+		conferenciers = conferencier;
+	}
+	
+	public void setExpositions(ArrayList<Exposition> exposition) {
+		expositions = exposition;
+	}
+	
+	public void setVisites(ArrayList<Visite> visite) {
+		visites = visite;
+	}
 
 	/**
 	 * Ajoute un employé à la liste des employés.
@@ -465,13 +485,146 @@ public class DonneesApplication {
 	}
 	
 	public static void main(String[] args) {
+		
+		String pathEmploye = "Z:\\SAE\\donnees\\employesData";
+		
+		File fichierEmploye = new File(pathEmploye);
+		
+		String pathConferenciers = "Z:\\SAE\\donnees\\conferencierseData";
+		
+		File fichierConferenciers = new File(pathConferenciers);
+		
+		String pathExpoitions = "Z:\\SAE\\donnees\\expositionsData";
+		
+		File fichierExpositions = new File(pathExpoitions);
+		
+		String pathVisites = "Z:\\SAE\\donnees\\visitesData";
+		
+		File fichierVisite = new File(pathVisites);
+		
+		/*if(fichierEmploye.exists() && fichierConferenciers.exists()
+				&& fichierExpositions.exists() && fichierVisite.exists() ) {
+		
+		try (FileInputStream fis = new FileInputStream("Z:\\SAE\\\\donnees\\employesData");
+			    ObjectInputStream ois = new ObjectInputStream(fis);) {
+
+			employes = (ArrayList) ois.readObject();
+
+			} catch (IOException ioe) {
+			  ioe.printStackTrace();
+			} catch (ClassNotFoundException c) {
+			  System.out.println("Class not found");
+			  c.printStackTrace();
+			}
+		
+		try (FileInputStream fis = new FileInputStream("Z:\\SAE\\\\donnees\\conferencierseData");
+			    ObjectInputStream ois = new ObjectInputStream(fis);) {
+
+			conferenciers = (ArrayList) ois.readObject();
+
+			} catch (IOException ioe) {
+			  ioe.printStackTrace();
+			} catch (ClassNotFoundException c) {
+			  System.out.println("Class not found");
+			  c.printStackTrace();
+			}
+		
+		try (FileInputStream fis = new FileInputStream("Z:\\SAE\\\\donnees\\expositionsData");
+			    ObjectInputStream ois = new ObjectInputStream(fis);) {
+
+			expositions = (ArrayList) ois.readObject();
+
+			} catch (IOException ioe) {
+			  ioe.printStackTrace();
+			} catch (ClassNotFoundException c) {
+			  System.out.println("Class not found");
+			  c.printStackTrace();
+			}
+		
+		try (FileInputStream fis = new FileInputStream("Z:\\SAE\\\\donnees\\visitesData");
+			    ObjectInputStream ois = new ObjectInputStream(fis);) {
+
+			visites = (ArrayList) ois.readObject();
+
+			} catch (IOException ioe) {
+			  ioe.printStackTrace();
+			} catch (ClassNotFoundException c) {
+			  System.out.println("Class not found");
+			  c.printStackTrace();
+			}
+		} else {
+		*/
 	    // Initialisation de l'application et importation des fichiers CSV avec chemins absolus
 	    DonneesApplication donnees = new DonneesApplication();
 
-	    donnees.importerEmployes(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\employes.csv"));
-	    donnees.importerExpositions(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\exposition.csv"));
-	    donnees.importerConferenciers(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\conferencier.csv"));
-	    donnees.importerVisites(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\visite.csv"));
+	    donnees.importerEmployes(LireCsv("Z:\\SAE\\donnees\\employes 28_08_24 17_26.csv"));
+	    donnees.importerExpositions(LireCsv("Z:\\SAE\\\\donnees\\expositions 28_08_24 17_26.csv"));
+	    donnees.importerConferenciers(LireCsv("Z:\\SAE\\\\donnees\\conferencier 28_08_24 17_26.csv"));
+	    donnees.importerVisites(LireCsv("Z:\\SAE\\donnees\\visites 28_08_24 17_26.csv"));
+	    
+		//}
+		
+		if (employes.isEmpty()) {
+		    System.out.println("La liste d'employés est vide, rien à sérialiser.");
+		} else {
+			try (FileOutputStream fos = new FileOutputStream("Z:\\SAE\\donnees\\employesData");
+	    	    ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+
+	    	  oos.writeObject(employes);
+	    	  System.out.println("Les données des employés ont été écrites dans employesData.");
+
+	    	} catch (FileNotFoundException e) {
+	    	  System.out.println("File not found");
+	    	  throw new RuntimeException(e);
+	    	} catch (IOException ioe) {
+	    	  System.out.print("Erreur lors de l'écrtiure dans le fichier");;
+	    	  ioe.printStackTrace();
+	    	}
+		}
+	    
+	    try (FileOutputStream fos = new FileOutputStream("Z:\\SAE\\donnees\\conferencierseData");
+	    	    ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+
+	    	  oos.writeObject(conferenciers);
+
+	    	} catch (FileNotFoundException e) {
+	    	  System.out.println("File not found");
+	    	  throw new RuntimeException(e);
+	    	} catch (IOException ioe) {
+	    	  System.out.print("Erreur lors de l'écrtiure dans le fichier");;
+	    	  ioe.printStackTrace();
+	    	}
+	    
+	    try (FileOutputStream fos = new FileOutputStream("Z:\\SAE\\donnees\\expositionsData");
+	    	    ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+
+	    	  oos.writeObject(expositions);
+
+	    	} catch (FileNotFoundException e) {
+	    	  System.out.println("File not found");
+	    	  throw new RuntimeException(e);
+	    	} catch (IOException ioe) {
+	    	  System.out.print("Erreur lors de l'écrtiure dans le fichier");;
+	    	  ioe.printStackTrace();
+	    	}
+	    
+	    try (FileOutputStream fos = new FileOutputStream("Z:\\SAE\\donnees\\visitesData");
+	    	    ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+
+	    	  oos.writeObject(visites);
+
+	    	} catch (FileNotFoundException e) {
+	    	  System.out.println("File not found");
+	    	  throw new RuntimeException(e);
+	    	} catch (IOException ioe) {
+	    	  System.out.print("Erreur lors de l'écrtiure dans le fichier");;
+	    	  ioe.printStackTrace();
+	    	}
+	    
+	    
+	    for (Employe employee : employes) {
+			  System.out.println(employee);
+			}
 	}
 
 }

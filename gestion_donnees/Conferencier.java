@@ -1,15 +1,17 @@
 package gestion_donnees;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * La classe Conferencier représente un conférencier avec ses informations personnelles et ses disponibilités.
  */
-public class Conferencier {
+public class Conferencier implements Serializable {
 	private String id;
 	private String nom;
 	private String prenom;
