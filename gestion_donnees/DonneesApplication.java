@@ -19,7 +19,7 @@ public class DonneesApplication {
 	private static ArrayList<Conferencier> conferenciers;
 	private static ArrayList<Employe> employes;
 	private static ArrayList<Exposition> expositions;
-	private static  ArrayList<Visite> visites;
+	private static ArrayList<Visite> visites;
 	
 	
 	/**
@@ -233,7 +233,6 @@ public class DonneesApplication {
 					expositions.add(expo);
                 }
                 //Exposition expo = new Exposition(id, intitule,periodeDebut,periodeFin, nbOeuvre, motCles,resume , debutExpo, finExpo);
-
 
             } else {
             	throw new IllegalArgumentException("Erreur dans la ligne " + (i + 1) + ": Format incorrect");
@@ -463,15 +462,4 @@ public class DonneesApplication {
 		}
 		return false;
 	}
-	
-	public static void main(String[] args) {
-	    // Initialisation de l'application et importation des fichiers CSV avec chemins absolus
-	    DonneesApplication donnees = new DonneesApplication();
-
-	    donnees.importerEmployes(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\employes.csv"));
-	    donnees.importerExpositions(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\exposition.csv"));
-	    donnees.importerConferenciers(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\conferencier.csv"));
-	    donnees.importerVisites(LireCsv("E:\\Cours\\info\\2emeAnnée\\SAE\\visite.csv"));
-	}
-
 }
