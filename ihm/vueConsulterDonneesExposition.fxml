@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -14,7 +20,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0"
-	prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1"
+	prefWidth="1080.0" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="application.ControlerConsulterDonneesExposition">
 	<children>
@@ -103,30 +109,21 @@
 				<VBox fx:id="panneauFiltres" alignment="CENTER" layoutX="835.0"
 					layoutY="131.0" prefHeight="405.0" prefWidth="182.0" spacing="10.0"
 					style="-fx-background-color: #f4f4f4;">
-					<Label text="Intervalle de dates :" />
-					<DatePicker fx:id="expoDateDebut"
-						style="-fx-background-color: #a8d0e6;" />
-					<DatePicker fx:id="expoDateFin"
-						style="-fx-background-color: #a8d0e6;" />
-					<Label text="heure de début :" />
-					<ChoiceBox fx:id="heureDebut" prefWidth="150.0"
-						style="-fx-background-color: #a8d0e6;" />
-					<Label text="Heure de fin :" />
-					<ChoiceBox fx:id="heureFin" prefWidth="150.0"
-						style="-fx-background-color: #a8d0e6;" />
-					<Button fx:id="btnLancerFiltre" alignment="CENTER"
-						contentDisplay="CENTER" layoutX="873.0" layoutY="132.0"
-						maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-						minWidth="-Infinity" mnemonicParsing="false" onAction="#notice"
-						prefHeight="33.0" prefWidth="120.0"
-						style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
-						text="Appliquer">
-						<font>
-							<Font name="Calibri" size="17.0" />
-						</font>
-					</Button>
+					<children>
+						<Label text="Intervalle de dates :" />
+						<DatePicker fx:id="expoDateDebut"
+							style="-fx-background-color: #a8d0e6;" />
+						<DatePicker fx:id="expoDateFin"
+							style="-fx-background-color: #a8d0e6;" />
+						<Label text="heure de début :" />
+						<ChoiceBox fx:id="heureDebut" prefWidth="150.0"
+							style="-fx-background-color: #a8d0e6;" />
+						<Label text="Heure de fin :" />
+						<ChoiceBox fx:id="heureFin" prefWidth="150.0"
+							style="-fx-background-color: #a8d0e6;" />
+					</children>
 					<padding>
-						<Insets top="-130.0" />
+						<Insets top="-180.0" />
 					</padding>
 				</VBox>
 			</content>
@@ -138,6 +135,28 @@
 			prefHeight="33.0" prefWidth="120.0"
 			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
 			text="Filtrer">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnLancerFiltre" alignment="CENTER"
+			contentDisplay="CENTER" layoutX="557.0" layoutY="547.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#notice"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
+			text="Appliquer">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnReinitialiserFiltre" alignment="CENTER"
+			contentDisplay="CENTER" layoutX="697.0" layoutY="547.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#notice"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
+			text="Réinitialiser">
 			<font>
 				<Font name="Calibri" size="17.0" />
 			</font>
