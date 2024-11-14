@@ -64,6 +64,8 @@ public class ControlerConsulterDonneesVisite {
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
+	
+	private boolean donnesChargeesSauvegarder;
 
 	@FXML
 	private Button btnFiltre;
@@ -123,13 +125,21 @@ public class ControlerConsulterDonneesVisite {
 	private Button btnLancerFiltre;
 	
 	@FXML
+
 	private Button btnReinitialiserFiltre;
 	
 	private StringBuilder strVisitesLocal;
 	
 	private StringBuilder strVisitesDistance;
+  
+  private StringBuilder strVisitesSave;
+
+  @FXML
+  private Button btnSauvegarder;
 
 	private ToggleGroup categorieToggleGroup;
+  
+  
 
 	@FXML
 	void initialize() {
@@ -182,12 +192,16 @@ public class ControlerConsulterDonneesVisite {
 
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+    
 		strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		strVisitesDistance = ControleurImporterDistance.getStrVisites();
+    strVisitesSave = ControleurPadeDeGarde.getStrVisites();
 		
 		listeFiltreOk = true;
 
-		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
+				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 		
@@ -201,7 +215,11 @@ public class ControlerConsulterDonneesVisite {
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
-		}
+		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+	    textAreaConsultation.setText(ControleurPadeDeGarde.getStrVisites().toString());
+      premierAffichageOk = true;
+			listeFiltreOk = false;
+	  }
 		
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
@@ -435,19 +453,24 @@ public class ControlerConsulterDonneesVisite {
 		
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+    
 		strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		strVisitesDistance = ControleurImporterDistance.getStrVisites();
-		// System.out.print("Données Charge distance" + donnesChargeesDistance);
+    strVisitesSave = ControleurPadeDeGarde.getStrVisites();
 		
+    if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
+				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
+    
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
-		}
-
-		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
+		} else if (donnesChargeesSauvegarder) {
+	    textAreaConsultation.setText(ControleurPadeDeGarde.getStrVisites().toString());
+	  }
 		
 		for (Conferencier conferencier : donnees.getConferenciers()) {
 			if (!nomsConf.contains(conferencier.getNom())) {
@@ -567,6 +590,11 @@ public class ControlerConsulterDonneesVisite {
 		reinitialiserFiltre();
 		filtres.reset();
 		Main.setPageConsulter();
+	}
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
 	}
 
 }

@@ -100,6 +100,14 @@ public class ControleurImporterDistance {
 
     @FXML
     private TextField textIpServ;
+    
+    @FXML
+	private Button btnSauvegarder;
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
     /** Getters pour les données importées des conférenciers
      * @return strConferencier la liste des conférenciers importés
@@ -200,6 +208,9 @@ public class ControleurImporterDistance {
     private void mettreAJourEtatBtnDemande() {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
+
+
+
 
     @FXML
     void recupIp(ActionEvent event) {

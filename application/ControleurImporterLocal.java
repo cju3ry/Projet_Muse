@@ -183,6 +183,14 @@ public class ControleurImporterLocal {
 
 	@FXML
 	private Label labelVisitesImporte;
+	
+	@FXML
+	private Button btnSauvegarder;
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
 	private static DonneesApplication donnees = new DonneesApplication();
 

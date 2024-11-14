@@ -28,6 +28,10 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     private Button btnRevenir;
+    
+    @FXML
+    private Button btnSauvegarder;
+
 
     @FXML
     private TextArea textAreaConsultation;
@@ -36,7 +40,10 @@ public class ControlerConsulterDonneesEmploye {
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
+
     private boolean premierAffichageOk;
+
+    private boolean donnesChargeesSauvegarder;
     
     @FXML
     void initialize() {
@@ -53,11 +60,13 @@ public class ControlerConsulterDonneesEmploye {
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
         donnesChargeesDistance = ControleurImporterDistance.isDonneesEmployesChargees();
+        donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
-        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+        StringBuilder strEmployesSave = ControleurPadeDeGarde.getStrEmployes();
         
-        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null) 
+        	&& (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
             textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
         
@@ -69,6 +78,10 @@ public class ControlerConsulterDonneesEmploye {
             textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
             donnees = ControleurImporterDistance.getDonnees();
             premierAffichageOk = true;
+        } else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrEmployes().toString());
+           donnees = PadeDeGarde.getDonnees();
+           premierAffichageOk = true;
         }
     }
     
@@ -102,5 +115,10 @@ public class ControlerConsulterDonneesEmploye {
     void revenirEnArriere(ActionEvent event) {
     	Main.setPageConsulter();
     }
+    
+    @FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
 }

@@ -38,6 +38,16 @@
 				<Font name="Calibri" size="17.0" />
 			</font>
 		</Button>
+    <Button fx:id="btnSauvegarder" layoutX="35.0" layoutY="372.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sauvegarder" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2e9cca;" text="Sauvegarder">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+     </Button>
+    <Button fx:id="btnSauvegarder" layoutX="35.0" layoutY="372.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sauvegarder" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2e9cca;" text="Sauvegarder">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
 		<Button fx:id="btnNotice" layoutX="35.0" layoutY="312.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#notice" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2e9cca;" text="Notice">
 			<font>
 				<Font name="Calibri" size="17.0" />
@@ -50,7 +60,7 @@
 		</Label>
 		<Button fx:id="btnRevenir" layoutX="780.0" layoutY="616.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#revenirEnArriere" prefHeight="60.0" prefWidth="250.0" style="-fx-background-radius: 10; -fx-background-color: #F76C6C;" text="Revenir en arrière">
 			<font>
-				<Font name="Calibri" size="20.0" />
+				<Font name="Calibri" size="25.0" />
 			</font>
 		</Button>
 		<TextArea fx:id="textAreaConsultation" layoutX="247.0" layoutY="132.0" prefHeight="455.0" prefWidth="784.0" />

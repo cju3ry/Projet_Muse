@@ -4,8 +4,12 @@ package gestion_donnees;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -334,6 +338,22 @@ public class DonneesApplication {
 	public ArrayList<Visite> getVisites() {
 		return visites;
 	}
+	
+	public void setEmployes(ArrayList<Employe> employe) {
+		employes = employe;
+	}
+	
+	public void setConferenciers(ArrayList<Conferencier> conferencier) {
+		conferenciers = conferencier;
+	}
+	
+	public void setExpositions(ArrayList<Exposition> exposition) {
+		expositions = exposition;
+	}
+	
+	public void setVisites(ArrayList<Visite> visite) {
+		visites = visite;
+	}
 
 	/**
 	 * Ajoute un employé à la liste des employés.
@@ -462,4 +482,4 @@ public class DonneesApplication {
 		}
 		return false;
 	}
-}
+

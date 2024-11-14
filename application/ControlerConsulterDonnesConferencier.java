@@ -69,6 +69,9 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	private DatePicker confDateFin;
+  
+  @FXML
+	private Button btnSauvegarder;
 
 	@FXML
 	private ChoiceBox<String> heureDebut;
@@ -82,10 +85,14 @@ public class ControlerConsulterDonnesConferencier {
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
+  
+  private boolean donnesChargeesSauvegarder;
 
 	private StringBuilder strConferencierLocal;
 
 	private StringBuilder strConferencierDistance;
+  
+  private StringBuilder strConferencierSave;
 
 	@FXML
 	void initialize() {
@@ -111,14 +118,18 @@ public class ControlerConsulterDonnesConferencier {
 		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesConferencierChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesConferencierChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+    
 		strConferencierLocal = ControleurImporterLocal.getStrConferencier();
 		strConferencierDistance = ControleurImporterDistance.getStrConferencier();
+    strConferencierSave = ControleurPadeDeGarde.getStrConferencier();
 
 		listeFiltreOk = true;
 
-		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
+		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
+        		&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+               textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+        }
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
@@ -130,7 +141,11 @@ public class ControlerConsulterDonnesConferencier {
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
-		}
+		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrConferencier().toString());
+           premierAffichageOk = true;
+			     listeFiltreOk = false;
+	  }
 
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
@@ -228,11 +243,14 @@ public class ControlerConsulterDonnesConferencier {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
-		}
+		} else if (donnesChargeesSauvegarder) {
+	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrConferencier().toString());
+	    }
 
-		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
+		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
+        		&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+               textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+        }
 
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
@@ -262,6 +280,8 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	void consulter(ActionEvent event) {
+    reinitialiserFiltre();
+		filtres.reset();
 		Main.setPageConsulter();
 	}
 
@@ -285,10 +305,16 @@ public class ControlerConsulterDonnesConferencier {
 	void quitter(ActionEvent event) {
 		System.exit(0);
 	}
+  
+  @FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
+  reinitialiserFiltre();
+		filtres.reset();
 		Main.setPageConsulter();
 	}
-
 }

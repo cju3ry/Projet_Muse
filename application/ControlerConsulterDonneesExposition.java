@@ -77,16 +77,23 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private TextArea textAreaConsultation;
+	
+	@FXML
+  private Button btnSauvegarder;
 
 	private StringBuilder strExpositionsLocal;
 
 	private StringBuilder strExpositionsDistance;
+  
+  private StringBuilder strExpositonsSave;
 	
 	private boolean premierAffichageOk;
 
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
+	
+	private boolean donnesChargeesSauvegarder;
 
 	@FXML
 	void initialize() {
@@ -112,13 +119,16 @@ public class ControlerConsulterDonneesExposition {
 		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+    
 		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
 		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
 
 		listeFiltreOk = true;
 
-		if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+		if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null)
+				&& (!donnesChargeesSauvegarder || strExpositonsSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 
@@ -132,7 +142,11 @@ public class ControlerConsulterDonneesExposition {
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
-		}
+		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+      textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
+      premierAffichageOk = true;
+      listeFiltreOk = false;
+    }
 
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
@@ -225,18 +239,19 @@ public class ControlerConsulterDonneesExposition {
 	void reinitialiserFiltre() {
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+
 		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
 		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
+    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
-		}
-
-		if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
+		} else if (donnesChargeesSauvegarder) {
+       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
+    }
 		
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
@@ -296,6 +311,11 @@ public class ControlerConsulterDonneesExposition {
 		reinitialiserFiltre();
 		filtresExpositions.reset();
 		Main.setPageConsulter();
+	}
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
 	}
 
 }
