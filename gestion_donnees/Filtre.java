@@ -203,7 +203,7 @@ public class Filtre {
 		// Ajoute les expositions sans visite dans la période spécifiée
 		for (Exposition exposition : donnees.getExpositions()) {
 			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId())
-				&& !this.expositionFiltre.contains(exposition)) {
+					&& !this.expositionFiltre.contains(exposition)) {
 				this.expositionFiltre.add(exposition);
 			}
 		}
@@ -232,29 +232,42 @@ public class Filtre {
 		// Ajoute les expositions sans visite dans l'intervalle horaire spécifié
 		for (Exposition exposition : expositionInitial) {
 			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId())
-				&& !this.expositionFiltre.contains(exposition)) {
+					&& !this.expositionFiltre.contains(exposition)) {
 				this.expositionFiltre.add(exposition);
 			}
 		}
 	}
 
-	// Filtre conférencier par période de visite
-	public void confVisitePeriode(Date dateDebut, Date dateFin) {
+	public void confVisitePeriode(String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
-		if (dateDebut.compareTo(dateFin) > 0) {
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date dateDebut = format.parse(debut);
+		Date dateFin = format.parse(fin);
+
+		if (dateDebut.after(dateFin)) {
 			throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
 		}
 
-		this.conferencierFiltre.removeIf(conferencier -> 
-		visiteInitial.stream().noneMatch(visite -> 
-		!visite.getDateVisite().before(dateDebut) &&
-		!visite.getDateVisite().after(dateFin) &&
-		visite.getConferencierId().equals(conferencier.getId())
-				)
-				);
+		// Identifie les conférenciers ayant des visites dans la période
+		ArrayList<String> conferenciersAvecVisitesDansPeriode = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			Date dateVisite = visite.getDateVisite();
+			if (!dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+				conferenciersAvecVisitesDansPeriode.add(visite.getConferencierId());
+			}
+		}
+
+		// Ajoute les conférenciers sans visites dans la période spécifiée
+		for (Conferencier conferencier : conferencierInitial) {
+			if (!conferenciersAvecVisitesDansPeriode.contains(conferencier.getId())
+					&& !this.conferencierFiltre.contains(conferencier)) {
+				this.conferencierFiltre.add(conferencier);
+			}
+		}
 	}
 
-	// Filtre conférencier par horaire de visite
 	public void confVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserConferencierFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -262,13 +275,26 @@ public class Filtre {
 		Date heureDebut = formatHeure.parse(dateHeureDebut);
 		Date heureFin = formatHeure.parse(dateHeureFin);
 
-		this.conferencierFiltre.removeIf(conferencier -> 
-		visiteInitial.stream().noneMatch(visite -> 
-		visite.getHeureVisite().after(heureDebut) &&
-		visite.getHeureVisite().before(heureFin) &&
-		visite.getConferencierId().equals(conferencier.getId())
-				)
-				);
+		if (heureDebut.after(heureFin)) {
+			throw new IllegalArgumentException("L'heure de début doit être avant l'heure de fin.");
+		}
+
+		// Identifie les conférenciers ayant des visites dans l'intervalle horaire
+		ArrayList<String> conferenciersAvecVisitesDansHoraire = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			Date heureVisite = visite.getHeureVisite();
+			if (!heureVisite.before(heureDebut) && !heureVisite.after(heureFin)) {
+				conferenciersAvecVisitesDansHoraire.add(visite.getConferencierId());
+			}
+		}
+
+		// Ajoute les conférenciers sans visites dans l'intervalle horaire spécifié
+		for (Conferencier conferencier : conferencierInitial) {
+			if (!conferenciersAvecVisitesDansHoraire.contains(conferencier.getId())
+					&& !this.conferencierFiltre.contains(conferencier)) {
+				this.conferencierFiltre.add(conferencier);
+			}
+		}
 	}
 
 	public void reset() {
@@ -287,22 +313,5 @@ public class Filtre {
 
 	public ArrayList<Conferencier> getListeConferencier() {
 		return this.conferencierFiltre;
-	}
-
-	public static void main(String[] args) throws ParseException {
-		// Initialisation de l'application et importation des fichiers CSV avec chemins absolus
-		DonneesApplication donnees = new DonneesApplication();
-		Filtre filtres = new Filtre();
-
-		DonneesApplication.importerEmployes(DonneesApplication.LireCsv("employes 28_08_24 17_26.csv"));
-		DonneesApplication.importerExpositions(DonneesApplication.LireCsv("expositions 28_08_24 17_26.csv"));
-		donnees.importerConferenciers(DonneesApplication.LireCsv("conferencier 28_08_24 17_26.csv"));
-		DonneesApplication.importerVisites(DonneesApplication.LireCsv("visites 28_08_24 17_26.csv"));
-
-		filtres.expoVisiteHoraire("10h00", "12h00");
-		System.out.print("\n\n");
-		for (Exposition exposition : filtres.getListeExposition()) {
-			System.out.println(exposition.toString());
-		}
 	}
 }
