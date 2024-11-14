@@ -34,7 +34,7 @@ import javafx.scene.layout.VBox;
 
 public class ControlerConsulterDonneesVisite {
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private DonneesApplication donnees;
 
 	private Filtre filtres = new Filtre();
 	
@@ -193,6 +193,7 @@ public class ControlerConsulterDonneesVisite {
 		}
 		
 		if (donneesChargeesLocal && !premierAffichageOk) {
+			donnees = ControleurImporterLocal.getDonnees();
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
 			premierAffichageOk = true;
 			listeFiltreOk = false;

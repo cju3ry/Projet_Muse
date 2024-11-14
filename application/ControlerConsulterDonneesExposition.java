@@ -28,7 +28,7 @@ public class ControlerConsulterDonneesExposition {
 
 	private DonneesApplication donnees = new DonneesApplication();
 
-	private Filtre filtres = new Filtre();
+	private Filtre filtresExpositions = new Filtre();
 
 	@FXML
 	private Button btnConsulter;
@@ -151,9 +151,6 @@ public class ControlerConsulterDonneesExposition {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
-//			for (Exposition exposition : filtres.getListeExposition()) {
-//				System.out.println(exposition.toString());
-//			}
 		}
 		
 		
@@ -170,7 +167,8 @@ public class ControlerConsulterDonneesExposition {
 	@FXML 
 	void appliquerFiltre() {
 	    // Réinitialise les filtres pour partir de toutes les données disponibles
-	    filtres.reset();
+		
+		filtresExpositions.reset();
 	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
 	    String strDateDebut;
@@ -185,11 +183,9 @@ public class ControlerConsulterDonneesExposition {
 	            // Conversion de LocalDate en String au format dd/MM/yyyy
 	            strDateDebut = expoDateDebut.getValue().format(dateTimeFormat);
 	            strDateFin = expoDateFin.getValue().format(dateTimeFormat);
-	            
-	            System.out.print(strDateDebut + "    " + strDateFin);
 
 	            // Appel du filtre avec les dates sous forme de chaînes
-	            filtres.expoVisitePeriode(strDateDebut, strDateFin);
+	            filtresExpositions.expoVisitePeriode(strDateDebut, strDateFin);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            textAreaConsultation.setText("Erreur dans le format des dates.");
@@ -202,7 +198,7 @@ public class ControlerConsulterDonneesExposition {
 	        strHeureFin = heureFin.getValue();
 	        
 	        try {
-	            filtres.expoVisiteHoraire(strHeureDebut, strHeureFin);
+	        	filtresExpositions.expoVisiteHoraire(strHeureDebut, strHeureFin);
 	        } catch (ParseException e) {
 	            e.printStackTrace();
 	            textAreaConsultation.setText("Erreur dans le format des heures.");
@@ -210,9 +206,9 @@ public class ControlerConsulterDonneesExposition {
 	    }
 
 	    // Affichage des résultats filtrés
-	    if (!filtres.getListeExposition().isEmpty()) {
-	        for (Exposition exposition : filtres.getListeExposition()) {
-	            aAfficher += exposition + "\n";
+	    if (!filtresExpositions.getListeExposition().isEmpty()) {
+	        for (Exposition exposition : filtresExpositions.getListeExposition()) {
+	            aAfficher += exposition.toString() + "\n";
 	        }
 	        textAreaConsultation.setText(aAfficher);
 	    } else {
@@ -226,7 +222,6 @@ public class ControlerConsulterDonneesExposition {
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
 		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
 		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
@@ -266,7 +261,7 @@ public class ControlerConsulterDonneesExposition {
 	@FXML
 	void consulter(ActionEvent event) {
 		reinitialiserFiltre();
-		filtres.reset();
+		filtresExpositions.reset();
 		Main.setPageConsulter();
 	}
 
@@ -294,7 +289,7 @@ public class ControlerConsulterDonneesExposition {
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
 		reinitialiserFiltre();
-		filtres.reset();
+		filtresExpositions.reset();
 		Main.setPageConsulter();
 	}
 
