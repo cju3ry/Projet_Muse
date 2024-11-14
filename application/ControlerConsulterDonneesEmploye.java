@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 public class ControlerConsulterDonneesEmploye {
+	
+	private DonneesApplication donnees;
 
     @FXML
     private Button btnConsulter;
@@ -38,6 +40,9 @@ public class ControlerConsulterDonneesEmploye {
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
+
+    private boolean premierAffichageOk;
+
     private boolean donnesChargeesSauvegarder;
     
     @FXML
@@ -45,9 +50,12 @@ public class ControlerConsulterDonneesEmploye {
         textAreaConsultation.setEditable(false);
         textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
+        premierAffichageOk = false;
+        
         // Déclenchement de l'événement au clic sur la TextArea
         textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
     }
+    
     // Méthode pour charger et afficher les données
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
@@ -56,20 +64,26 @@ public class ControlerConsulterDonneesEmploye {
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
         StringBuilder strEmployesSave = ControleurPadeDeGarde.getStrEmployes();
-        System.out.print("Donnes Charge distance" + donnesChargeesDistance);
-        if (donneesChargeesLocal) {
-            textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
-        } else if (donnesChargeesDistance) {
-            textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
-        } else if (donnesChargeesSauvegarder) {
-        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrEmployes().toString());
-        }
+        
         if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null) 
         	&& (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
             textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
+        
+        if (donneesChargeesLocal && !premierAffichageOk) {
+            textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+            donnees = ControleurImporterLocal.getDonnees();
+            premierAffichageOk = true;
+        } else if (donnesChargeesDistance && !premierAffichageOk) {
+            textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
+            donnees = ControleurImporterDistance.getDonnees();
+            premierAffichageOk = true;
+        } else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrEmployes().toString());
+           donnees = PadeDeGarde.getDonnees();
+           premierAffichageOk = true;
+        }
     }
-    
     
     @FXML
     void consulter(ActionEvent event) {

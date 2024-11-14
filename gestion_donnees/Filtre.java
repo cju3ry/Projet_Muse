@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import application.ControleurImporterLocal;
+
 public class Filtre {
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private DonneesApplication donnees = ControleurImporterLocal.getDonnees();
 
 	private ArrayList<Visite> visiteFiltre;
 	private ArrayList<Exposition> expositionFiltre;
@@ -19,8 +21,8 @@ public class Filtre {
 
 	public Filtre() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
-		this.expositionFiltre = new ArrayList<>(expositionInitial);
-		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
+		this.expositionFiltre = new ArrayList<>();
+		this.conferencierFiltre = new ArrayList<>();
 	}
 
 	private void initialiserVisiteFiltre() {
@@ -30,14 +32,14 @@ public class Filtre {
 	}
 
 	private void initialiserExpositionFiltre() {
-		if (expositionFiltre.isEmpty()) {
-			this.expositionFiltre = new ArrayList<>(expositionInitial);
+		if (!expositionFiltre.isEmpty()) {
+			this.expositionFiltre = new ArrayList<>();
 		}
 	}
 
 	private void initialiserConferencierFiltre() {
-		if (conferencierFiltre.isEmpty()) {
-			this.conferencierFiltre = new ArrayList<>(conferencierInitial);
+		if (!conferencierFiltre.isEmpty()) {
+			this.conferencierFiltre = new ArrayList<>();
 		}
 	}
 
@@ -51,6 +53,7 @@ public class Filtre {
 				break;
 			}
 		}
+
 		String finalIdConferencier = idConferencier;
 		this.visiteFiltre.removeIf(visite -> !finalIdConferencier.equals(visite.getConferencierId()));
 	}
@@ -172,31 +175,40 @@ public class Filtre {
 		this.visiteFiltre.removeIf(visite -> !idExposition.contains(visite.getExpositionId()));
 	}
 
-	// Filtre exposition par période de visite
-	public void expoVisitePeriode(Date dateDebut, Date dateFin) {
-	    initialiserExpositionFiltre();
-	    
-	    // Vérification des dates de début et de fin
-	    if (dateDebut.compareTo(dateFin) > 0) {
-	        throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
-	    }
+	public void expoVisitePeriode(String debut, String fin) throws ParseException {
+		initialiserExpositionFiltre();
 
-	    // Liste pour stocker les expositions ayant une visite dans l'intervalle
-	    ArrayList<String> expositionsAvecVisitesDansPeriode = new ArrayList<>();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-	    // Parcours de toutes les visites pour trouver les expositions visitées dans la période
-	    for (Visite visite : visiteInitial) {
-	        Date dateVisite = visite.getDateVisite();
-	        if (dateVisite != null && !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
-	            expositionsAvecVisitesDansPeriode.add(visite.getExpositionId());
-	        }
-	    }
+		Date dateDebut = new Date();
+		Date dateFin = new Date();
+		Date dateVisite;
 
-	    // On filtre les expositions pour conserver celles qui ne sont pas dans la liste
-	    this.expositionFiltre.removeIf(exposition -> expositionsAvecVisitesDansPeriode.contains(exposition.getId()));
+		dateDebut = format.parse(debut);
+		dateFin = format.parse(fin);
+
+		if (dateDebut.compareTo(dateFin) > 0) {
+			throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
+		}
+
+		// Identifie les expositions visitées dans la période
+		ArrayList<String> expositionsAvecVisitesDansPeriode = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			dateVisite = visite.getDateVisite();
+			if (!dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+				expositionsAvecVisitesDansPeriode.add(visite.getExpositionId());
+			}
+		}
+
+		// Ajoute les expositions sans visite dans la période spécifiée
+		for (Exposition exposition : donnees.getExpositions()) {
+			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId())
+					&& !this.expositionFiltre.contains(exposition)) {
+				this.expositionFiltre.add(exposition);
+			}
+		}
 	}
 
-	// Filtre exposition par horaire de visite
 	public void expoVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserExpositionFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -204,32 +216,58 @@ public class Filtre {
 		Date heureDebut = formatHeure.parse(dateHeureDebut);
 		Date heureFin = formatHeure.parse(dateHeureFin);
 
-		this.expositionFiltre.removeIf(exposition -> 
-			visiteInitial.stream().noneMatch(visite -> 
-				visite.getHeureVisite().after(heureDebut) &&
-				visite.getHeureVisite().before(heureFin) &&
-				visite.getExpositionId().equals(exposition.getId())
-			)
-		);
+		if (heureDebut.after(heureFin)) {
+			throw new IllegalArgumentException("L'heure de début doit être avant l'heure de fin.");
+		}
+
+		// Identifie les expositions visitées dans l'intervalle d'heures spécifié
+		ArrayList<String> expositionsAvecVisitesDansHoraire = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			Date heureVisite = visite.getHeureVisite();
+			if (!heureVisite.before(heureDebut) && !heureVisite.after(heureFin)) {
+				expositionsAvecVisitesDansHoraire.add(visite.getExpositionId());
+			}
+		}
+
+		// Ajoute les expositions sans visite dans l'intervalle horaire spécifié
+		for (Exposition exposition : expositionInitial) {
+			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId())
+					&& !this.expositionFiltre.contains(exposition)) {
+				this.expositionFiltre.add(exposition);
+			}
+		}
 	}
 
-	// Filtre conférencier par période de visite
-	public void confVisitePeriode(Date dateDebut, Date dateFin) {
+	public void confVisitePeriode(String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
-		if (dateDebut.compareTo(dateFin) > 0) {
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date dateDebut = format.parse(debut);
+		Date dateFin = format.parse(fin);
+
+		if (dateDebut.after(dateFin)) {
 			throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
 		}
 
-		this.conferencierFiltre.removeIf(conferencier -> 
-			visiteInitial.stream().noneMatch(visite -> 
-				!visite.getDateVisite().before(dateDebut) &&
-				!visite.getDateVisite().after(dateFin) &&
-				visite.getConferencierId().equals(conferencier.getId())
-			)
-		);
+		// Identifie les conférenciers ayant des visites dans la période
+		ArrayList<String> conferenciersAvecVisitesDansPeriode = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			Date dateVisite = visite.getDateVisite();
+			if (!dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+				conferenciersAvecVisitesDansPeriode.add(visite.getConferencierId());
+			}
+		}
+
+		// Ajoute les conférenciers sans visites dans la période spécifiée
+		for (Conferencier conferencier : conferencierInitial) {
+			if (!conferenciersAvecVisitesDansPeriode.contains(conferencier.getId())
+					&& !this.conferencierFiltre.contains(conferencier)) {
+				this.conferencierFiltre.add(conferencier);
+			}
+		}
 	}
 
-	// Filtre conférencier par horaire de visite
 	public void confVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserConferencierFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -237,19 +275,32 @@ public class Filtre {
 		Date heureDebut = formatHeure.parse(dateHeureDebut);
 		Date heureFin = formatHeure.parse(dateHeureFin);
 
-		this.conferencierFiltre.removeIf(conferencier -> 
-			visiteInitial.stream().noneMatch(visite -> 
-				visite.getHeureVisite().after(heureDebut) &&
-				visite.getHeureVisite().before(heureFin) &&
-				visite.getConferencierId().equals(conferencier.getId())
-			)
-		);
+		if (heureDebut.after(heureFin)) {
+			throw new IllegalArgumentException("L'heure de début doit être avant l'heure de fin.");
+		}
+
+		// Identifie les conférenciers ayant des visites dans l'intervalle horaire
+		ArrayList<String> conferenciersAvecVisitesDansHoraire = new ArrayList<>();
+		for (Visite visite : visiteInitial) {
+			Date heureVisite = visite.getHeureVisite();
+			if (!heureVisite.before(heureDebut) && !heureVisite.after(heureFin)) {
+				conferenciersAvecVisitesDansHoraire.add(visite.getConferencierId());
+			}
+		}
+
+		// Ajoute les conférenciers sans visites dans l'intervalle horaire spécifié
+		for (Conferencier conferencier : conferencierInitial) {
+			if (!conferenciersAvecVisitesDansHoraire.contains(conferencier.getId())
+					&& !this.conferencierFiltre.contains(conferencier)) {
+				this.conferencierFiltre.add(conferencier);
+			}
+		}
 	}
 
 	public void reset() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
-		this.expositionFiltre = new ArrayList<>(expositionInitial);
-		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
+		this.expositionFiltre = new ArrayList<>();
+		this.conferencierFiltre = new ArrayList<>();
 	}
 
 	public ArrayList<Visite> getListeVisite() {
@@ -262,29 +313,5 @@ public class Filtre {
 
 	public ArrayList<Conferencier> getListeConferencier() {
 		return this.conferencierFiltre;
-	}
-	
-	public static void main(String[] args) throws ParseException {
-	    // Initialisation de l'application et importation des fichiers CSV avec chemins absolus
-	    DonneesApplication donnees = new DonneesApplication();
-	    Filtre filtres = new Filtre();
-	    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-	    
-	    Date dateDebut = new Date();
-	    Date dateFin = new Date();
-	    
-	    dateDebut = format.parse("01/11/2024");
-	    dateFin = format.parse("02/11/2024");
-
-	    donnees.importerEmployes(donnees.LireCsv("employes 28_08_24 17_26.csv"));
-	    donnees.importerExpositions(donnees.LireCsv("expositions 28_08_24 17_26.csv"));
-	    donnees.importerConferenciers(donnees.LireCsv("conferencier 28_08_24 17_26.csv"));
-	    donnees.importerVisites(donnees.LireCsv("visites 28_08_24 17_26.csv"));
-	    
-	    filtres.expoVisitePeriode(dateDebut, dateFin);
-	    System.out.print("\n\n");
-	    for (Exposition exposition : filtres.getListeExposition()) {
-	    	System.out.print(exposition.toString());
-	    }
 	}
 }

@@ -86,7 +86,6 @@ public class ControleurImporterDistance {
     @FXML
     private Button btnOkIP;
 
-
     @FXML
     private Label labelConferencierImporte;
 
@@ -96,10 +95,8 @@ public class ControleurImporterDistance {
     @FXML
     private Label labelExpositionsImporte;
 
-
     @FXML
     private Label labelVisitesImporte;
-
 
     @FXML
     private TextField textIpServ;
@@ -157,7 +154,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des expositions ont été importées
      * @return donneesExpositionsChargees true si les données des expositions ont été importées
-     * */
+     **/
     public static boolean isDonneesExpositionsChargees() {
         return donneesExpositionsChargees;
     }
@@ -165,7 +162,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des visites ont été importées
      * @return donneesVisitesChargees true si les données des visites ont été importées
-     * */
+     **/
     public static boolean isDonneesVisitesChargees() {
         return donneesVisitesChargees;
     }
@@ -173,8 +170,12 @@ public class ControleurImporterDistance {
     /**
      * Getters pour le chemin du fichier des conférenciers
      * @return cheminFichierConferenciers le chemin du fichier des conférenciers
-     * * */
-    private DonneesApplication donnees = new DonneesApplication();
+     **/
+    private static DonneesApplication donnees = new DonneesApplication();
+    
+    public static DonneesApplication getDonnees() {
+		return donnees;
+	}
 
     /**
      * Socket pour la connexion au serveur

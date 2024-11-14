@@ -23,7 +23,7 @@ public class DonneesApplication {
 	private static ArrayList<Conferencier> conferenciers;
 	private static ArrayList<Employe> employes;
 	private static ArrayList<Exposition> expositions;
-	private static  ArrayList<Visite> visites;
+	private static ArrayList<Visite> visites;
 	
 	
 	/**
@@ -93,7 +93,7 @@ public class DonneesApplication {
     			
     			Employe employe = new Employe(id, nom, prenom, numTel);
 
-    			ajoutEmploye(employe);
+    			employes.add(employe);
 
 	            System.out.println("Employé ajouté : " + employe);
 	        } else {
@@ -157,9 +157,9 @@ public class DonneesApplication {
 			conferencier.setEstEmploye(estEmployes);
 			conferencier.setIndisponibilite(indisponibilite);
 			conferencier.setSpecialitees(specialite);
-
-			ajoutConferencier(conferencier);
-				
+			
+			conferenciers.add(conferencier);
+			
 			System.out.println("Conferencier ajouté : " + conferencier);
 	    }
 	}
@@ -237,7 +237,6 @@ public class DonneesApplication {
 					expositions.add(expo);
                 }
                 //Exposition expo = new Exposition(id, intitule,periodeDebut,periodeFin, nbOeuvre, motCles,resume , debutExpo, finExpo);
-
 
             } else {
             	throw new IllegalArgumentException("Erreur dans la ligne " + (i + 1) + ": Format incorrect");
@@ -484,4 +483,3 @@ public class DonneesApplication {
 		return false;
 	}
 
-}

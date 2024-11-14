@@ -192,8 +192,11 @@ public class ControleurImporterLocal {
 		Main.sauvegarder();
 	}
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private static DonneesApplication donnees = new DonneesApplication();
 
+	public static DonneesApplication getDonnees() {
+		return donnees;
+	}
 
 	@FXML
     public void initialize() {

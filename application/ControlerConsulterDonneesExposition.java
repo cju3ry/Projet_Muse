@@ -26,9 +26,9 @@ import javafx.scene.layout.VBox;
 
 public class ControlerConsulterDonneesExposition {
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private DonneesApplication donnees;
 
-	private Filtre filtres = new Filtre();
+	private Filtre filtresExpositions = new Filtre();
 
 	@FXML
 	private Button btnConsulter;
@@ -53,7 +53,7 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private ScrollPane scrollPaneFiltres;
-	
+
 	@FXML
 	private VBox panneauFiltres;
 
@@ -73,10 +73,21 @@ public class ControlerConsulterDonneesExposition {
 	private Button btnLancerFiltre;
 
 	@FXML
+	private Button btnReinitialiserFiltre;
+
+	@FXML
 	private TextArea textAreaConsultation;
 	
 	@FXML
-    private Button btnSauvegarder;
+  private Button btnSauvegarder;
+
+	private StringBuilder strExpositionsLocal;
+
+	private StringBuilder strExpositionsDistance;
+  
+  private StringBuilder strExpositonsSave;
+	
+	private boolean premierAffichageOk;
 
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
@@ -89,37 +100,159 @@ public class ControlerConsulterDonneesExposition {
 		textAreaConsultation.setEditable(false);
 		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
+		premierAffichageOk = false;
 		// Déclenchement de l'événement au clic sur la TextArea
 		textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
 
-		// Par défaut, cacher le panneau de filtres
+		// Par défaut, cacher le panneau et boutons des filtres
 		scrollPaneFiltres.setVisible(false);
+		btnLancerFiltre.setVisible(false);
+		btnReinitialiserFiltre.setVisible(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
-
+		btnReinitialiserFiltre.setOnAction(event -> reinitialiserFiltre());
 	}
+
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
+		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
-		donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
-		StringBuilder strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
-		StringBuilder strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-		StringBuilder strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
-		System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+    
+		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
+		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
+    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
+
+		listeFiltreOk = true;
+
+		if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null)
+				&& (!donnesChargeesSauvegarder || strExpositonsSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
+
+		if (donneesChargeesLocal && !premierAffichageOk) {
+			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+			donnees = ControleurImporterLocal.getDonnees();
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		} else if (donnesChargeesDistance && !premierAffichageOk) {
+			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
+			donnees = ControleurImporterDistance.getDonnees();
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
+      textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
+      premierAffichageOk = true;
+      listeFiltreOk = false;
+    }
+
+		if (premierAffichageOk && !listeFiltreOk) {
+			listeFiltreOk = true;
+			heureDebut.setItems(FXCollections.observableArrayList(
+					"8h00", "8h30", "9h00",
+					"9h30", "10h00", "10h30",
+					"11h00", "11h30", "12h00", 
+					"12h30", "13h30", "13h30",
+					"14h00", "14h30", "15h00", 
+					"15h30","16h00", "16h30", "17h00"
+					));
+
+			heureFin.setItems(FXCollections.observableArrayList(
+					"8h00", "8h30", "9h00",
+					"9h30", "10h00", "10h30",
+					"11h00", "11h30", "12h00", 
+					"12h30", "13h30", "13h30",
+					"14h00", "14h30", "15h00", 
+					"15h30","16h00", "16h30", "17h00"
+					));
+		}
+		
+		
+	}
+
+	private void toggleFiltrePanel() {
+		// Basculer la visibilité du panneau de filtres
+		boolean isVisible = scrollPaneFiltres.isVisible();
+		scrollPaneFiltres.setVisible(!isVisible);
+		btnLancerFiltre.setVisible(!isVisible);
+		btnReinitialiserFiltre.setVisible(!isVisible);
+	}
+
+	@FXML 
+	void appliquerFiltre() {
+	    // Réinitialise les filtres pour partir de toutes les données disponibles
+		filtresExpositions.reset();
+		
+	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    
+	    String strDateDebut;
+	    String strDateFin;
+	    String strHeureDebut;
+	    String strHeureFin;
+	    String aAfficher = "";
+
+	    // Vérification et application du filtre par période de date
+	    if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
+	        try {
+	            // Conversion de LocalDate en String au format dd/MM/yyyy
+	            strDateDebut = expoDateDebut.getValue().format(dateTimeFormat);
+	            strDateFin = expoDateFin.getValue().format(dateTimeFormat);
+
+	            // Appel du filtre avec les dates sous forme de chaînes
+	            filtresExpositions.expoVisitePeriode(strDateDebut, strDateFin);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            textAreaConsultation.setText("Erreur dans le format des dates.");
+	        }
+	    }
+
+	    // Vérification et application du filtre par horaire de visite
+	    if (heureDebut.getValue() != null && heureFin.getValue() != null) {
+	        strHeureDebut = heureDebut.getValue();
+	        strHeureFin = heureFin.getValue();
+	        
+	        try {
+	        	filtresExpositions.expoVisiteHoraire(strHeureDebut, strHeureFin);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	            textAreaConsultation.setText("Erreur dans le format des heures.");
+	        }
+	    }
+
+	    // Affichage des résultats filtrés
+	    if (!filtresExpositions.getListeExposition().isEmpty()) {
+	        for (Exposition exposition : filtresExpositions.getListeExposition()) {
+	            aAfficher += exposition.toString() + "\n";
+	        }
+	        textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
+					 + "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
+					 + filtresExpositions.getListeExposition().size() + ".\n\n\n"
+					 + aAfficher);
+		} else {
+			textAreaConsultation.setText("Aucun résultat à votre recherche.");
+		}
+	}
+
+	@FXML
+	void reinitialiserFiltre() {
+		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
+		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
+    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+
+		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
+		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
+    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
+
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 		} else if (donnesChargeesSauvegarder) {
        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
-       }
-		if ((!donneesChargeesLocal || strExpositionsLocal == null) && (!donnesChargeesDistance || strExpositionsDistance == null)
-				&& (!donnesChargeesSauvegarder || strExpositonsSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
-
+    }
+		
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
 				"9h30", "10h00", "10h30",
@@ -137,84 +270,18 @@ public class ControlerConsulterDonneesExposition {
 				"14h00", "14h30", "15h00", 
 				"15h30","16h00", "16h30", "17h00"
 				));
-	}
 
-	private void toggleFiltrePanel() {
-		// Basculer la visibilité du panneau de filtres
-		boolean isVisible = scrollPaneFiltres.isVisible();
-		scrollPaneFiltres.setVisible(!isVisible);
+		expoDateDebut.getEditor().clear();
+		expoDateDebut.setValue(null);
 
-		// TODO reset les filtres
-	}
-
-	@FXML 
-	void appliquerFiltre() {
-		filtres.reset();
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String nom;
-		String prenom;
-		String strAnalyser;
-		String strAnalyserBis;
-		String[] champs;
-		String aAfficher;
-		Date date;
-		Date dateDebut;
-		Date dateFin;
-		LocalDate datePrecise;
-		LocalDate dateIntervalleDebut;
-		LocalDate dateIntervalleFin;
-		
-		aAfficher = "";
-		date = null;
-		dateDebut = null;
-		dateFin = null;
-		dateIntervalleDebut = null;
-
-		if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
-		    try {
-		        // Récupérer les dates sous forme de LocalDate
-		        dateIntervalleDebut = expoDateDebut.getValue();
-		        dateIntervalleFin = expoDateFin.getValue();
-		        
-		        // Si vous avez besoin de les formater en chaîne (par exemple, pour affichage ou autre traitement)
-		        strAnalyser = dateIntervalleDebut.format(dateTimeFormat);
-		        strAnalyserBis = dateIntervalleFin.format(dateTimeFormat);
-
-		        // Conversion des LocalDate en Date, sans étapes superflues
-		        // Utiliser les convertisseurs appropriés si vous en avez besoin, sinon utilisez directement les LocalDate
-		        dateDebut = Date.from(dateIntervalleDebut.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		        dateFin = Date.from(dateIntervalleFin.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		        
-		        // Appliquez les filtres
-		        filtres.expoVisitePeriode(dateDebut, dateFin);
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		}
-
-		if (heureDebut.getValue() != null && heureFin.getValue() != null) {
-			strAnalyser = heureDebut.getValue();
-			strAnalyserBis = heureFin.getValue();
-			try {
-				filtres.expoVisiteHoraire(strAnalyser, strAnalyserBis);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (!filtres.getListeExposition().isEmpty()) {
-			for (Exposition exposition : filtres.getListeExposition()) {
-				aAfficher += exposition + "\n\n";
-			}
-			textAreaConsultation.setText(aAfficher);
-		} else {
-			textAreaConsultation.setText("Aucun résultat à votre recherche.");
-		}
+		expoDateFin.getEditor().clear();
+		expoDateFin.setValue(null);
 	}
 
 	@FXML
 	void consulter(ActionEvent event) {
+		reinitialiserFiltre();
+		filtresExpositions.reset();
 		Main.setPageConsulter();
 	}
 
@@ -241,6 +308,8 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
+		reinitialiserFiltre();
+		filtresExpositions.reset();
 		Main.setPageConsulter();
 	}
 	
