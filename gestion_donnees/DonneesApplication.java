@@ -89,7 +89,7 @@ public class DonneesApplication {
     			
     			Employe employe = new Employe(id, nom, prenom, numTel);
 
-    			ajoutEmploye(employe);
+    			employes.add(employe);
 
 	            System.out.println("Employé ajouté : " + employe);
 	        } else {
@@ -153,9 +153,9 @@ public class DonneesApplication {
 			conferencier.setEstEmploye(estEmployes);
 			conferencier.setIndisponibilite(indisponibilite);
 			conferencier.setSpecialitees(specialite);
-
-			ajoutConferencier(conferencier);
-				
+			
+			conferenciers.add(conferencier);
+			
 			System.out.println("Conferencier ajouté : " + conferencier);
 	    }
 	}

@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import application.ControleurImporterLocal;
+
 public class Filtre {
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private DonneesApplication donnees = ControleurImporterLocal.getDonnees();
 
 	private ArrayList<Visite> visiteFiltre;
 	private ArrayList<Exposition> expositionFiltre;
@@ -19,8 +21,8 @@ public class Filtre {
 
 	public Filtre() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
-		this.expositionFiltre = new ArrayList<>(expositionInitial);
-		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
+		this.expositionFiltre = new ArrayList<>();
+		this.conferencierFiltre = new ArrayList<>();
 	}
 
 	private void initialiserVisiteFiltre() {
@@ -30,7 +32,7 @@ public class Filtre {
 	}
 
 	private void initialiserExpositionFiltre() {
-		if (expositionFiltre.isEmpty()) {
+		if (!expositionFiltre.isEmpty()) {
 			this.expositionFiltre = new ArrayList<>();
 		}
 	}
@@ -173,7 +175,7 @@ public class Filtre {
 		this.visiteFiltre.removeIf(visite -> !idExposition.contains(visite.getExpositionId()));
 	}
 
-	public void expoVisitePeriode(String debut, String fin) {
+	public void expoVisitePeriode(String debut, String fin) throws ParseException {
 		initialiserExpositionFiltre();
 
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -182,14 +184,8 @@ public class Filtre {
 		Date dateFin = new Date();
 		Date dateVisite;
 
-		try {
-			dateDebut = format.parse(debut);
-			dateFin = format.parse(fin);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		dateDebut = format.parse(debut);
+		dateFin = format.parse(fin);
 
 		if (dateDebut.compareTo(dateFin) > 0) {
 			throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
@@ -199,15 +195,15 @@ public class Filtre {
 		ArrayList<String> expositionsAvecVisitesDansPeriode = new ArrayList<>();
 		for (Visite visite : visiteInitial) {
 			dateVisite = visite.getDateVisite();
-			if (dateVisite != null && !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+			if (!dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
 				expositionsAvecVisitesDansPeriode.add(visite.getExpositionId());
 			}
 		}
 
 		// Ajoute les expositions sans visite dans la période spécifiée
 		for (Exposition exposition : donnees.getExpositions()) {
-			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId()) &&
-					!this.expositionFiltre.contains(exposition)) {
+			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId())
+				&& !this.expositionFiltre.contains(exposition)) {
 				this.expositionFiltre.add(exposition);
 			}
 		}
@@ -228,15 +224,15 @@ public class Filtre {
 		ArrayList<String> expositionsAvecVisitesDansHoraire = new ArrayList<>();
 		for (Visite visite : visiteInitial) {
 			Date heureVisite = visite.getHeureVisite();
-			if (heureVisite.after(heureDebut) && heureVisite.before(heureFin)) {
+			if (!heureVisite.before(heureDebut) && !heureVisite.after(heureFin)) {
 				expositionsAvecVisitesDansHoraire.add(visite.getExpositionId());
 			}
 		}
 
 		// Ajoute les expositions sans visite dans l'intervalle horaire spécifié
 		for (Exposition exposition : expositionInitial) {
-			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId()) &&
-					!this.expositionFiltre.contains(exposition)) {
+			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId())
+				&& !this.expositionFiltre.contains(exposition)) {
 				this.expositionFiltre.add(exposition);
 			}
 		}
@@ -277,8 +273,8 @@ public class Filtre {
 
 	public void reset() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
-		this.expositionFiltre = new ArrayList<>(expositionInitial);
-		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
+		this.expositionFiltre = new ArrayList<>();
+		this.conferencierFiltre = new ArrayList<>();
 	}
 
 	public ArrayList<Visite> getListeVisite() {
@@ -303,7 +299,7 @@ public class Filtre {
 		donnees.importerConferenciers(DonneesApplication.LireCsv("conferencier 28_08_24 17_26.csv"));
 		DonneesApplication.importerVisites(DonneesApplication.LireCsv("visites 28_08_24 17_26.csv"));
 
-		filtres.expoVisitePeriode("01/11/2024", "30/11/2024");
+		filtres.expoVisiteHoraire("10h00", "12h00");
 		System.out.print("\n\n");
 		for (Exposition exposition : filtres.getListeExposition()) {
 			System.out.println(exposition.toString());
