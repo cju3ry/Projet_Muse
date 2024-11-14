@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 public class ControlerConsulterDonneesEmploye {
+	
+	private DonneesApplication donnees;
 
     @FXML
     private Button btnConsulter;
@@ -61,9 +63,11 @@ public class ControlerConsulterDonneesEmploye {
         
         if (donneesChargeesLocal && !premierAffichageOk) {
             textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
+            donnees = ControleurImporterLocal.getDonnees();
             premierAffichageOk = true;
         } else if (donnesChargeesDistance && !premierAffichageOk) {
             textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
+            donnees = ControleurImporterDistance.getDonnees();
             premierAffichageOk = true;
         }
     }

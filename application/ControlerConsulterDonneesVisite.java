@@ -184,7 +184,6 @@ public class ControlerConsulterDonneesVisite {
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
 		strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		strVisitesDistance = ControleurImporterDistance.getStrVisites();
-		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 		
 		listeFiltreOk = true;
 
@@ -199,6 +198,7 @@ public class ControlerConsulterDonneesVisite {
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
+			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
@@ -410,7 +410,7 @@ public class ControlerConsulterDonneesVisite {
 			filtres.conferencierExterne();
 		}
 
-		if (!filtres.getListeVisite().isEmpty() && !(filtres.getListeVisite().size() == 18)) {
+		if (!filtres.getListeVisite().isEmpty()) {
 			for (Visite visite : filtres.getListeVisite()) {
 				aAfficher += visite + "\n\n";
 			}
@@ -418,6 +418,8 @@ public class ControlerConsulterDonneesVisite {
 										 + "\n\t\t\t\t\t\t\t\t     Nombre de visite(s) trouvée(s) : " 
 										 + filtres.getListeVisite().size() + ".\n\n\n"
 										 + aAfficher);
+		} else if (filtres.getListeVisite().size() == donnees.getVisites().size()) {
+			textAreaConsultation.setText("Aucun(s) filtre(s) appliqué(s).");
 		} else {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}

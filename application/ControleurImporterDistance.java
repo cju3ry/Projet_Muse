@@ -163,7 +163,11 @@ public class ControleurImporterDistance {
      * Getters pour le chemin du fichier des conférenciers
      * @return cheminFichierConferenciers le chemin du fichier des conférenciers
      **/
-    private DonneesApplication donnees = new DonneesApplication();
+    private static DonneesApplication donnees = new DonneesApplication();
+    
+    public static DonneesApplication getDonnees() {
+		return donnees;
+	}
 
     /**
      * Socket pour la connexion au serveur
@@ -196,9 +200,6 @@ public class ControleurImporterDistance {
     private void mettreAJourEtatBtnDemande() {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
-
-
-
 
     @FXML
     void recupIp(ActionEvent event) {

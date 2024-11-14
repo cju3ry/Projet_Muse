@@ -24,6 +24,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
 public class ControlerConsulterDonnesConferencier {
+	
+	private DonneesApplication donnees;
 
 	private Filtre filtres = new Filtre();
 
@@ -111,7 +113,6 @@ public class ControlerConsulterDonnesConferencier {
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesConferencierChargees();
 		strConferencierLocal = ControleurImporterLocal.getStrConferencier();
 		strConferencierDistance = ControleurImporterDistance.getStrConferencier();
-		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 
 		listeFiltreOk = true;
 
@@ -121,10 +122,12 @@ public class ControlerConsulterDonnesConferencier {
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
+			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
@@ -163,6 +166,7 @@ public class ControlerConsulterDonnesConferencier {
 	void appliquerFiltre() {
 		// Réinitialise les filtres pour partir de toutes les données disponibles
 	    filtres.reset();
+	    
 	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
 	    String strDateDebut;
@@ -177,11 +181,9 @@ public class ControlerConsulterDonnesConferencier {
 	            // Conversion de LocalDate en String au format dd/MM/yyyy
 	            strDateDebut = confDateDebut.getValue().format(dateTimeFormat);
 	            strDateFin = confDateFin.getValue().format(dateTimeFormat);
-	            
-	            System.out.print(strDateDebut + "    " + strDateFin);
 
 	            // Appel du filtre avec les dates sous forme de chaînes
-	            filtres.expoVisitePeriode(strDateDebut, strDateFin);
+	            filtres.confVisitePeriode(strDateDebut, strDateFin);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            textAreaConsultation.setText("Erreur dans le format des dates.");
@@ -195,7 +197,7 @@ public class ControlerConsulterDonnesConferencier {
 	        strHeureFin = heureFin.getValue();
 	        
 	        try {
-	            filtres.expoVisiteHoraire(strHeureDebut, strHeureFin);
+	            filtres.confVisiteHoraire(strHeureDebut, strHeureFin);
 	        } catch (ParseException e) {
 	            e.printStackTrace();
 	            textAreaConsultation.setText("Erreur dans le format des heures.");
@@ -207,7 +209,10 @@ public class ControlerConsulterDonnesConferencier {
 			for (Conferencier conferencier : filtres.getListeConferencier()) {
 				aAfficher += conferencier + "\n\n";
 			}
-			textAreaConsultation.setText(aAfficher);
+			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
+					 + "\n\t\t\t\t\t\t\t\t     Nombre de conférencier(s) trouvée(s) : " 
+					 + filtres.getListeConferencier().size() + ".\n\n\n"
+					 + aAfficher);
 		} else {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}
@@ -250,8 +255,8 @@ public class ControlerConsulterDonnesConferencier {
 		confDateDebut.getEditor().clear();
 		confDateDebut.setValue(null);
 
-		confDateDebut.getEditor().clear();
-		confDateDebut.setValue(null);
+		confDateFin.getEditor().clear();
+		confDateFin.setValue(null);
 	}
 
 

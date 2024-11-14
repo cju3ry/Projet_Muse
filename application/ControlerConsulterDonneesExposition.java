@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox;
 
 public class ControlerConsulterDonneesExposition {
 
-	private DonneesApplication donnees = new DonneesApplication();
+	private DonneesApplication donnees;
 
 	private Filtre filtresExpositions = new Filtre();
 
@@ -124,10 +124,12 @@ public class ControlerConsulterDonneesExposition {
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
+			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
@@ -167,8 +169,8 @@ public class ControlerConsulterDonneesExposition {
 	@FXML 
 	void appliquerFiltre() {
 	    // Réinitialise les filtres pour partir de toutes les données disponibles
-		
 		filtresExpositions.reset();
+		
 	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
 	    String strDateDebut;
@@ -210,10 +212,13 @@ public class ControlerConsulterDonneesExposition {
 	        for (Exposition exposition : filtresExpositions.getListeExposition()) {
 	            aAfficher += exposition.toString() + "\n";
 	        }
-	        textAreaConsultation.setText(aAfficher);
-	    } else {
-	        textAreaConsultation.setText("Aucun résultat à votre recherche.");
-	    }
+	        textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
+					 + "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
+					 + filtresExpositions.getListeExposition().size() + ".\n\n\n"
+					 + aAfficher);
+		} else {
+			textAreaConsultation.setText("Aucun résultat à votre recherche.");
+		}
 	}
 
 	@FXML
