@@ -24,10 +24,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
 public class ControlerConsulterDonnesConferencier {
-	
+
 	private DonneesApplication donnees;
 
-	private Filtre filtres = new Filtre();
+	private Filtre filtres;
 
 	private boolean premierAffichageOk;
 
@@ -69,8 +69,8 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	private DatePicker confDateFin;
-  
-  @FXML
+
+	@FXML
 	private Button btnSauvegarder;
 
 	@FXML
@@ -85,14 +85,14 @@ public class ControlerConsulterDonnesConferencier {
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
-  
-  private boolean donnesChargeesSauvegarder;
+
+	private boolean donnesChargeesSauvegarder;
 
 	private StringBuilder strConferencierLocal;
 
 	private StringBuilder strConferencierDistance;
-  
-  private StringBuilder strConferencierSave;
+
+	private StringBuilder strConferencierSave;
 
 	@FXML
 	void initialize() {
@@ -115,21 +115,22 @@ public class ControlerConsulterDonnesConferencier {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
+		filtres = new Filtre();
 		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesConferencierChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesConferencierChargees();
-    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
-    
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+
 		strConferencierLocal = ControleurImporterLocal.getStrConferencier();
 		strConferencierDistance = ControleurImporterDistance.getStrConferencier();
-    strConferencierSave = ControleurPadeDeGarde.getStrConferencier();
+		strConferencierSave = ControleurPageDeGarde.getStrConferencier();
 
 		listeFiltreOk = true;
 
 		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
-        		&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-               textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-        }
+				&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
@@ -142,10 +143,11 @@ public class ControlerConsulterDonnesConferencier {
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrConferencier().toString());
-           premierAffichageOk = true;
-			     listeFiltreOk = false;
-	  }
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
+			donnees = ControleurPageDeGarde.getDonnees();
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		}
 
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
@@ -180,54 +182,54 @@ public class ControlerConsulterDonnesConferencier {
 	@FXML 
 	void appliquerFiltre() {
 		// Réinitialise les filtres pour partir de toutes les données disponibles
-	    filtres.reset();
-	    
-	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    
-	    String strDateDebut;
-	    String strDateFin;
-	    String strHeureDebut;
-	    String strHeureFin;
-	    String aAfficher = "";
+		filtres.reset();
+
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		String strDateDebut;
+		String strDateFin;
+		String strHeureDebut;
+		String strHeureFin;
+		String aAfficher = "";
 
 		// Vérification et application du filtre par période de date
-	    if (confDateDebut.getValue() != null && confDateFin.getValue() != null) {
-	        try {
-	            // Conversion de LocalDate en String au format dd/MM/yyyy
-	            strDateDebut = confDateDebut.getValue().format(dateTimeFormat);
-	            strDateFin = confDateFin.getValue().format(dateTimeFormat);
+		if (confDateDebut.getValue() != null && confDateFin.getValue() != null) {
+			try {
+				// Conversion de LocalDate en String au format dd/MM/yyyy
+				strDateDebut = confDateDebut.getValue().format(dateTimeFormat);
+				strDateFin = confDateFin.getValue().format(dateTimeFormat);
 
-	            // Appel du filtre avec les dates sous forme de chaînes
-	            filtres.confVisitePeriode(strDateDebut, strDateFin);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            textAreaConsultation.setText("Erreur dans le format des dates.");
-	            
-	        }
-	    }
+				// Appel du filtre avec les dates sous forme de chaînes
+				filtres.confVisitePeriode(strDateDebut, strDateFin);
+			} catch (Exception e) {
+				e.printStackTrace();
+				textAreaConsultation.setText("Erreur dans le format des dates.");
 
-	 // Vérification et application du filtre par horaire de visite
-	    if (heureDebut.getValue() != null && heureFin.getValue() != null) {
-	        strHeureDebut = heureDebut.getValue();
-	        strHeureFin = heureFin.getValue();
-	        
-	        try {
-	            filtres.confVisiteHoraire(strHeureDebut, strHeureFin);
-	        } catch (ParseException e) {
-	            e.printStackTrace();
-	            textAreaConsultation.setText("Erreur dans le format des heures.");
-	            
-	        }
-	    }
+			}
+		}
+
+		// Vérification et application du filtre par horaire de visite
+		if (heureDebut.getValue() != null && heureFin.getValue() != null) {
+			strHeureDebut = heureDebut.getValue();
+			strHeureFin = heureFin.getValue();
+
+			try {
+				filtres.confVisiteHoraire(strHeureDebut, strHeureFin);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				textAreaConsultation.setText("Erreur dans le format des heures.");
+
+			}
+		}
 
 		if (!filtres.getListeConferencier().isEmpty()) {
 			for (Conferencier conferencier : filtres.getListeConferencier()) {
 				aAfficher += conferencier + "\n\n";
 			}
 			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-					 + "\n\t\t\t\t\t\t\t\t     Nombre de conférencier(s) trouvée(s) : " 
-					 + filtres.getListeConferencier().size() + ".\n\n\n"
-					 + aAfficher);
+					+ "\n\t\t\t\t\t\t\t\t     Nombre de conférencier(s) trouvée(s) : " 
+					+ filtres.getListeConferencier().size() + ".\n\n\n"
+					+ aAfficher);
 		} else {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}
@@ -244,13 +246,13 @@ public class ControlerConsulterDonnesConferencier {
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
 		} else if (donnesChargeesSauvegarder) {
-	       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrConferencier().toString());
-	    }
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
+		}
 
 		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
-        		&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-               textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-        }
+				&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
 
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
@@ -280,7 +282,7 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	void consulter(ActionEvent event) {
-    reinitialiserFiltre();
+		reinitialiserFiltre();
 		filtres.reset();
 		Main.setPageConsulter();
 	}
@@ -305,15 +307,15 @@ public class ControlerConsulterDonnesConferencier {
 	void quitter(ActionEvent event) {
 		System.exit(0);
 	}
-  
-  @FXML
+
+	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
-  reinitialiserFiltre();
+		reinitialiserFiltre();
 		filtres.reset();
 		Main.setPageConsulter();
 	}

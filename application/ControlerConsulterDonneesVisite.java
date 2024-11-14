@@ -36,8 +36,8 @@ public class ControlerConsulterDonneesVisite {
 
 	private DonneesApplication donnees;
 
-	private Filtre filtres = new Filtre();
-	
+	private Filtre filtres;
+
 	private boolean premierAffichageOk;
 
 	@FXML
@@ -64,7 +64,7 @@ public class ControlerConsulterDonneesVisite {
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
-	
+
 	private boolean donnesChargeesSauvegarder;
 
 	@FXML
@@ -105,7 +105,7 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	private RadioButton confExterne;
-	
+
 	@FXML
 	private RadioButton expoPerm;
 
@@ -123,29 +123,29 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	private Button btnLancerFiltre;
-	
+
 	@FXML
 
 	private Button btnReinitialiserFiltre;
-	
-	private StringBuilder strVisitesLocal;
-	
-	private StringBuilder strVisitesDistance;
-  
-  private StringBuilder strVisitesSave;
 
-  @FXML
-  private Button btnSauvegarder;
+	private StringBuilder strVisitesLocal;
+
+	private StringBuilder strVisitesDistance;
+
+	private StringBuilder strVisitesSave;
+
+	@FXML
+	private Button btnSauvegarder;
 
 	private ToggleGroup categorieToggleGroup;
-  
-  
+
+
 
 	@FXML
 	void initialize() {
 		textAreaConsultation.setEditable(false);
 		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
-		
+
 		premierAffichageOk = false;
 		// Déclenchement de l'événement au clic sur la TextArea
 		textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
@@ -159,11 +159,11 @@ public class ControlerConsulterDonneesVisite {
 		categorieToggleGroup = new ToggleGroup();
 		confInterne.setToggleGroup(categorieToggleGroup);
 		confExterne.setToggleGroup(categorieToggleGroup);
-		
+
 		categorieToggleGroup = new ToggleGroup();
 		expoPerm.setToggleGroup(categorieToggleGroup);
 		expoTemp.setToggleGroup(categorieToggleGroup);
-		
+
 		visiteDate.setEditable(false);
 		visiteDateDebut.setEditable(false);
 		visiteDateFin.setEditable(false);
@@ -183,6 +183,7 @@ public class ControlerConsulterDonneesVisite {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
+		filtres = new Filtre();
 		boolean listeFiltreOk;
 		ArrayList<String> nomsConf = new ArrayList<>();
 		ArrayList<String> nomsEmploye = new ArrayList<>();
@@ -192,19 +193,19 @@ public class ControlerConsulterDonneesVisite {
 
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
-    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
-    
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+
 		strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		strVisitesDistance = ControleurImporterDistance.getStrVisites();
-    strVisitesSave = ControleurPadeDeGarde.getStrVisites();
-		
+		strVisitesSave = ControleurPageDeGarde.getStrVisites();
+
 		listeFiltreOk = true;
 
 		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
 				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
-		
+
 		if (donneesChargeesLocal && !premierAffichageOk) {
 			donnees = ControleurImporterLocal.getDonnees();
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
@@ -216,11 +217,12 @@ public class ControlerConsulterDonneesVisite {
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-	    textAreaConsultation.setText(ControleurPadeDeGarde.getStrVisites().toString());
-      premierAffichageOk = true;
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrVisites().toString());
+			donnees = ControleurPageDeGarde.getDonnees();
+			premierAffichageOk = true;
 			listeFiltreOk = false;
-	  }
-		
+		}
+
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
 			for (Conferencier conferencier : donnees.getConferenciers()) {
@@ -228,43 +230,43 @@ public class ControlerConsulterDonneesVisite {
 					nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
 				}
 			}
-	
+
 			for (Employe employe : donnees.getEmployes()) {
 				if (!nomsEmploye.contains(employe.getNom())) {
 					nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
 				}
 			}
-	
+
 			for (Exposition exposition : donnees.getExpositions()) {
 				if (!IntituleExpo.contains(exposition.getIntitule())) {
 					IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
 				}
 			}
-	
+
 			for (Visite visite : donnees.getVisites()) {
 				if (!IntituleVisites.contains(visite.getIntitule())) {
 					IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
 				}
 			}
-	
+
 			for (Visite visite : donnees.getVisites()) {
 				if (!numtels.contains(visite.getNumTel())) {
 					numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
 				}
 			}
-	
+
 			Collections.sort(nomsConf);
 			Collections.sort(nomsEmploye);
 			Collections.sort(IntituleExpo);
 			Collections.sort(IntituleVisites);
 			Collections.sort(numtels);
-	
+
 			nomConf.setItems(FXCollections.observableArrayList(nomsConf)); 
 			nomPrenomEmploye.setItems(FXCollections.observableArrayList(nomsEmploye));
 			intituleExpo.setItems(FXCollections.observableArrayList(IntituleExpo));
 			intituleVisite.setItems(FXCollections.observableArrayList(IntituleVisites));
 			numTel.setItems(FXCollections.observableArrayList(numtels));
-	
+
 			heurePrecise.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",
 					"9h30", "10h00", "10h30",
@@ -273,7 +275,7 @@ public class ControlerConsulterDonneesVisite {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
-	
+
 			heureDebut.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",
 					"9h30", "10h00", "10h30",
@@ -282,7 +284,7 @@ public class ControlerConsulterDonneesVisite {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
-	
+
 			heureFin.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",
 					"9h30", "10h00", "10h30",
@@ -311,7 +313,7 @@ public class ControlerConsulterDonneesVisite {
 		LocalDate datePrecise;
 		LocalDate dateIntervalleDebut;
 		LocalDate dateIntervalleFin;
-		
+
 		aAfficher = "";
 		date = null;
 		dateDebut = null;
@@ -319,7 +321,7 @@ public class ControlerConsulterDonneesVisite {
 		dateIntervalleDebut = null;
 
 		if (nomConf.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = nomConf.getValue();
 			champs = strAnalyser.split(" ");
 			nom = champs[0];
@@ -328,7 +330,7 @@ public class ControlerConsulterDonneesVisite {
 		}
 
 		if (nomPrenomEmploye.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = nomPrenomEmploye.getValue();
 			champs = strAnalyser.split(" ");
 			nom = champs[0];
@@ -337,25 +339,25 @@ public class ControlerConsulterDonneesVisite {
 		}
 
 		if (intituleExpo.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = intituleExpo.getValue();
 			filtres.expositionIntitule(strAnalyser);
 		}
 
 		if (intituleVisite.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = intituleVisite.getValue();
 			filtres.visiteIntitule(strAnalyser);
 		}
 
 		if (numTel.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = numTel.getValue();
 			filtres.visiteNumTel(strAnalyser);
 		}
 
 		if (heurePrecise.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = heurePrecise.getValue();
 			try {
 				filtres.heurePrecise(strAnalyser);
@@ -365,8 +367,8 @@ public class ControlerConsulterDonneesVisite {
 		}
 
 		if (heureDebut.getValue() != null 
-			&& heureFin.getValue() != null 
-		&& !filtres.getListeVisite().isEmpty()) {
+				&& heureFin.getValue() != null 
+				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = heureDebut.getValue();
 			strAnalyserBis = heureFin.getValue();
 			try {
@@ -375,17 +377,17 @@ public class ControlerConsulterDonneesVisite {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (visiteDate.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			try {
 				datePrecise = visiteDate.getValue();
-				
+
 				strAnalyser = datePrecise.format(dateTimeFormat);
 				datePrecise = LocalDate.parse(strAnalyser, dateTimeFormat);
-				
+
 				date = format.parse(datePrecise.format(dateTimeFormat).toString());
-				
+
 				filtres.datePrecise(date);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -393,36 +395,36 @@ public class ControlerConsulterDonneesVisite {
 		}
 
 		if (visiteDateDebut.getValue() != null 
-			&& visiteDateFin.getValue() != null 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& visiteDateFin.getValue() != null 
+				&& !filtres.getListeVisite().isEmpty()) {
 			try {
 				dateIntervalleDebut = visiteDateDebut.getValue();
 				dateIntervalleFin = visiteDateFin.getValue();
-				
+
 				strAnalyser = dateIntervalleDebut.format(dateTimeFormat);
 				strAnalyserBis = dateIntervalleFin.format(dateTimeFormat);
-				
+
 				dateIntervalleDebut = LocalDate.parse(strAnalyser, dateTimeFormat);
 				dateIntervalleFin = LocalDate.parse(strAnalyserBis, dateTimeFormat);
-				
+
 				dateDebut = format.parse(dateIntervalleDebut.format(dateTimeFormat).toString());
 				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
-				
+
 				filtres.datePeriode(dateDebut, dateFin);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (expoPerm.isSelected() 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			filtres.expositionPermanente();
 		} else if (expoTemp.isSelected()) {
 			filtres.expositionTemporaire();
 		}
-		
+
 		if (confInterne.isSelected() 
-			&& !filtres.getListeVisite().isEmpty()) {
+				&& !filtres.getListeVisite().isEmpty()) {
 			filtres.conferencierInterne();
 		} else if (confExterne.isSelected()) {
 			filtres.conferencierExterne();
@@ -433,16 +435,16 @@ public class ControlerConsulterDonneesVisite {
 				aAfficher += visite + "\n\n";
 			}
 			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-										 + "\n\t\t\t\t\t\t\t\t     Nombre de visite(s) trouvée(s) : " 
-										 + filtres.getListeVisite().size() + ".\n\n\n"
-										 + aAfficher);
+					+ "\n\t\t\t\t\t\t\t\t     Nombre de visite(s) trouvée(s) : " 
+					+ filtres.getListeVisite().size() + ".\n\n\n"
+					+ aAfficher);
 		} else if (filtres.getListeVisite().size() == donnees.getVisites().size()) {
 			textAreaConsultation.setText("Aucun(s) filtre(s) appliqué(s).");
 		} else {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}
 	}
-	
+
 	@FXML
 	void reinitialiserFiltre() {
 		ArrayList<String> nomsConf = new ArrayList<>();
@@ -450,28 +452,28 @@ public class ControlerConsulterDonneesVisite {
 		ArrayList<String> IntituleExpo = new ArrayList<>();
 		ArrayList<String> IntituleVisites = new ArrayList<>();
 		ArrayList<String> numtels = new ArrayList<>();
-		
+
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
-    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
-    
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+
 		strVisitesLocal = ControleurImporterLocal.getStrVisites();
 		strVisitesDistance = ControleurImporterDistance.getStrVisites();
-    strVisitesSave = ControleurPadeDeGarde.getStrVisites();
-		
-    if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
+		strVisitesSave = ControleurPageDeGarde.getStrVisites();
+
+		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
 				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
-    
+
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
 		} else if (donnesChargeesSauvegarder) {
-	    textAreaConsultation.setText(ControleurPadeDeGarde.getStrVisites().toString());
-	  }
-		
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrVisites().toString());
+		}
+
 		for (Conferencier conferencier : donnees.getConferenciers()) {
 			if (!nomsConf.contains(conferencier.getNom())) {
 				nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
@@ -540,19 +542,19 @@ public class ControlerConsulterDonneesVisite {
 				"14h00", "14h30", "15h00", 
 				"15h30","16h00", "16h30", "17h00"
 				));
-		
+
 		visiteDate.getEditor().clear();
 		visiteDate.setValue(null);
-		
+
 		visiteDateDebut.getEditor().clear();
 		visiteDateDebut.setValue(null);
-		
+
 		visiteDateFin.getEditor().clear();
 		visiteDateFin.setValue(null);
-		
+
 		confInterne.setSelected(false);
 		confExterne.setSelected(false);
-		
+
 		expoPerm.setSelected(false);
 		expoTemp.setSelected(false);
 	}
@@ -591,7 +593,7 @@ public class ControlerConsulterDonneesVisite {
 		filtres.reset();
 		Main.setPageConsulter();
 	}
-	
+
 	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();

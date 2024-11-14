@@ -28,7 +28,7 @@ public class ControlerConsulterDonneesExposition {
 
 	private DonneesApplication donnees;
 
-	private Filtre filtresExpositions = new Filtre();
+	private Filtre filtresExpositions;
 
 	@FXML
 	private Button btnConsulter;
@@ -77,22 +77,22 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private TextArea textAreaConsultation;
-	
+
 	@FXML
-  private Button btnSauvegarder;
+	private Button btnSauvegarder;
 
 	private StringBuilder strExpositionsLocal;
 
 	private StringBuilder strExpositionsDistance;
-  
-  private StringBuilder strExpositonsSave;
-	
+
+	private StringBuilder strExpositonsSave;
+
 	private boolean premierAffichageOk;
 
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
 	private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
-	
+
 	private boolean donnesChargeesSauvegarder;
 
 	@FXML
@@ -116,14 +116,15 @@ public class ControlerConsulterDonneesExposition {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
+		filtresExpositions = new Filtre();
 		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
-    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
-    
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+
 		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
 		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
+		strExpositonsSave = ControleurPageDeGarde.getStrExpositions();
 
 		listeFiltreOk = true;
 
@@ -143,10 +144,11 @@ public class ControlerConsulterDonneesExposition {
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-      textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
-      premierAffichageOk = true;
-      listeFiltreOk = false;
-    }
+			donnees = ControleurPageDeGarde.getDonnees();
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
+			premierAffichageOk = true;
+			listeFiltreOk = false;
+		}
 
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
@@ -168,8 +170,8 @@ public class ControlerConsulterDonneesExposition {
 					"15h30","16h00", "16h30", "17h00"
 					));
 		}
-		
-		
+
+
 	}
 
 	private void toggleFiltrePanel() {
@@ -182,54 +184,54 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML 
 	void appliquerFiltre() {
-	    // Réinitialise les filtres pour partir de toutes les données disponibles
+		// Réinitialise les filtres pour partir de toutes les données disponibles
 		filtresExpositions.reset();
-		
-	    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    
-	    String strDateDebut;
-	    String strDateFin;
-	    String strHeureDebut;
-	    String strHeureFin;
-	    String aAfficher = "";
 
-	    // Vérification et application du filtre par période de date
-	    if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
-	        try {
-	            // Conversion de LocalDate en String au format dd/MM/yyyy
-	            strDateDebut = expoDateDebut.getValue().format(dateTimeFormat);
-	            strDateFin = expoDateFin.getValue().format(dateTimeFormat);
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	            // Appel du filtre avec les dates sous forme de chaînes
-	            filtresExpositions.expoVisitePeriode(strDateDebut, strDateFin);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            textAreaConsultation.setText("Erreur dans le format des dates.");
-	        }
-	    }
+		String strDateDebut;
+		String strDateFin;
+		String strHeureDebut;
+		String strHeureFin;
+		String aAfficher = "";
 
-	    // Vérification et application du filtre par horaire de visite
-	    if (heureDebut.getValue() != null && heureFin.getValue() != null) {
-	        strHeureDebut = heureDebut.getValue();
-	        strHeureFin = heureFin.getValue();
-	        
-	        try {
-	        	filtresExpositions.expoVisiteHoraire(strHeureDebut, strHeureFin);
-	        } catch (ParseException e) {
-	            e.printStackTrace();
-	            textAreaConsultation.setText("Erreur dans le format des heures.");
-	        }
-	    }
+		// Vérification et application du filtre par période de date
+		if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
+			try {
+				// Conversion de LocalDate en String au format dd/MM/yyyy
+				strDateDebut = expoDateDebut.getValue().format(dateTimeFormat);
+				strDateFin = expoDateFin.getValue().format(dateTimeFormat);
 
-	    // Affichage des résultats filtrés
-	    if (!filtresExpositions.getListeExposition().isEmpty()) {
-	        for (Exposition exposition : filtresExpositions.getListeExposition()) {
-	            aAfficher += exposition.toString() + "\n";
-	        }
-	        textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-					 + "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
-					 + filtresExpositions.getListeExposition().size() + ".\n\n\n"
-					 + aAfficher);
+				// Appel du filtre avec les dates sous forme de chaînes
+				filtresExpositions.expoVisitePeriode(strDateDebut, strDateFin);
+			} catch (Exception e) {
+				e.printStackTrace();
+				textAreaConsultation.setText("Erreur dans le format des dates.");
+			}
+		}
+
+		// Vérification et application du filtre par horaire de visite
+		if (heureDebut.getValue() != null && heureFin.getValue() != null) {
+			strHeureDebut = heureDebut.getValue();
+			strHeureFin = heureFin.getValue();
+
+			try {
+				filtresExpositions.expoVisiteHoraire(strHeureDebut, strHeureFin);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				textAreaConsultation.setText("Erreur dans le format des heures.");
+			}
+		}
+
+		// Affichage des résultats filtrés
+		if (!filtresExpositions.getListeExposition().isEmpty()) {
+			for (Exposition exposition : filtresExpositions.getListeExposition()) {
+				aAfficher += exposition.toString() + "\n";
+			}
+			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
+					+ "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
+					+ filtresExpositions.getListeExposition().size() + ".\n\n\n"
+					+ aAfficher);
 		} else {
 			textAreaConsultation.setText("Aucun résultat à votre recherche.");
 		}
@@ -239,20 +241,20 @@ public class ControlerConsulterDonneesExposition {
 	void reinitialiserFiltre() {
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
-    donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
 
 		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
 		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-    strExpositonsSave = ControleurPadeDeGarde.getStrExpositions();
+		strExpositonsSave = ControleurPageDeGarde.getStrExpositions();
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 		} else if (donnesChargeesSauvegarder) {
-       	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrExpositions().toString());
-    }
-		
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
+		}
+
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
 				"9h30", "10h00", "10h30",
@@ -312,7 +314,7 @@ public class ControlerConsulterDonneesExposition {
 		filtresExpositions.reset();
 		Main.setPageConsulter();
 	}
-	
+
 	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();

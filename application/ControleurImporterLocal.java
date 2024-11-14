@@ -180,7 +180,6 @@ public class ControleurImporterLocal {
 	@FXML
 	private Label labelExpositionsImporte;
 
-
 	@FXML
 	private Label labelVisitesImporte;
 	

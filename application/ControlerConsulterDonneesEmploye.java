@@ -60,10 +60,10 @@ public class ControlerConsulterDonneesEmploye {
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
         donnesChargeesDistance = ControleurImporterDistance.isDonneesEmployesChargees();
-        donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
-        StringBuilder strEmployesSave = ControleurPadeDeGarde.getStrEmployes();
+        StringBuilder strEmployesSave = ControleurPageDeGarde.getStrEmployes();
         
         if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null) 
         	&& (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
@@ -79,8 +79,8 @@ public class ControlerConsulterDonneesEmploye {
             donnees = ControleurImporterDistance.getDonnees();
             premierAffichageOk = true;
         } else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrEmployes().toString());
-           donnees = PadeDeGarde.getDonnees();
+        	 textAreaConsultation.setText(ControleurPageDeGarde.getStrEmployes().toString());
+           donnees = ControleurPageDeGarde.getDonnees();
            premierAffichageOk = true;
         }
     }
