@@ -29,6 +29,14 @@ public class ControleurImporter {
     
     @FXML
     private Button btnRevenirArriere;
+    
+    @FXML
+	private Button btnSauvegarder;
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
     @FXML
     void consulter(ActionEvent event) {

@@ -26,6 +26,10 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     private Button btnRevenir;
+    
+    @FXML
+    private Button btnSauvegarder;
+
 
     @FXML
     private TextArea textAreaConsultation;
@@ -34,7 +38,7 @@ public class ControlerConsulterDonneesEmploye {
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
     
-    
+    private boolean donnesChargeesSauvegarder;
     
     @FXML
     void initialize() {
@@ -48,15 +52,20 @@ public class ControlerConsulterDonneesEmploye {
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
         donnesChargeesDistance = ControleurImporterDistance.isDonneesEmployesChargees();
+        donnesChargeesSauvegarder = ControleurPadeDeGarde.isDonneesSaveChargees();
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
+        StringBuilder strEmployesSave = ControleurPadeDeGarde.getStrEmployes();
         System.out.print("Donnes Charge distance" + donnesChargeesDistance);
         if (donneesChargeesLocal) {
             textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
         } else if (donnesChargeesDistance) {
             textAreaConsultation.setText(ControleurImporterDistance.getStrEmployes().toString());
+        } else if (donnesChargeesSauvegarder) {
+        	 textAreaConsultation.setText(ControleurPadeDeGarde.getStrEmployes().toString());
         }
-        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null) 
+        	&& (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
             textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
     }
@@ -92,5 +101,10 @@ public class ControlerConsulterDonneesEmploye {
     void revenirEnArriere(ActionEvent event) {
     	Main.setPageConsulter();
     }
+    
+    @FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
 
 }

@@ -1,13 +1,29 @@
 package application;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Optional;
 
+import gestion_donnees.Conferencier;
+import gestion_donnees.DonneesApplication;
+import gestion_donnees.Employe;
+import gestion_donnees.Exposition;
+import gestion_donnees.Visite;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -18,48 +34,192 @@ import javafx.stage.StageStyle;
 
 public class ControleurPadeDeGarde {
 
-    @FXML
-    private Button btnConsulter;
+	private DonneesApplication donnees = new DonneesApplication();
 
-    @FXML Button btnExporter;
+	private static boolean donneesEmployesChargees = false;
 
-    @FXML
-    private Button btnImporter;
+	private  static StringBuilder strConferencier;
 
-    @FXML
-    private Button btnNotice;
+	private  static StringBuilder strEmployes;
 
-    @FXML
-    private Button btnQuitter;
+	private  static StringBuilder strExpositions;
 
-    @FXML
-    void consulter(ActionEvent event) {
-    	Main.setPageConsulter();
-    }
+	private  static StringBuilder strVisites;
 
-    @FXML
-    void exporter(ActionEvent event) {
-    	Main.setPageExporter();
-    }
+	@FXML
+	private Button btnConsulter;
 
-    @FXML
-    void importer(ActionEvent event) {
-    	Main.setPageImporter();
-    }
+	@FXML Button btnExporter;
 
-//    @FXML
-//    void notice(ActionEvent event) {
-//    	 displayImages();
-//    }
+	@FXML
+	private Button btnImporter;
 
-    @FXML
-    void quitter(ActionEvent event) {
-    	System.exit(0);
-    }
-    
+	@FXML
+	private Button btnNotice;
+
+	@FXML
+	private Button btnQuitter;
+	
+	@FXML
+	private Button btnSauvegarder;
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
+
+	@FXML
+	void consulter(ActionEvent event) {
+		Main.setPageConsulter();
+	}
+
+	@FXML
+	void exporter(ActionEvent event) {
+		Main.setPageExporter();
+	}
+
+	@FXML
+	void importer(ActionEvent event) {
+		Main.setPageImporter();
+	}
+
+	//    @FXML
+	//    void notice(ActionEvent event) {
+	//    	 displayImages();
+	//    }
+
+	@FXML
+	void quitter(ActionEvent event) {
+		System.exit(0);
+	}
+
 	@FXML
 	void notice(ActionEvent event) {
 		Main.afficherNotice();
 	}
 
+	@FXML
+	public void initialize() {
+		String pathEmploye = "save\\employesData";
+		File fichierEmploye = new File(pathEmploye);
+
+		String pathConferenciers = "save\\conferencierseData";
+		File fichierConferenciers = new File(pathConferenciers);
+
+		String pathExpoitions = "save\\expositionsData";
+		File fichierExpositions = new File(pathExpoitions);
+
+		String pathVisites = "save\\visitesData";
+		File fichierVisite = new File(pathVisites);
+
+		if (fichierEmploye.exists() && fichierConferenciers.exists() &&
+				fichierExpositions.exists() && fichierVisite.exists()) {
+
+			// Utiliser Platform.runLater pour afficher l'alerte après que la fenêtre principale soit chargée
+			Platform.runLater(() -> {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Recharges les donnees sauvegardées");
+				alert.setContentText("Une sauvegarde a été détectée. Voulez vous la recharger ?");
+				Optional<ButtonType> result = alert.showAndWait();
+
+				if (result.isPresent() && result.get() == ButtonType.OK) {
+					chargerDonnees();
+				}
+			});
+		}
+	}
+
+	private void chargerDonnees() {
+		try (FileInputStream fis = new FileInputStream("save\\employesData");
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			donnees.setEmployes((ArrayList) ois.readObject());
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (FileInputStream fis = new FileInputStream("save\\conferencierseData");
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			donnees.setConferenciers((ArrayList) ois.readObject());
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (FileInputStream fis = new FileInputStream("save\\expositionsData");
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			donnees.setExpositions((ArrayList) ois.readObject());
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (FileInputStream fis = new FileInputStream("save\\visitesData");
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+			donnees.setVisites((ArrayList) ois.readObject());
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		strEmployes = new StringBuilder();
+		strConferencier = new StringBuilder();
+		strExpositions = new StringBuilder();
+		strVisites = new StringBuilder();
+
+		ArrayList<Employe> listeDesEmployes = donnees.getEmployes();
+		strEmployes.append("\n");
+		for (int i = 0; i < listeDesEmployes.size(); i++) {
+			strEmployes.append(listeDesEmployes.get(i).toString()).append("\n");
+		}
+
+		ArrayList<Exposition> listeDesExpositions = donnees.getExpositions();
+		strExpositions.append("\n");
+		for (int i = 0; i < listeDesExpositions.size(); i++) {
+			strExpositions.append(listeDesExpositions.get(i).toString()).append("\n");
+		}
+
+		ArrayList<Visite> listeDesVistes = donnees.getVisites();
+		strVisites.append("\n");
+		for (int i = 0; i < listeDesVistes.size(); i++) {
+			strVisites.append(listeDesVistes.get(i).toString()).append("\n");
+		}
+
+		ArrayList<Conferencier> listeDesConfernciers = donnees.getConferenciers();
+		strConferencier.append("\n");
+		for (int i = 0; i < listeDesConfernciers.size(); i++) {
+			strConferencier.append(listeDesConfernciers.get(i).toString()).append("\n");
+		}
+
+		donneesEmployesChargees = true;
+	}
+
+
+
+	/** Getters pour les données importées des conférenciers
+	 * @return strConferencier la liste des conférenciers importés
+	 * */
+	public static StringBuilder getStrConferencier() {
+		return strConferencier;
+	}
+	/** Getters pour les données importées des employés
+	 * @return strEmployes la liste des employés importés
+	 * */
+	public static StringBuilder getStrEmployes() {
+		return strEmployes;
+	}
+
+	/** Getters pour les données importées des expositions
+	 * @return strExpositions la liste des expositions importées
+	 * */
+	public static StringBuilder getStrExpositions() {
+		return strExpositions;
+	}
+
+	/** Getters pour les données importées des visites
+	 * @return strVisites la liste des visites importées
+	 * */
+	public static StringBuilder getStrVisites() {
+		return strVisites;
+	}
+
+	public static boolean isDonneesSaveChargees() {
+		return donneesEmployesChargees;
+	}
 }

@@ -24,10 +24,19 @@ public class ControlerConsulterDonnees {
 
     @FXML
     private Button btnRevenir;
+    
+    @FXML
+	private Button btnSauvegarder;
 
     @FXML
     public TextArea textAreaConsultation;
     
+    @FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
+    
+    @FXML
     public TextArea getTextAreaConsultation() {
 		return textAreaConsultation;
 	}

@@ -41,6 +41,14 @@ public class ControleurConsulter {
     @FXML
     private Button btnVisites;
     
+    @FXML
+	private Button btnSauvegarder;
+    
+    @FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
+	}
+    
     
     @FXML
     void importer(ActionEvent event) {

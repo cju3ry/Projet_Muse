@@ -1,5 +1,6 @@
 package gestion_donnees;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
  * La classe Visite représente une visite avec ses informations détaillées.
  * Elle permet de gérer les visites, y compris l'identifiant, l'intitulé, la date, l'heure, le téléphone, et les identifiants des expositions, employés et conférenciers associés.
  */
-public class Visite {
+public class Visite implements Serializable {
 	private String id;
 	private String intitule;
 	private Date dateVisite;

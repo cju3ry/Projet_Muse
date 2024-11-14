@@ -1,5 +1,6 @@
 package gestion_donnees;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.util.Date;
 /**
  * La classe Exposition représente une exposition avec ses informations détaillées.
  */
-public class Exposition {
+public class Exposition implements Serializable {
 	private String id;
 	private String intitule;
 	private String resume;
