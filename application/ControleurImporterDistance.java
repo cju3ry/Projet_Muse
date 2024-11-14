@@ -18,58 +18,41 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.ImageView;
 
 public class ControleurImporterDistance {
 
     // Variables pour vérifier si l'adresse IP et le fichier ont été choisis
     private static boolean ipEstChoisit = false;
-
     // Variables pour vérifier si l'adresse IP et le fichier ont été choisis
     private static boolean fichierEstChoisit = false;
-
     // Variable pour stocker le nom du fichier sélectionné
     private String fichierSelectionne;
-
     // Variable pour stocker le nom du fichier reçu
     private String fichierRecu = "";
-
     // Variable pour stocker l'adresse IP du serveur
     private String ipServ;
-
     // Variables pour stocker les données importées
     private static StringBuilder strConferencier;
-
     // Variables pour stocker les données importées
     private  static StringBuilder strEmployes;
-
     // Variables pour stocker les données importées
     private  static StringBuilder strExpositions;
-
     // Variables pour stocker les données importées
     private  static StringBuilder strVisites;
-
     // Variables pour vérifier si les données ont été importées
     private static boolean donneesConferencierChargees = false;
-
     // Variables pour vérifier si les données ont été importées
     private static boolean donneesEmployesChargees = false;
-
     // Variables pour vérifier si les données ont été importées
     private static boolean donneesExpositionsChargees = false;
-
     // Variables pour vérifier si les données ont été importées
     private static boolean donneesVisitesChargees = false;
-
     // Variables pour stocker le chemin du fichier des conférenciers
     private String cheminFichierConferenciers;
-
     // Variables pour stocker le chemin du fichier des employés
     private String cheminFichierEmployes;
-
     // Variables pour stocker le chemin du fichier des expositions
     private String cheminFichierExpositions;
-
     // Variables pour stocker le chemin du fichier des visites
     private String cheminFichierVisites;
 
@@ -104,9 +87,6 @@ public class ControleurImporterDistance {
     private Button btnOkIP;
 
     @FXML
-    private ImageView croixVerte;
-
-    @FXML
     private Label labelConferencierImporte;
 
     @FXML
@@ -115,10 +95,8 @@ public class ControleurImporterDistance {
     @FXML
     private Label labelExpositionsImporte;
 
-
     @FXML
     private Label labelVisitesImporte;
-
 
     @FXML
     private TextField textIpServ;
@@ -168,7 +146,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des expositions ont été importées
      * @return donneesExpositionsChargees true si les données des expositions ont été importées
-     * */
+     **/
     public static boolean isDonneesExpositionsChargees() {
         return donneesExpositionsChargees;
     }
@@ -176,7 +154,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des visites ont été importées
      * @return donneesVisitesChargees true si les données des visites ont été importées
-     * */
+     **/
     public static boolean isDonneesVisitesChargees() {
         return donneesVisitesChargees;
     }
@@ -184,7 +162,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour le chemin du fichier des conférenciers
      * @return cheminFichierConferenciers le chemin du fichier des conférenciers
-     * * */
+     **/
     private DonneesApplication donnees = new DonneesApplication();
 
     /**
@@ -194,7 +172,6 @@ public class ControleurImporterDistance {
 
     public void initialize() {
         btnDemanderFichier.setDisable(true);
-        croixVerte.setVisible(false);
 
         conboBoxFichier.getItems().clear();
         conboBoxFichier.getItems().addAll("Selectionner le fichier", "Employés", "Conférenciers", "Expositions", "Visites");
@@ -220,6 +197,9 @@ public class ControleurImporterDistance {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
 
+
+
+
     @FXML
     void recupIp(ActionEvent event) {
         // Vérifier si l'adresse IP est valide
@@ -229,10 +209,8 @@ public class ControleurImporterDistance {
         if (ipServ.matches(ipPattern)) {
             ipEstChoisit = true;
             mettreAJourEtatBtnDemande();
-            System.out.println("L'ip du serveur est " + ipServ);
-            croixVerte.setVisible(true);
+            System.out.print("L'ip du serveur est " + ipServ);
         } else {
-            croixVerte.setVisible(false);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText("Adresse IP invalide");
             alert.setContentText("Veuillez entrer une adresse IP valide.\nExemple : 192.168.1.22 " +
