@@ -115,7 +115,32 @@ public class Statistiques {
         return pourcentageParConferencier;
     }
 
-    public void afficherPourcentageVisitesParConferencier() {
+    public StringBuilder afficherPourcentageVisitesParConferencier() {
+        StringBuilder str = new StringBuilder();
+        Map<String, Double> pourcentageParConferencier = getPourcentageVisitesParConferencier();
+        for (Map.Entry<String, Double> entry : pourcentageParConferencier.entrySet()) {
+            str.append("Conférencier ")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(getNomPrenomConferencierById(entry.getKey()))
+                    .append(": ")
+                    .append(Math.round(entry.getValue()))
+                    .append("% des visites\n");
+        }
+        return str;
+    }
+
+    public String getNomPrenomConferencierById(String id) {
+        for (Conferencier conferencier : donnees.getConferenciers()) {
+            if (conferencier.getId().equals(id)) {
+                return conferencier.getNom() + " " + conferencier.getPrenom();
+            }
+        }
+        return "Conférencier non trouvé";
+    }
+
+    public StringBuilder afficherPourcentageVisitesParTypeConferencier() {
+        StringBuilder str = new StringBuilder();
         // Obtenir le pourcentage de visites par conférencier
         Map<String, Double> pourcentageParConferencier = getPourcentageVisitesParConferencier();
 
@@ -134,9 +159,9 @@ public class Statistiques {
 
         double pourcentageInternes = visitesInternes;
         double pourcentageExternes = visitesExternes;
-
-        System.out.println("Pourcentage de visites par conférenciers internes: " + pourcentageInternes + "%");
-        System.out.println("Pourcentage de visites par conférenciers externes: " + pourcentageExternes + "%");
+        str.append("Pourcentage de visites effectuées par des conférenciers internes: " + pourcentageInternes + "%\n");
+        str.append("Pourcentage de visites effectuées par des conférenciers externes: " + pourcentageExternes + "%");
+        return str;
     }
 
     public void enleveVisitesLiensExpoTemporaire() {
@@ -171,13 +196,14 @@ public class Statistiques {
         for (Map.Entry<String, Double> entry : pourcentageParExposition.entrySet()) {
             String expositionId = entry.getKey();
             double pourcentage = entry.getValue();
+            pourcentage = Math.round(pourcentage);
             pourcentageVisitesParExposition.append("Exposition ")
                                            .append(expositionId)
                                            .append(": ")
                                            .append(getExpositionIntituleById(expositionId))
                                            .append(": ")
                                            .append(pourcentage)
-                                           .append("%\n");
+                                           .append("% des visites\n");
         }
         return pourcentageVisitesParExposition;
     }
@@ -192,8 +218,8 @@ public class Statistiques {
     }
     public static void main(String[] args) throws ParseException {
         Statistiques stats = new Statistiques();
-        //stats.conferencierInterne();
-//        stats.conferencierExterne();
+        stats.conferencierInterne();
+        //stats.conferencierExterne();
 //        for (Visite visite : stats.visiteFiltre) {
 //            System.out.println(visite.toString());
 //        }
@@ -220,9 +246,13 @@ public class Statistiques {
 
         //System.out.println(stats.getPourcentageVisitesParConferencier());
 
-        //stats.afficherPourcentageVisitesParConferencier();
+        //System.out.print(stats.afficherPourcentageVisitesParTypeConferencier()); // pourcentage des visites par type de conférencier
 
-        System.out.print(stats.affichagepourcentageVisitesParExposition());
+        //System.out.print(stats.affichagepourcentageVisitesParExposition()); // pourcentage visites pour expo
+
+        // System.out.print(stats.afficherPourcentageVisitesParConferencier()); // pourcentage des visites par conférencier
+
+
 
 
     }
