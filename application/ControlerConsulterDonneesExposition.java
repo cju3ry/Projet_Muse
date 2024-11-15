@@ -8,9 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import gestion_donnees.DonneesApplication;
-import gestion_donnees.EmployeException;
 import gestion_donnees.Exposition;
-import gestion_donnees.ExpositionException;
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
 import javafx.collections.FXCollections;

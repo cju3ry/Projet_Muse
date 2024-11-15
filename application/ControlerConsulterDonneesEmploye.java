@@ -1,7 +1,6 @@
 package application;
 
 import gestion_donnees.DonneesApplication;
-import gestion_donnees.EmployeException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

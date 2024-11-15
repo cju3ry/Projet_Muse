@@ -14,3 +14,12 @@ target/
 
 ### VS Code ###
 .vscode/
+
+### Intellij ###
+.idea/
+*.iml
+*.iws
+*.ipr
+*.csv
+out/
+save/

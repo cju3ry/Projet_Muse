@@ -13,11 +13,14 @@ import java.util.logging.Logger;
 
 
 import gestion_donnees.DonneesApplication;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class ControleurExporter {
 	@FXML
@@ -79,22 +82,32 @@ public class ControleurExporter {
 	
 	@FXML
 	private Button btnSauvegarder;
-	
-	
+
+	@FXML
+	private ImageView imageSpinner;
+
+	private RotateTransition rotateTransition;
 
 	private Thread serverThread;
 
 	private ServerSocket serverSocket;
 
 
-
+	@FXML
+	void initialize() {
+		imageSpinner.setVisible(false);
+		rotateTransition = new RotateTransition(Duration.seconds(2), imageSpinner);
+		rotateTransition.setByAngle(360);
+		rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
+	}
 
 	@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
 		if (!ControleurImporterLocal.isDonneesConferencierChargees()
-				|| !ControleurImporterLocal.isDonneesEmployesChargees()
-				|| !ControleurImporterLocal.isDonneesExpositionsChargees()
-				|| !ControleurImporterLocal.isDonneesVisitesChargees()) {
+				&& !ControleurImporterLocal.isDonneesEmployesChargees()
+				&& !ControleurImporterLocal.isDonneesExpositionsChargees()
+				&& !ControleurImporterLocal.isDonneesVisitesChargees()
+				&& !ControleurPageDeGarde.isDonneesSaveChargees()) {
 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
@@ -102,9 +115,8 @@ public class ControleurExporter {
 			alert.showAndWait();
 		} else {
 			labelEcouteLancee.setText("L'écoute est lancée");
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("L'écoute a été lancée");
-			alert.showAndWait();
+			imageSpinner.setVisible(true);
+			rotateTransition.play();
 			int port = 65412; // Port d'écoute
 			serverThread = new Thread(() -> {
 				try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
@@ -339,9 +351,10 @@ public class ControleurExporter {
 			} finally {
 				serverThread = null;
 				labelEcouteLancee.setText("Aucune écoute en cours");
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText("L'écoute a été arrêtée");
-				alert.showAndWait();
+				//Arrêter la rotation de l'image
+				rotateTransition.stop();
+				imageSpinner.setVisible(false);
+
 			}
 		}
 	}

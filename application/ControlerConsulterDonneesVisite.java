@@ -10,15 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 import gestion_donnees.Conferencier;
-import gestion_donnees.ConferencierException;
 import gestion_donnees.DonneesApplication;
 import gestion_donnees.Employe;
-import gestion_donnees.EmployeException;
 import gestion_donnees.Exposition;
-import gestion_donnees.ExpositionException;
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
-import gestion_donnees.VisiteException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
