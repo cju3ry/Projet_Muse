@@ -165,7 +165,31 @@ public class Statistiques {
         this.visiteFiltre.removeIf(visite -> idExpositionsPermanantes.contains(visite.getExpositionId()));
     }
 
+    public StringBuilder affichagepourcentageVisitesParExposition() {
+        StringBuilder pourcentageVisitesParExposition = new StringBuilder();
+        Map<String, Double> pourcentageParExposition = getPourcentageVisitesParExposition();
+        for (Map.Entry<String, Double> entry : pourcentageParExposition.entrySet()) {
+            String expositionId = entry.getKey();
+            double pourcentage = entry.getValue();
+            pourcentageVisitesParExposition.append("Exposition ")
+                                           .append(expositionId)
+                                           .append(": ")
+                                           .append(getExpositionIntituleById(expositionId))
+                                           .append(": ")
+                                           .append(pourcentage)
+                                           .append("%\n");
+        }
+        return pourcentageVisitesParExposition;
+    }
 
+    public String getExpositionIntituleById(String id) {
+        for (Exposition exposition : donnees.getExpositions()) {
+            if (exposition.getId().equals(id)) {
+                return exposition.getIntitule();
+            }
+        }
+        return id;
+    }
     public static void main(String[] args) throws ParseException {
         Statistiques stats = new Statistiques();
         //stats.conferencierInterne();
@@ -186,7 +210,7 @@ public class Statistiques {
 
         System.out.println("taille liste " + stats.visiteFiltre.size());
 
-        stats.enleveVisitesLiensExpoTemporaire();
+        //stats.enleveVisitesLiensExpoTemporaire();
         for (Visite visite : stats.visiteFiltre) {
             System.out.println(visite.getId() + " | " + visite.getExpositionId() + " | " + visite.getConferencierId());
         }
@@ -197,6 +221,8 @@ public class Statistiques {
         //System.out.println(stats.getPourcentageVisitesParConferencier());
 
         //stats.afficherPourcentageVisitesParConferencier();
+
+        System.out.print(stats.affichagepourcentageVisitesParExposition());
 
 
     }
