@@ -56,6 +56,8 @@ public class ControleurImporterDistance {
     // Variables pour stocker le chemin du fichier des visites
     private String cheminFichierVisites;
 
+    private boolean donnesChargeesSauvegarder;
+    
     @FXML
     private Button btnConsulter;
 
@@ -484,6 +486,10 @@ public class ControleurImporterDistance {
         strConferencier = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierConferenciers = userHome + "/Downloads/conferenciersRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListConferenciers();
+    	}
         try {
             donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
             donneesConferencierChargees = true;
@@ -509,6 +515,10 @@ public class ControleurImporterDistance {
         strEmployes = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierEmployes = userHome + "/Downloads/employesRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListEmployes();
+    	}
         try {
             donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
             donneesEmployesChargees = true;
@@ -536,6 +546,9 @@ public class ControleurImporterDistance {
         strVisites = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierVisites = userHome + "/Downloads/visitesRecu.csv";
+        if(donnesChargeesSauvegarder) {
+    		donnees.clearListVisites();
+    	}
         try {
             donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
             donneesVisitesChargees = true;
@@ -561,6 +574,10 @@ public class ControleurImporterDistance {
         strExpositions = new StringBuilder();
         String userHome = System.getProperty("user.home");
         String cheminFichierExpositions = userHome + "/Downloads/expositionsRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListExpositions();
+    	}
         try {
             donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
             donneesExpositionsChargees = true;
