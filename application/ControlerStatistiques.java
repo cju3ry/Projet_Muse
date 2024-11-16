@@ -2,11 +2,15 @@ package application;
 
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import gestion_donnees.Conferencier;
 import gestion_donnees.DonneesApplication;
+import gestion_donnees.Statistiques;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +28,8 @@ public class ControlerStatistiques {
 
 	private DonneesApplication donnees;
 
+	private Statistiques stats;
+
 	@FXML
 	private Button btnConsulter;
 
@@ -31,13 +37,13 @@ public class ControlerStatistiques {
 	private Button btnExporter;
 
 	@FXML
-	private Button btnFiltre;
+	private Button btnStat;
 
 	@FXML
 	private Button btnImporter;
 
 	@FXML
-	private Button btnLancerFiltre;
+	private Button btnLancerStat;
 
 	@FXML
 	private Button btnNotice;
@@ -64,10 +70,10 @@ public class ControlerStatistiques {
 	private RadioButton confExterne;
 
 	@FXML
-	private ChoiceBox<?> confHeureDebut;
+	private ChoiceBox<String> confHeureDebut;
 
 	@FXML
-	private ChoiceBox<?> confHeureFin;
+	private ChoiceBox<String> confHeureFin;
 
 	@FXML
 	private RadioButton confInterne;
@@ -91,10 +97,10 @@ public class ControlerStatistiques {
 	private DatePicker expoDateFin;
 
 	@FXML
-	private ChoiceBox<?> expoHeureDebut;
+	private ChoiceBox<String> expoHeureDebut;
 
 	@FXML
-	private ChoiceBox<?> expoHeureFin;
+	private ChoiceBox<String> expoHeureFin;
 
 	@FXML
 	private Label expoLabelDates;
@@ -159,9 +165,11 @@ public class ControlerStatistiques {
 		premierAffichageOk = false;
 		// Déclenchement de l'événement au clic sur la TextArea
 		textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
-		
+
 		choixConfExpo.setOnAction(event -> toggleFiltreExpoConf());
-		
+		choixConfExpo.setItems(FXCollections.observableArrayList("Conferencier", "Exposition"));
+		choixConfExpo.setValue("Choisir :");
+
 		confDateDebut.setVisible(false);
 		confDateFin.setVisible(false);
 		confHeureDebut.setVisible(false);
@@ -186,7 +194,7 @@ public class ControlerStatistiques {
 
 		// Par défaut, cacher le panneau et boutons des filtres
 		scrollPaneFiltres.setVisible(false);
-		btnLancerFiltre.setVisible(false);
+		btnLancerStat.setVisible(false);
 		btnReinitialiserFiltre.setVisible(false);
 
 		categorieToggleGroup = new ToggleGroup();
@@ -197,8 +205,8 @@ public class ControlerStatistiques {
 		expoPerm.setToggleGroup(categorieToggleGroup);
 		expoTemp.setToggleGroup(categorieToggleGroup);
 
-		btnFiltre.setOnAction(event -> toggleFiltrePanel());
-		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
+		btnStat.setOnAction(event -> toggleFiltrePanel());
+		btnLancerStat.setOnAction(event -> appliquerFiltreStat());
 		btnReinitialiserFiltre.setOnAction(event -> reinitialiserFiltre());
 	}
 
@@ -233,63 +241,206 @@ public class ControlerStatistiques {
 		}
 
 		if (donneesChargeesLocalConferencier && !premierAffichageOk 
-				&& choixConfExpo.getValue() == "Conferencier") {
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donneesChargeesLocalExposition && !premierAffichageOk 
-				&& choixConfExpo.getValue() == "Exposition") {
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistanceConferencier && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Conferencier") {
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistanceExposition && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Exposition") {
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarderConferencier && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Conferencier") {
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarderExposition && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Exposition") {
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
 
-		if (premierAffichageOk) {
-			choixConfExpo.setItems(FXCollections.observableArrayList("Conferencier", "Exposition"));
+		stats = new Statistiques();
+	}
+
+	@FXML 
+	void appliquerFiltreStat() {
+		if (choixConfExpo.getValue().equals("Conferencier")) {
+			afficherStatConf();
+		} else if (choixConfExpo.getValue().equals("Exposition")) {
+			afficherStatExpo();
 		}
+	}
+
+	private void afficherStatConf() {
+		stats.reset();
+
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		String strAnalyser;
+		String strAnalyserBis;
+		Date dateDebut;
+		Date dateFin;
+		LocalDate dateIntervalleDebut;
+		LocalDate dateIntervalleFin;
+
+		if (confDateDebut.getValue() != null 
+				&& confDateFin.getValue() != null) {
+			try {
+				dateIntervalleDebut = confDateDebut.getValue();
+				dateIntervalleFin = confDateFin.getValue();
+
+				strAnalyser = dateIntervalleDebut.format(dateTimeFormat);
+				strAnalyserBis = dateIntervalleFin.format(dateTimeFormat);
+
+				dateIntervalleDebut = LocalDate.parse(strAnalyser, dateTimeFormat);
+				dateIntervalleFin = LocalDate.parse(strAnalyserBis, dateTimeFormat);
+
+				dateDebut = format.parse(dateIntervalleDebut.format(dateTimeFormat).toString());
+				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
+
+				stats.visitePeriode(dateDebut, dateFin);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (confHeureDebut.getValue() != null 
+				&& confHeureFin.getValue() != null) {
+			strAnalyser = confHeureDebut.getValue();
+			strAnalyserBis = confHeureFin.getValue();
+			try {
+				stats.visitePlageHoraire(strAnalyser, strAnalyserBis);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (confInterne.isSelected()) {
+			stats.conferencierInterne();
+		} else if (confExterne.isSelected()) {
+			stats.conferencierExterne();
+		}
+
+		textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche.\n\n\n" 
+				+ stats.afficherPVisitesConferencier());
+	}
+
+	private void afficherStatExpo() {
+		stats.reset();
+
+		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		String strAnalyser;
+		String strAnalyserBis;
+		Date dateDebut;
+		Date dateFin;
+		LocalDate dateIntervalleDebut;
+		LocalDate dateIntervalleFin;
+
+		if (expoDateDebut.getValue() != null 
+				&& expoDateFin.getValue() != null) {
+			try {
+				dateIntervalleDebut = expoDateDebut.getValue();
+				dateIntervalleFin = expoDateFin.getValue();
+
+				strAnalyser = dateIntervalleDebut.format(dateTimeFormat);
+				strAnalyserBis = dateIntervalleFin.format(dateTimeFormat);
+
+				dateIntervalleDebut = LocalDate.parse(strAnalyser, dateTimeFormat);
+				dateIntervalleFin = LocalDate.parse(strAnalyserBis, dateTimeFormat);
+
+				dateDebut = format.parse(dateIntervalleDebut.format(dateTimeFormat).toString());
+				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
+
+				stats.visitePeriode(dateDebut, dateFin);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (expoHeureDebut.getValue() != null 
+				&& expoHeureFin.getValue() != null) {
+			strAnalyser = expoHeureDebut.getValue();
+			strAnalyserBis = expoHeureFin.getValue();
+			try {
+				stats.visitePlageHoraire(strAnalyser, strAnalyserBis);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (expoPerm.isSelected()) {
+			stats.expositionPermanente();
+		} else if (expoTemp.isSelected()) {
+			stats.expositionTemporaire();
+		}
+
+		textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche.\n\n\n" 
+				+ stats.affichagePVisitesExposition());
 	}
 
 	private void toggleFiltrePanel() {
 		// Basculer la visibilité du panneau de filtres
 		boolean isVisible = scrollPaneFiltres.isVisible();
 		scrollPaneFiltres.setVisible(!isVisible);
-		btnLancerFiltre.setVisible(!isVisible);
+		btnLancerStat.setVisible(!isVisible);
 		btnReinitialiserFiltre.setVisible(!isVisible);
 	}
 
 	private void toggleFiltreExpoConf() {
+		if (donneesChargeesLocalConferencier
+				&& choixConfExpo.getValue().equals("Conferencier")) {
+			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+			donnees = ControleurImporterLocal.getDonnees();
+		} else if (donneesChargeesLocalExposition 
+				&& choixConfExpo.getValue().equals("Exposition")) {
+			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+			donnees = ControleurImporterLocal.getDonnees();
+		} else if (donnesChargeesDistanceConferencier
+				&& choixConfExpo.getValue().equals("Conferencier")) {
+			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
+			donnees = ControleurImporterDistance.getDonnees();
+		} else if (donnesChargeesDistanceExposition
+				&& choixConfExpo.getValue().equals("Exposition")) {
+			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
+			donnees = ControleurImporterDistance.getDonnees();
+		} else if (donnesChargeesSauvegarderConferencier 
+				&& choixConfExpo.getValue().equals("Conferencier")) {
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
+			donnees = ControleurPageDeGarde.getDonnees();
+		} else if (donnesChargeesSauvegarderExposition
+				&& choixConfExpo.getValue().equals("Exposition")) {
+			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
+			donnees = ControleurPageDeGarde.getDonnees();
+		}
+		
 		// Basculer la visibilité des filtres
-		if (choixConfExpo.getValue() == "Conferencier") {
+		if (choixConfExpo.getValue().equals("Conferencier")) {
 			confDateDebut.setVisible(true);
 			confDateFin.setVisible(true);
 			confHeureDebut.setVisible(true);
-			confHeureDebut.setVisible(true);
+			confHeureFin.setVisible(true);
 			confExterne.setVisible(true);
 			confInterne.setVisible(true);
 			confLabelDate.setVisible(true);
@@ -300,62 +451,62 @@ public class ControlerStatistiques {
 			expoDateDebut.setVisible(false);
 			expoDateFin.setVisible(false);
 			expoHeureDebut.setVisible(false);
-			expoHeureDebut.setVisible(false);
+			expoHeureFin.setVisible(false);
 			expoPerm.setVisible(false);
 			expoTemp.setVisible(false);
 			expoLabelDates.setVisible(false);
 			expoLabelHeureDebut.setVisible(false);
 			expoLabelHeureFin.setVisible(false);
 			expoLabelEtat.setVisible(false);
-		} else if (choixConfExpo.getValue() == "Exposition") {
-			confDateDebut.setVisible(true);
-			confDateFin.setVisible(true);
-			confHeureDebut.setVisible(true);
-			confHeureDebut.setVisible(true);
-			confExterne.setVisible(true);
-			confInterne.setVisible(true);
-			confLabelDate.setVisible(true);
-			confLabelHeureDebut.setVisible(true);
-			confLabelHeureFin.setVisible(true);
-			confLabelEtat.setVisible(true);
+		} else if (choixConfExpo.getValue().equals("Exposition")) {
+			confDateDebut.setVisible(false);
+			confDateFin.setVisible(false);
+			confHeureDebut.setVisible(false);
+			confHeureFin.setVisible(false);
+			confExterne.setVisible(false);
+			confInterne.setVisible(false);
+			confLabelDate.setVisible(false);
+			confLabelHeureDebut.setVisible(false);
+			confLabelHeureFin.setVisible(false);
+			confLabelEtat.setVisible(false);
 
-			expoDateDebut.setVisible(false);
-			expoDateFin.setVisible(false);
-			expoHeureDebut.setVisible(false);
-			expoHeureDebut.setVisible(false);
-			expoPerm.setVisible(false);
-			expoTemp.setVisible(false);
-			expoLabelDates.setVisible(false);
-			expoLabelHeureDebut.setVisible(false);
-			expoLabelHeureFin.setVisible(false);
-			expoLabelEtat.setVisible(false);
+			expoDateDebut.setVisible(true);
+			expoDateFin.setVisible(true);
+			expoHeureDebut.setVisible(true);
+			expoHeureFin.setVisible(true);
+			expoPerm.setVisible(true);
+			expoTemp.setVisible(true);
+			expoLabelDates.setVisible(true);
+			expoLabelHeureDebut.setVisible(true);
+			expoLabelHeureFin.setVisible(true);
+			expoLabelEtat.setVisible(true);
 		}
 	}
 
 	@FXML
 	void reinitialiserFiltre() {
-		if (donneesChargeesLocalConferencier && !premierAffichageOk 
-				&& choixConfExpo.getValue() == "Conferencier") {
+		if (donneesChargeesLocalConferencier
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
 			donnees = ControleurImporterLocal.getDonnees();
-		} else if (donneesChargeesLocalExposition && !premierAffichageOk 
-				&& choixConfExpo.getValue() == "Exposition") {
+		} else if (donneesChargeesLocalExposition 
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 			donnees = ControleurImporterLocal.getDonnees();
-		} else if (donnesChargeesDistanceConferencier && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Conferencier") {
+		} else if (donnesChargeesDistanceConferencier
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
 			donnees = ControleurImporterDistance.getDonnees();
-		} else if (donnesChargeesDistanceExposition && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Exposition") {
+		} else if (donnesChargeesDistanceExposition
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 			donnees = ControleurImporterDistance.getDonnees();
-		} else if (donnesChargeesSauvegarderConferencier && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Conferencier") {
+		} else if (donnesChargeesSauvegarderConferencier 
+				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
-		} else if (donnesChargeesSauvegarderExposition && !premierAffichageOk
-				&& choixConfExpo.getValue() == "Exposition") {
+		} else if (donnesChargeesSauvegarderExposition
+				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 		}
@@ -365,23 +516,18 @@ public class ControlerStatistiques {
 
 		confDateFin.getEditor().clear();
 		confDateFin.setValue(null);
-		
+
 		expoDateDebut.getEditor().clear();
 		expoDateDebut.setValue(null);
-		
+
 		expoDateDebut.getEditor().clear();
 		expoDateDebut.setValue(null);
-		
+
 		confInterne.setSelected(false);
 		confExterne.setSelected(false);
 
 		expoPerm.setSelected(false);
 		expoTemp.setSelected(false);
-	}
-
-	@FXML 
-	void appliquerFiltre() {
-
 	}
 
 	@FXML

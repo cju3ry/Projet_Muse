@@ -47,6 +47,8 @@ public class Main extends Application {
 	private static Scene scenePageConsulterDonneesVisite;
 
 	private static Scene scenePageConsulterDonneesExposition;
+	
+	private static Scene scenePageStatitiques;
 
 	private static FXMLLoader chargeurFxmlPageDeGarde = new FXMLLoader();
 
@@ -60,7 +62,6 @@ public class Main extends Application {
 
 	private static FXMLLoader chargeurFxmlPageConsulter = new FXMLLoader();
 
-
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesConferencier = new FXMLLoader();
 
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesEmploye = new FXMLLoader();
@@ -68,6 +69,8 @@ public class Main extends Application {
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesVisite = new FXMLLoader();
 
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesExposition = new FXMLLoader();
+	
+	private static FXMLLoader chargeurFxmlPageStatistiques = new FXMLLoader();
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -132,7 +135,11 @@ public class Main extends Application {
 			conteneur = chargeurFxmlPageConsulterDonneesVisite.load();
 			scenePageConsulterDonneesVisite = new Scene(conteneur);
 			scenePageConsulterDonneesVisite.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
+			
+			chargeurFxmlPageStatistiques.setLocation(getClass().getResource("/ihm/vueStatistiques.fxml"));
+			conteneur = chargeurFxmlPageStatistiques.load();
+			scenePageStatitiques = new Scene(conteneur);
+			scenePageStatitiques.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setTitle("PadeDeGarde");
 			primaryStage.setScene(scenePageDeGarde);
@@ -187,10 +194,15 @@ public class Main extends Application {
 	public static void setPageConsulterDonneesVisite() {
 		fenetrePrincipale.setScene(scenePageConsulterDonneesVisite);
 	}
+	
+	public static void setPageConsulterStatistiques() {
+		fenetrePrincipale.setScene(scenePageStatitiques);
+	}
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
 	public static void afficherNotice() {
 		VBox vbox = new VBox();
 		vbox.setSpacing(10);
@@ -214,11 +226,9 @@ public class Main extends Application {
 			i++;
 		}
 
-
 		ScrollPane scrollPane = new ScrollPane(vbox);
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefViewportHeight(400); 
-
 
 		scrollPane.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
 			vbox.getChildren().stream()
