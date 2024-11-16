@@ -1,6 +1,7 @@
 package application;
 
 import java.io.*;
+
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -620,7 +621,7 @@ public class ControleurImporterDistance {
     }
     @FXML
     void quitter(ActionEvent event) {
-        System.exit(0);
+    	Main.quitterApllication();
     }
 
     @FXML

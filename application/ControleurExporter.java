@@ -403,9 +403,8 @@ public class ControleurExporter {
 
 	@FXML
 	void quitter(ActionEvent event) {
-		System.exit(0);
-
-	}
+    	Main.quitterApllication();
+    }
 
 	@FXML
 	void revenirArriere(ActionEvent event) {
