@@ -4,34 +4,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Statistiques {
+import application.ControleurImporterLocal;
 
-    Filtre filtres;
+public class Statistiques {
+    
     SimpleDateFormat format;
 
-    DonneesApplication donnees;
+    DonneesApplication donnees = ControleurImporterLocal.getDonnees();
+
+    final ArrayList<Visite> visiteInitial = donnees.getVisites();
 
     ArrayList<Visite> visiteFiltre;
 
-    ArrayList<Visite> visiteInitial;
-
     public Statistiques() {
-        donnees = new DonneesApplication();
-        filtres = new Filtre();
         format = new SimpleDateFormat("dd/MM/yyyy");
-        donnees.importerConferenciers(donnees.LireCsv("conferencier.csv"));
-        donnees.importerVisites(donnees.LireCsv("visites.csv"));
-        donnees.importerExpositions(donnees.LireCsv("expositions.csv"));
-        visiteInitial = donnees.getVisites();
         visiteFiltre = donnees.getVisites();
     }
+    
     private void initialiserVisiteFiltre() {
-        if (!visiteFiltre.isEmpty()) {
-            this.visiteFiltre = new ArrayList<>();
+        if (visiteFiltre.isEmpty()) {
+            this.visiteFiltre = new ArrayList<>(visiteInitial);
         }
     }
-
-
 
     public void conferencierInterne() {
         initialiserVisiteFiltre();
@@ -43,7 +37,6 @@ public class Statistiques {
         }
         this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
     }
-
 
     public void conferencierExterne() {
         initialiserVisiteFiltre();
@@ -57,7 +50,7 @@ public class Statistiques {
     }
 
     // Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
-    public void expoVisitePeriode(Date dateDebut, Date dateFin) {
+    public void visitePeriode(Date dateDebut, Date dateFin) {
         initialiserVisiteFiltre();
         // Vérification des dates de début et de fin
         if (dateDebut.compareTo(dateFin) > 0) {
@@ -66,21 +59,6 @@ public class Statistiques {
         // Filtrer les visites par période
         this.visiteFiltre.removeIf(visite ->
                 visite.getDateVisite().before(dateDebut) || visite.getDateVisite().after(dateFin)
-        );
-    }
-
-    // Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
-    public void visitePeriode(String dateDebut, String dateFin) throws ParseException {
-        initialiserVisiteFiltre();
-        // Vérification des dates de début et de fin
-        Date dateDebutParse = format.parse(dateDebut);
-        Date dateFinParse = format.parse(dateFin);
-        if (dateDebutParse.compareTo(dateFinParse) > 0) {
-            throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
-        }
-        // Filtrer les visites par période
-        this.visiteFiltre.removeIf(visite ->
-                visite.getDateVisite().before(dateDebutParse) || visite.getDateVisite().after(dateFinParse)
         );
     }
 
@@ -147,6 +125,7 @@ public class Statistiques {
 
         Map<String, Double> pourcentageParConferencier = new HashMap<>();
         int totalVisites = visiteFiltre.size();
+        System.out.print(visiteFiltre.size());
 
         for (Map.Entry<String, Integer> entry : visitesParConferencier.entrySet()) {
             double pourcentage = (entry.getValue() * 100.0) / totalVisites;
@@ -155,6 +134,7 @@ public class Statistiques {
 
         return pourcentageParConferencier;
     }
+    
     public StringBuilder afficherPVisitesConferencier() {
         StringBuilder str = new StringBuilder();
         Map<String, Double> pourcentageParConferencier = getPVisitesConferenciers();
@@ -232,6 +212,7 @@ public class Statistiques {
         // Enlever les visites liées aux expositions permanantes
         this.visiteFiltre.removeIf(visite -> idExpositionsPermanantes.contains(visite.getExpositionId()));
     }
+    
     public StringBuilder affichagePVisitesExposition() {
         StringBuilder pourcentageVisitesParExposition = new StringBuilder();
         Map<String, Double> pourcentageParExposition = getPVisitesExpositions();
