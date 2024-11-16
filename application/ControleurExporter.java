@@ -76,11 +76,11 @@ public class ControleurExporter {
 
 	@FXML
 	private Button btnCleCommune;
-	
+
 	@FXML
 	private Button btnSauvegarder;
-	
-	
+
+	private boolean donnesChargeesSauvegarder;
 
 	private Thread serverThread;
 
@@ -91,38 +91,46 @@ public class ControleurExporter {
 
 	@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
-		if (!ControleurImporterLocal.isDonneesConferencierChargees()
-				|| !ControleurImporterLocal.isDonneesEmployesChargees()
-				|| !ControleurImporterLocal.isDonneesExpositionsChargees()
-				|| !ControleurImporterLocal.isDonneesVisitesChargees()) {
-
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+		if(donnesChargeesSauvegarder) {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
+			alert.setHeaderText("Par soucis de sécuirité de de compatibilité, vous devez au préalable avoir importé les fichiers en local "
 					+ "sur votre poste avant de pouvoir les exporter");
 			alert.showAndWait();
 		} else {
-			labelEcouteLancee.setText("L'écoute est lancée");
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setHeaderText("L'écoute a été lancée");
-			alert.showAndWait();
-			int port = 65412; // Port d'écoute
-			serverThread = new Thread(() -> {
-				try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
-					System.out.println("Serveur en attente de connexion...");
-					while (true) {
-						// Attente d'une connexion
-						Socket socket = serverSocket.accept();
-						System.out.println("Connexion établie avec " + socket.getInetAddress());
-						// Lance un thread pour gérer la requête
-						new Thread(() -> handleRequest(socket)).start();
+			if (!ControleurImporterLocal.isDonneesConferencierChargees()
+					|| !ControleurImporterLocal.isDonneesEmployesChargees()
+					|| !ControleurImporterLocal.isDonneesExpositionsChargees()
+					|| !ControleurImporterLocal.isDonneesVisitesChargees()) {
+
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
+						+ "sur votre poste avant de pouvoir les exporter");
+				alert.showAndWait();
+			} else {
+				labelEcouteLancee.setText("L'écoute est lancée");
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setHeaderText("L'écoute a été lancée");
+				alert.showAndWait();
+				int port = 65412; // Port d'écoute
+				serverThread = new Thread(() -> {
+					try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
+						System.out.println("Serveur en attente de connexion...");
+						while (true) {
+							// Attente d'une connexion
+							Socket socket = serverSocket.accept();
+							System.out.println("Connexion établie avec " + socket.getInetAddress());
+							// Lance un thread pour gérer la requête
+							new Thread(() -> handleRequest(socket)).start();
+						}
+					} catch (IOException e) {
+						System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
+						//Mets un message plus robuste
 					}
-				} catch (IOException e) {
-					System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
-					//Mets un message plus robuste
-				}
-			});
-			serverThread.setDaemon(true); // Permet de fermer le serveur en même temps que l'application
-			serverThread.start();
+				});
+				serverThread.setDaemon(true); // Permet de fermer le serveur en même temps que l'application
+				serverThread.start();
+			}
 		}
 	}
 
@@ -142,7 +150,7 @@ public class ControleurExporter {
 				chemin = ControleurImporterLocal.cheminFichierEmployes;
 			}
 
-            // Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("conferenciers".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierConferenciers;
 			}
@@ -258,14 +266,14 @@ public class ControleurExporter {
 					} catch (IOException e) {
 						System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
 					}
-				// Si l'utilisateur refuse, on envoie un message de refus
+					// Si l'utilisateur refuse, on envoie un message de refus
 				} else {
 
 					try {System.out.println("Demande refusée par l'utilisateur.");
-						OutputStream output = socket.getOutputStream();
-						output.write("REFUS".getBytes(StandardCharsets.UTF_8));
-						output.flush();System.out.println("Demande refusée par l'utilisateur.");
-						socket.close(); // Fermer la connexion si refusé
+					OutputStream output = socket.getOutputStream();
+					output.write("REFUS".getBytes(StandardCharsets.UTF_8));
+					output.flush();System.out.println("Demande refusée par l'utilisateur.");
+					socket.close(); // Fermer la connexion si refusé
 					} catch (IOException e) {
 						Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 					}
@@ -286,8 +294,8 @@ public class ControleurExporter {
 	 */
 	private void sendFile(Socket socket, String chemin) {
 		try (OutputStream output = socket.getOutputStream();
-			 BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
-			 FileInputStream fileInput = new FileInputStream(chemin)) {
+				BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
+				FileInputStream fileInput = new FileInputStream(chemin)) {
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 
@@ -395,16 +403,15 @@ public class ControleurExporter {
 
 	@FXML
 	void quitter(ActionEvent event) {
-		System.exit(0);
-
-	}
+    	Main.quitterApllication();
+    }
 
 	@FXML
 	void revenirArriere(ActionEvent event) {
 		Main.setPageDeGarde();
 
 	}
-	
+
 	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();

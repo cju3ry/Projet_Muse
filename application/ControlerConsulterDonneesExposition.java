@@ -1,6 +1,7 @@
 package application;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -8,9 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import gestion_donnees.DonneesApplication;
-import gestion_donnees.EmployeException;
+
 import gestion_donnees.Exposition;
-import gestion_donnees.ExpositionException;
+
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
 import javafx.collections.FXCollections;
@@ -305,8 +306,8 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void quitter(ActionEvent event) {
-		System.exit(0);
-	}
+    	Main.quitterApllication();
+    }
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {

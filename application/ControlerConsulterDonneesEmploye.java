@@ -1,7 +1,7 @@
 package application;
 
 import gestion_donnees.DonneesApplication;
-import gestion_donnees.EmployeException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -108,7 +108,7 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     void quitter(ActionEvent event) {
-    	System.exit(0);
+    	Main.quitterApllication();
     }
 
     @FXML

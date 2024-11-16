@@ -482,5 +482,21 @@ public class DonneesApplication {
 		}
 		return false;
 	}
+	
+	public static void clearListVisites() {
+		visites.clear();
+	}
+	
+	public static void clearListConferenciers() {
+		conferenciers.clear();
+	}
+	
+	public static void clearListEmployes() {
+		employes.clear();
+	}
+	
+	public static void clearListExpositions() {
+		expositions.clear();
+	}
 }
 
