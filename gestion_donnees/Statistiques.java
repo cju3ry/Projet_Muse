@@ -13,6 +13,8 @@ public class Statistiques {
 
     ArrayList<Visite> visiteFiltre;
 
+    ArrayList<Visite> visiteInitial;
+
     public Statistiques() {
         donnees = new DonneesApplication();
         filtres = new Filtre();
@@ -20,46 +22,82 @@ public class Statistiques {
         donnees.importerConferenciers(donnees.LireCsv("conferencier.csv"));
         donnees.importerVisites(donnees.LireCsv("visites.csv"));
         donnees.importerExpositions(donnees.LireCsv("expositions.csv"));
+        visiteInitial = donnees.getVisites();
         visiteFiltre = donnees.getVisites();
     }
+    private void initialiserVisiteFiltre() {
+        if (!visiteFiltre.isEmpty()) {
+            this.visiteFiltre = new ArrayList<>();
+        }
+    }
+
+
 
     public void conferencierInterne() {
-
+        initialiserVisiteFiltre();
         ArrayList<String> idConferencier = new ArrayList<>();
-
         for (Conferencier conferencier : donnees.getConferenciers()) {
             if (conferencier.getEstEmploye()) {
                 idConferencier.add(conferencier.getId());
             }
         }
-
         this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
     }
 
 
-
     public void conferencierExterne() {
+        initialiserVisiteFiltre();
         ArrayList<String> idConferencier = new ArrayList<>();
-
         for (Conferencier conferencier : donnees.getConferenciers()) {
             if (!conferencier.getEstEmploye()) {
                 idConferencier.add(conferencier.getId());
             }
         }
-
         this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
     }
 
     // Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
     public void expoVisitePeriode(Date dateDebut, Date dateFin) {
+        initialiserVisiteFiltre();
         // Vérification des dates de début et de fin
         if (dateDebut.compareTo(dateFin) > 0) {
             throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
         }
-
         // Filtrer les visites par période
         this.visiteFiltre.removeIf(visite ->
                 visite.getDateVisite().before(dateDebut) || visite.getDateVisite().after(dateFin)
+        );
+    }
+
+    // Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
+    public void visitePeriode(String dateDebut, String dateFin) throws ParseException {
+        initialiserVisiteFiltre();
+        // Vérification des dates de début et de fin
+        Date dateDebutParse = format.parse(dateDebut);
+        Date dateFinParse = format.parse(dateFin);
+        if (dateDebutParse.compareTo(dateFinParse) > 0) {
+            throw new IllegalArgumentException("La date de début ne doit pas être supérieure à la date de fin.");
+        }
+        // Filtrer les visites par période
+        this.visiteFiltre.removeIf(visite ->
+                visite.getDateVisite().before(dateDebutParse) || visite.getDateVisite().after(dateFinParse)
+        );
+    }
+
+    // Methode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une plage horaire donnée
+    public void visitePlageHoraire(String heureDebut, String heureFin) throws ParseException {
+        initialiserVisiteFiltre();
+        SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
+        Date heureDebutParse = formatHeure.parse(heureDebut);
+        Date heureFinParse = formatHeure.parse(heureFin);
+
+        // Vérification des heures de début et de fin
+        if (heureDebutParse.compareTo(heureFinParse) > 0) {
+            throw new IllegalArgumentException("L'heure de début ne doit pas être supérieure à l'heure de fin.");
+        }
+        // Filtrer les visites par plage horaire
+        this.visiteFiltre.removeIf(visite ->
+                visite.getHeureVisite().before(heureDebutParse) || visite.getHeureVisite().after(heureFinParse)
         );
     }
 
@@ -68,6 +106,7 @@ public class Statistiques {
      * @return une map avec l'ID de l'exposition comme clé et le nombre de visites comme valeur
      */
     public Map<String, Integer> getNbVisitesParExposition() {
+        initialiserVisiteFiltre();
         Map<String, Integer> visitesParExposition = new HashMap<>();
         for (Visite visite : visiteFiltre) {
             String expositionId = visite.getExpositionId();
@@ -80,7 +119,8 @@ public class Statistiques {
      * Méthode pour obtenir le pourcentage de visites pour chaque exposition de la liste des visites filtrées
      * @return une map avec l'ID de l'exposition comme clé et le pourcentage de visites comme valeur
      */
-    public Map<String, Double> getPourcentageVisitesParExposition() {
+    public Map<String, Double> getPVisitesExpositions() {
+        initialiserVisiteFiltre();
         Map<String, Integer> visitesParExposition = getNbVisitesParExposition();
         Map<String, Double> pourcentageParExposition = new HashMap<>();
         int totalVisites = visiteFiltre.size();
@@ -97,7 +137,8 @@ public class Statistiques {
      * Méthode pour obtenir le pourcentage de visites effectuées par chaque conférencier
      * @return une map avec l'ID du conférencier comme clé et le pourcentage de visites comme valeur
      */
-    public Map<String, Double> getPourcentageVisitesParConferencier() {
+    public Map<String, Double> getPVisitesConferenciers() {
+        initialiserVisiteFiltre();
         Map<String, Integer> visitesParConferencier = new HashMap<>();
         for (Visite visite : visiteFiltre) {
             String conferencierId = visite.getConferencierId();
@@ -114,10 +155,9 @@ public class Statistiques {
 
         return pourcentageParConferencier;
     }
-
-    public StringBuilder afficherPourcentageVisitesParConferencier() {
+    public StringBuilder afficherPVisitesConferencier() {
         StringBuilder str = new StringBuilder();
-        Map<String, Double> pourcentageParConferencier = getPourcentageVisitesParConferencier();
+        Map<String, Double> pourcentageParConferencier = getPVisitesConferenciers();
         for (Map.Entry<String, Double> entry : pourcentageParConferencier.entrySet()) {
             str.append("Conférencier ")
                     .append(entry.getKey())
@@ -139,10 +179,11 @@ public class Statistiques {
         return "Conférencier non trouvé";
     }
 
-    public StringBuilder afficherPourcentageVisitesParTypeConferencier() {
+    public StringBuilder afficherPVisitesTConferencier() {
+        initialiserVisiteFiltre();
         StringBuilder str = new StringBuilder();
         // Obtenir le pourcentage de visites par conférencier
-        Map<String, Double> pourcentageParConferencier = getPourcentageVisitesParConferencier();
+        Map<String, Double> pourcentageParConferencier = getPVisitesConferenciers();
 
         // Calculer le pourcentage de visites par conférenciers internes et externes
         double totalVisites = visiteFiltre.size();
@@ -164,7 +205,8 @@ public class Statistiques {
         return str;
     }
 
-    public void enleveVisitesLiensExpoTemporaire() {
+    public void expositionTemporaire() {
+        initialiserVisiteFiltre();
         // Obtenir les ID des expositions temporaires
         ArrayList<String> idExpositionsTemporaires = new ArrayList<>();
         for (Exposition exposition : donnees.getExpositions()) {
@@ -177,7 +219,8 @@ public class Statistiques {
         this.visiteFiltre.removeIf(visite -> idExpositionsTemporaires.contains(visite.getExpositionId()));
     }
 
-    public void enleveVisitesLiensExpoPermanante() {
+    public void expositionPermanente() {
+        initialiserVisiteFiltre();
         // Obtenir les ID des expositions permanentes
         ArrayList<String> idExpositionsPermanantes = new ArrayList<>();
         for (Exposition exposition : donnees.getExpositions()) {
@@ -189,10 +232,9 @@ public class Statistiques {
         // Enlever les visites liées aux expositions permanantes
         this.visiteFiltre.removeIf(visite -> idExpositionsPermanantes.contains(visite.getExpositionId()));
     }
-
-    public StringBuilder affichagepourcentageVisitesParExposition() {
+    public StringBuilder affichagePVisitesExposition() {
         StringBuilder pourcentageVisitesParExposition = new StringBuilder();
-        Map<String, Double> pourcentageParExposition = getPourcentageVisitesParExposition();
+        Map<String, Double> pourcentageParExposition = getPVisitesExpositions();
         for (Map.Entry<String, Double> entry : pourcentageParExposition.entrySet()) {
             String expositionId = entry.getKey();
             double pourcentage = entry.getValue();
@@ -216,9 +258,14 @@ public class Statistiques {
         }
         return id;
     }
+
+    public void reset() {
+        this.visiteFiltre = new ArrayList<>(visiteInitial);
+    }
+
     public static void main(String[] args) throws ParseException {
         Statistiques stats = new Statistiques();
-        stats.conferencierInterne();
+        //stats.conferencierInterne();
         //stats.conferencierExterne();
 //        for (Visite visite : stats.visiteFiltre) {
 //            System.out.println(visite.toString());
@@ -234,26 +281,35 @@ public class Statistiques {
 
         //stats.expoVisitePeriode(dateDebut, dateFin);
 
-        System.out.println("taille liste " + stats.visiteFiltre.size());
 
-        //stats.enleveVisitesLiensExpoTemporaire();
-        for (Visite visite : stats.visiteFiltre) {
-            System.out.println(visite.getId() + " | " + visite.getExpositionId() + " | " + visite.getConferencierId());
-        }
+        //stats.expositionTemporaire();
+
+        //stats.expositionPermanente();
+
+        //stats.visitePlageHoraire("10h00", "11h00"); // filtre par plage horaire les visites uniquement
+        // System.out.println("taille liste " + stats.visiteFiltre.size());
+
+        //stats.reset();    // reset la liste des visites
+
+//        for (Visite visite : stats.visiteFiltre) {
+//            System.out.println(visite.getId() + " | " + visite.getExpositionId() + " | " + visite.getConferencierId() +
+//                               " | " + visite.getHeureVisite().toString());
+//        }
+
+        // System.out.println("taille liste " + stats.visiteFiltre.size());
 
         // affiche la map des visites par exposition
-        // System.out.println(stats.getPourcentageVisitesParExposition());
+        //System.out.println(stats.getPVisitesExpositions());
 
-        //System.out.println(stats.getPourcentageVisitesParConferencier());
+        //System.out.println(stats.getPVisitesConferenciers());
 
-        //System.out.print(stats.afficherPourcentageVisitesParTypeConferencier()); // pourcentage des visites par type de conférencier
+        //System.out.print(stats.afficherPVisitesTConferencier()); // pourcentage des visites par type de conférencier
 
-        //System.out.print(stats.affichagepourcentageVisitesParExposition()); // pourcentage visites pour expo
+        //System.out.print(stats.affichagePVisitesExposition()); // pourcentage visites pour expo
 
-        // System.out.print(stats.afficherPourcentageVisitesParConferencier()); // pourcentage des visites par conférencier
+        //stats.visitePeriode("03/12/2024","04/12/2024");  // filtre par date les visites uniquement
 
-
-
+        //System.out.print(stats.afficherPVisitesConferencier()); // pourcentage des visites par conférencier
 
     }
 }
