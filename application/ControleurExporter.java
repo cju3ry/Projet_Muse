@@ -80,15 +80,25 @@ public class ControleurExporter {
 	@FXML
 	private Button btnSauvegarder;
 
+	/**
+	 * Indique si les données ont été chargées et sauvegardées.
+	 */
 	private boolean donnesChargeesSauvegarder;
 
+	/**
+	 * Thread du serveur.
+	 */
 	private Thread serverThread;
 
+	/**
+	 * Socket du serveur.
+	 */
 	private ServerSocket serverSocket;
 
-
-
-
+	/**
+	 * Ecoute les demandes de fichiers entrantes.
+	 * @param event l'événement de clic sur le bouton.
+	 */
 	@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
 		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
@@ -317,10 +327,13 @@ public class ControleurExporter {
 		}
 	}
 
+	/**
+	 * Affiche l'adresse IP locale de la machine.
+	 * @param event l'événement de clic sur le bouton.
+	 */
 	@FXML
 	void afficherIp(ActionEvent event) {
-		String adresseIPLocale ;
-
+		String adresseIPLocale;
 		try {
 			InetAddress inetadr = InetAddress.getLocalHost();
 			//adresse ip sur le réseau
@@ -333,6 +346,10 @@ public class ControleurExporter {
 		}
 	}
 
+	/**
+	 * Arrête l'écoute des demandes de fichiers.
+	 * @param event l'événement de clic sur le bouton.
+	 */
 	@FXML
 	void arreterEcouter(ActionEvent event) {
 		if (serverThread != null && serverThread.isAlive()) {
@@ -371,7 +388,6 @@ public class ControleurExporter {
 	@FXML
 	void consulter(ActionEvent event) {
 		Main.setPageConsulter();
-
 	}
 
 	@FXML
@@ -382,7 +398,6 @@ public class ControleurExporter {
 	@FXML
 	void exporter(ActionEvent event) {
 		Main.setPageExporter();
-
 	}
 
 	@FXML
@@ -393,7 +408,6 @@ public class ControleurExporter {
 	@FXML
 	void importer(ActionEvent event) {
 		Main.setPageImporter();
-
 	}
 
 	@FXML
@@ -416,7 +430,4 @@ public class ControleurExporter {
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
-
-
-
 }
