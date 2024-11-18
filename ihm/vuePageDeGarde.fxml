@@ -7,66 +7,125 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ControleurPageDeGarde">
-   <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="60.0" layoutX="20.0" layoutY="16.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="1040.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="20.0" layoutY="102.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;" width="150.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6" height="600.0" layoutX="215.0" layoutY="95.0" stroke="#a8d0e6" strokeType="INSIDE" style="-fx-arc-height: 40; -fx-arc-width: 40;" width="845.0" />
-      <Button fx:id="btnImporter" layoutX="35.0" layoutY="123.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#importer" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Importer">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnQuitter" layoutX="35.0" layoutY="651.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#quitter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #F76C6C;" text="Quitter">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <Label layoutX="455.0" layoutY="31.0" text="DATA BRIDGE">
-         <font>
-            <Font name="Calibri Bold" size="26.0" />
-         </font>
-      </Label>
-      <Text layoutX="550.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenue sur Data ">
-         <font>
-            <Font name="Calibri" size="25.0" />
-         </font>
-      </Text>
-      <Button fx:id="btnExporter" layoutX="35.0" layoutY="186.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exporter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Exporter">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnConsulter" layoutX="35.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#consulter" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Consulter">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <!-- Bouton Sauvegarder ajouté -->
-      <Button fx:id="btnSauvegarder" layoutX="35.0" layoutY="372.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sauvegarder" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Sauvegarder">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnNotice" layoutX="35.0" layoutY="312.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#notice" prefHeight="33.0" prefWidth="120.0" style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;" text="Notice">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Button>
-      <Text layoutX="264.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data Bridge est une application qui va vous permettre d'automatiser la génération des rapports statistiques.">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Text>
-      <Text layoutX="329.0" layoutY="332.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sélectionnez l’action que vous souhaitez réaliser, grâce aux boutons dans la liste sur la gauche ">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Text>
-      <Text layoutX="360.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cela vous ouvrira une nouvelle fenêtre en fonction de ce que vous souhaitez réaliser">
-         <font>
-            <Font name="Calibri" size="17.0" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0"
+	prefWidth="1080.0" xmlns="http://javafx.com/javafx/23"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="application.ControleurPageDeGarde">
+	<children>
+		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6"
+			height="60.0" layoutX="20.0" layoutY="16.0" stroke="#a8d0e6"
+			strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;"
+			width="1040.0" />
+		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6"
+			height="600.0" layoutX="20.0" layoutY="102.0" stroke="#a8d0e6"
+			strokeType="INSIDE" style="-fx-arc-height: 20; -fx-arc-width: 20;"
+			width="150.0" />
+		<Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a8d0e6"
+			height="600.0" layoutX="215.0" layoutY="95.0" stroke="#a8d0e6"
+			strokeType="INSIDE" style="-fx-arc-height: 40; -fx-arc-width: 40;"
+			width="845.0" />
+		<Button fx:id="btnImporter" layoutX="35.0" layoutY="123.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#importer"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;"
+			text="Importer">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnQuitter" layoutX="35.0" layoutY="651.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#quitter"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #F76C6C;"
+			text="Quitter">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Label layoutX="455.0" layoutY="31.0" text="DATA BRIDGE">
+			<font>
+				<Font name="Calibri Bold" size="26.0" />
+			</font>
+		</Label>
+		<Text layoutX="550.0" layoutY="146.0" strokeType="OUTSIDE"
+			strokeWidth="0.0" text="Bienvenue sur Data ">
+			<font>
+				<Font name="Calibri" size="25.0" />
+			</font>
+		</Text>
+		<Button fx:id="btnExporter" layoutX="35.0" layoutY="186.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#exporter"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;"
+			text="Exporter">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnConsulter" layoutX="35.0" layoutY="250.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#consulter"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2E9CCA;"
+			text="Consulter">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnSauvegarder" layoutX="35.0" layoutY="432.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#sauvegarder"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
+			text="Sauvegarder">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="statistiques" layoutX="35.0" layoutY="312.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#statistiques"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
+			text="Statistiques">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Button fx:id="btnNotice" layoutX="35.0" layoutY="372.0"
+			maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+			minWidth="-Infinity" mnemonicParsing="false" onAction="#notice"
+			prefHeight="33.0" prefWidth="120.0"
+			style="-fx-background-radius: 5; -fx-background-color: #2e9cca;"
+			text="Notice">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Button>
+		<Text layoutX="264.0" layoutY="254.0" strokeType="OUTSIDE"
+			strokeWidth="0.0"
+			text="Data Bridge est une application qui va vous permettre d'automatiser la génération des rapports statistiques.">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Text>
+		<Text layoutX="329.0" layoutY="332.0" strokeType="OUTSIDE"
+			strokeWidth="0.0"
+			text="Sélectionnez l’action que vous souhaitez réaliser, grâce aux boutons dans la liste sur la gauche ">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Text>
+		<Text layoutX="360.0" layoutY="415.0" strokeType="OUTSIDE"
+			strokeWidth="0.0"
+			text="Cela vous ouvrira une nouvelle fenêtre en fonction de ce que vous souhaitez réaliser">
+			<font>
+				<Font name="Calibri" size="17.0" />
+			</font>
+		</Text>
+	</children>
 </AnchorPane>
