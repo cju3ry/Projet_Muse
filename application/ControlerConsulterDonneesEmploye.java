@@ -114,7 +114,7 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     void quitter(ActionEvent event) {
-    	System.exit(0);
+    	Main.quitterApllication();
     }
 
     @FXML

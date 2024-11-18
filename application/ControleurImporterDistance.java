@@ -613,21 +613,25 @@ public class ControleurImporterDistance {
     void importerFichier(ActionEvent event) {
 
     }
+    
     @FXML
     void exporter(ActionEvent event) {
         Main.setPageExporter();
     }
+    
     @FXML
     void notice(ActionEvent event) {
         Main.afficherNotice();
     }
+    
     @FXML
     void consulter(ActionEvent event) {
         Main.setPageConsulter();
     }
+    
     @FXML
     void quitter(ActionEvent event) {
-        System.exit(0);
+    	Main.quitterApllication();
     }
 
     @FXML

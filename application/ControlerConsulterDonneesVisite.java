@@ -603,9 +603,9 @@ public class ControlerConsulterDonneesVisite {
     }
 
 	@FXML
-	void quitter(ActionEvent event) {
-		System.exit(0);
-	}
+    void quitter(ActionEvent event) {
+    	Main.quitterApllication();
+    }
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {

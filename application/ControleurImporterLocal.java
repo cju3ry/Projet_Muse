@@ -436,7 +436,7 @@ public class ControleurImporterLocal {
 
     @FXML
     void quitter(ActionEvent event) {
-    	System.exit(0);
+    	Main.quitterApllication();
     }
     
     @FXML

@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 
 import gestion_donnees.DonneesApplication;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +48,7 @@ public class Main extends Application {
 	private static Scene scenePageConsulterDonneesVisite;
 
 	private static Scene scenePageConsulterDonneesExposition;
-	
+
 	private static Scene scenePageStatitiques;
 
 	private static FXMLLoader chargeurFxmlPageDeGarde = new FXMLLoader();
@@ -69,7 +70,7 @@ public class Main extends Application {
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesVisite = new FXMLLoader();
 
 	private static FXMLLoader chargeurFxmlPageConsulterDonneesExposition = new FXMLLoader();
-	
+
 	private static FXMLLoader chargeurFxmlPageStatistiques = new FXMLLoader();
 
 	@Override
@@ -135,7 +136,7 @@ public class Main extends Application {
 			conteneur = chargeurFxmlPageConsulterDonneesVisite.load();
 			scenePageConsulterDonneesVisite = new Scene(conteneur);
 			scenePageConsulterDonneesVisite.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			
+
 			chargeurFxmlPageStatistiques.setLocation(getClass().getResource("/ihm/vueStatistiques.fxml"));
 			conteneur = chargeurFxmlPageStatistiques.load();
 			scenePageStatitiques = new Scene(conteneur);
@@ -194,7 +195,7 @@ public class Main extends Application {
 	public static void setPageConsulterDonneesVisite() {
 		fenetrePrincipale.setScene(scenePageConsulterDonneesVisite);
 	}
-	
+
 	public static void setPageConsulterStatistiques() {
 		fenetrePrincipale.setScene(scenePageStatitiques);
 	}
@@ -202,7 +203,7 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	public static void afficherNotice() {
 		VBox vbox = new VBox();
 		vbox.setSpacing(10);
@@ -315,6 +316,20 @@ public class Main extends Application {
 				alert.showAndWait();
 			}
 		}
+	}
+	
+	public static void quitterApllication() {
+		  
+	    Alert alert = new Alert(AlertType.CONFIRMATION);
+	    alert.setTitle("Confirmation");
+	    alert.setHeaderText("Êtes-vous sûr de vouloir quitter ? Les données non sauvegardées seront perdu");
+	    alert.setContentText("Cliquez sur OK pour quitter, ou sur Annuler pour rester.");
+
+	    alert.showAndWait().ifPresent(response -> {
+	        if (response == javafx.scene.control.ButtonType.OK) {
+	        	Platform.exit();
+	        }
+	    });
 	}
 
 }
