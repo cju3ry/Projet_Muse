@@ -89,6 +89,9 @@ public class ControleurImporterDistance {
 
     @FXML
     private Button btnRevenirArriere;
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private Label labelFichierSelectionne;
@@ -631,6 +634,11 @@ public class ControleurImporterDistance {
     void revenirArriere(ActionEvent event) {
         Main.setPageImporter();
 
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
 }

@@ -122,6 +122,9 @@ public class ControlerStatistiques {
 
 	@FXML
 	private VBox panneauFiltres;
+	
+	@FXML
+	private Button btnSauvegarder;
 
 	@FXML
 	private ScrollPane scrollPaneFiltres;
@@ -277,8 +280,10 @@ public class ControlerStatistiques {
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
-
-		stats = new Statistiques();
+		
+		if (premierAffichageOk) {
+			stats = new Statistiques();
+		}
 	}
 
 	@FXML 
@@ -532,17 +537,38 @@ public class ControlerStatistiques {
 
 	@FXML
 	void consulter(ActionEvent event) {
+		if (premierAffichageOk) {
+			stats.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+		if (premierAffichageOk) {
+			stats.reset();
+		}
+		
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
 	void exporter(ActionEvent event) {
+		if (premierAffichageOk) {
+			stats.reset();
+		}
+		
 		Main.setPageExporter();
 
 	}
 
 	@FXML
 	void importer(ActionEvent event) {
+		if (premierAffichageOk) {
+			stats.reset();
+		}
+		
 		Main.setPageImporter();
 	}
 
@@ -558,7 +584,16 @@ public class ControlerStatistiques {
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
+		if (premierAffichageOk) {
+			stats.reset();
+		}
+		
 		Main.setPageConsulter();
+	}
+	
+	@FXML
+	void sauvegarder(ActionEvent event) {
+		Main.sauvegarder();
 	}
 
 }

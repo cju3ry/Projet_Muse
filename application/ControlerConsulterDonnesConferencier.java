@@ -70,6 +70,9 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	private Button btnSauvegarder;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private ChoiceBox<String> heureDebut;
@@ -280,19 +283,42 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	void consulter(ActionEvent event) {
-		reinitialiserFiltre();
-		filtres.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
 	void exporter(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageExporter();
 
 	}
 
 	@FXML
 	void importer(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageImporter();
 	}
 
@@ -313,8 +339,11 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
-		reinitialiserFiltre();
-		filtres.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 }

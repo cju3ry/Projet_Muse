@@ -20,7 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterLocal {
 	
-
+	
 	
 	private static final String MESSAGE_FICHIER_SELECTIONNE = "     Fichier séléctionné";
 	private static String initialFilePath = null;
@@ -130,6 +130,9 @@ public class ControleurImporterLocal {
 
     @FXML
     private Button btnNotice;
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private Button btnQuitter;
@@ -434,6 +437,11 @@ public class ControleurImporterLocal {
     @FXML
     void quitter(ActionEvent event) {
     	System.exit(0);
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
     @FXML

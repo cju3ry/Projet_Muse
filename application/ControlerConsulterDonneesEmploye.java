@@ -30,7 +30,9 @@ public class ControlerConsulterDonneesEmploye {
     
     @FXML
     private Button btnSauvegarder;
-
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private TextArea textAreaConsultation;
@@ -103,6 +105,11 @@ public class ControlerConsulterDonneesEmploye {
     @FXML
     void notice(ActionEvent event) {
     	
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
     @FXML

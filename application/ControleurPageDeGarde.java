@@ -213,4 +213,9 @@ public class ControleurPageDeGarde {
 	public static boolean isDonneesSaveChargees() {
 		return isDonneesChargees;
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 }

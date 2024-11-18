@@ -63,6 +63,9 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private ChoiceBox<String> heureDebut;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private ChoiceBox<String> heureFin;
@@ -280,19 +283,32 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void consulter(ActionEvent event) {
-		reinitialiserFiltre();
-		filtresExpositions.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 
 	@FXML
 	void exporter(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageExporter();
 
 	}
 
 	@FXML
 	void importer(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageImporter();
 	}
 
@@ -300,6 +316,16 @@ public class ControlerConsulterDonneesExposition {
 	void notice(ActionEvent event) {
 
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
 	void quitter(ActionEvent event) {
@@ -308,8 +334,11 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
-		reinitialiserFiltre();
-		filtresExpositions.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 

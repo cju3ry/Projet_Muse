@@ -55,6 +55,9 @@ public class ControleurExporter {
 
 	@FXML
 	private Button btnArreterEcouter;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private Label textAffichageIp;
@@ -400,6 +403,11 @@ public class ControleurExporter {
 		Main.setPageImporter();
 
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
 	void notice(ActionEvent event) {
