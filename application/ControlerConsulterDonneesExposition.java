@@ -117,7 +117,6 @@ public class ControlerConsulterDonneesExposition {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
-		filtresExpositions = new Filtre();
 		boolean listeFiltreOk;
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
@@ -152,6 +151,7 @@ public class ControlerConsulterDonneesExposition {
 		}
 
 		if (premierAffichageOk && !listeFiltreOk) {
+			filtresExpositions = new Filtre();
 			listeFiltreOk = true;
 			heureDebut.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",

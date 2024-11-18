@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 
 
 import gestion_donnees.DonneesApplication;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -121,6 +123,7 @@ public class ControleurExporter {
 			rotateTransition.setInterpolator(Interpolator.LINEAR);
 			rotateTransition.play();			
 			imageSpinner.setVisible(true);
+			rotateTransition.play();
 			rotateTransition.play();
 			int port = 65412; // Port d'écoute
 			serverThread = new Thread(() -> {
@@ -358,9 +361,11 @@ public class ControleurExporter {
 				labelEcouteLancee.setText("Aucune écoute en cours");
 			}
 		}
+		
 		if(rotateTransition != null) {
 			rotateTransition.stop();
 		}
+		
 		imageSpinner.setVisible(false);
 	}
 	@FXML

@@ -588,7 +588,7 @@ public class ControlerStatistiques {
 			stats.reset();
 		}
 		
-		Main.setPageConsulter();
+		Main.setPageDeGarde();
 	}
 	
 	@FXML
