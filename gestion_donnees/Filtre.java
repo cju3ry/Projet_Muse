@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import application.ControleurImporterLocal;
 
@@ -32,14 +33,14 @@ public class Filtre {
 	}
 
 	private void initialiserExpositionFiltre() {
-		if (!expositionFiltre.isEmpty()) {
-			this.expositionFiltre = new ArrayList<>();
+		if (expositionFiltre.isEmpty()) {
+			this.expositionFiltre = new ArrayList<>(expositionInitial);
 		}
 	}
 
 	private void initialiserConferencierFiltre() {
-		if (!conferencierFiltre.isEmpty()) {
-			this.conferencierFiltre = new ArrayList<>();
+		if (conferencierFiltre.isEmpty()) {
+			this.conferencierFiltre = new ArrayList<>(conferencierInitial);
 		}
 	}
 
@@ -202,13 +203,12 @@ public class Filtre {
 
 		// Ajoute les expositions sans visite dans la période spécifiée
 		for (Exposition exposition : donnees.getExpositions()) {
-			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId())
-					&& !this.expositionFiltre.contains(exposition)) {
-				this.expositionFiltre.add(exposition);
+			if (!expositionsAvecVisitesDansPeriode.contains(exposition.getId())) {
+				this.expositionFiltre.remove(exposition);
 			}
 		}
 	}
-
+	
 	public void expoVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserExpositionFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -231,9 +231,8 @@ public class Filtre {
 
 		// Ajoute les expositions sans visite dans l'intervalle horaire spécifié
 		for (Exposition exposition : expositionInitial) {
-			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId())
-					&& !this.expositionFiltre.contains(exposition)) {
-				this.expositionFiltre.add(exposition);
+			if (!expositionsAvecVisitesDansHoraire.contains(exposition.getId())) {
+				this.expositionFiltre.remove(exposition);
 			}
 		}
 	}
@@ -260,10 +259,9 @@ public class Filtre {
 		}
 
 		// Ajoute les conférenciers sans visites dans la période spécifiée
-		for (Conferencier conferencier : conferencierInitial) {
-			if (!conferenciersAvecVisitesDansPeriode.contains(conferencier.getId())
-					&& !this.conferencierFiltre.contains(conferencier)) {
-				this.conferencierFiltre.add(conferencier);
+		for (Conferencier conferencier : donnees.getConferenciers()) {
+			if (!conferenciersAvecVisitesDansPeriode.contains(conferencier.getId())) {
+				this.conferencierFiltre.remove(conferencier);
 			}
 		}
 	}
@@ -289,18 +287,71 @@ public class Filtre {
 		}
 
 		// Ajoute les conférenciers sans visites dans l'intervalle horaire spécifié
-		for (Conferencier conferencier : conferencierInitial) {
-			if (!conferenciersAvecVisitesDansHoraire.contains(conferencier.getId())
-					&& !this.conferencierFiltre.contains(conferencier)) {
-				this.conferencierFiltre.add(conferencier);
+		for (Conferencier conferencier : donnees.getConferenciers()) {
+			if (!conferenciersAvecVisitesDansHoraire.contains(conferencier.getId())) {
+				this.conferencierFiltre.remove(conferencier);
 			}
 		}
+	}
+	
+	public HashMap<String, Integer> confMoyennesPeriode(ArrayList<Conferencier> liste, String debut, String fin) throws ParseException {
+		initialiserConferencierFiltre();
+		
+		HashMap<String, Integer> moyennes = new HashMap<>();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date dateDebut = format.parse(debut);
+		Date dateFin = format.parse(fin);
+		long moyenne = 0;
+		int nbVisite = 0;
+		
+		for (Conferencier conferencier : liste) {
+			for (Visite visite : visiteInitial) {
+				Date dateVisite = visite.getDateVisite();
+				if (conferencier.getId().equals(visite.getConferencierId())
+						&& !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+					nbVisite++;
+				}
+			}
+			
+			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
+			moyennes.put(conferencier.getId(), (int) moyenne);
+		}
+		
+		return moyennes;
+	}
+	
+	public HashMap<String, Integer> expoMoyennesPeriode(ArrayList<Exposition> liste, String debut, String fin) throws ParseException {
+		initialiserConferencierFiltre();
+		
+		HashMap<String, Integer> moyennes = new HashMap<>();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date dateDebut = format.parse(debut);
+		Date dateFin = format.parse(fin);
+		long moyenne = 0;
+		int nbVisite = 0;
+		
+		for (Exposition exposition : liste) {
+			for (Visite visite : visiteInitial) {
+				Date dateVisite = visite.getDateVisite();
+				if (exposition.getId().equals(visite.getExpositionId())
+						&& !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+					nbVisite++;
+				}
+			}
+			
+			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
+			moyennes.put(exposition.getId(), (int) moyenne);
+		}
+		
+		return moyennes;
 	}
 
 	public void reset() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
-		this.expositionFiltre = new ArrayList<>();
-		this.conferencierFiltre = new ArrayList<>();
+		this.expositionFiltre = new ArrayList<>(expositionInitial);
+		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
 	}
 
 	public ArrayList<Visite> getListeVisite() {
