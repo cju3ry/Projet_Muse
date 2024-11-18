@@ -99,9 +99,6 @@ public class ControleurExporter {
 	@FXML
 	void initialize() {
 		imageSpinner.setVisible(false);
-		rotateTransition = new RotateTransition(Duration.seconds(2), imageSpinner);
-		rotateTransition.setByAngle(360);
-		rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
 	}
 
 	@FXML
@@ -118,6 +115,11 @@ public class ControleurExporter {
 			alert.showAndWait();
 		} else {
 			labelEcouteLancee.setText("L'écoute est lancée");
+			rotateTransition = new RotateTransition(Duration.seconds(1), imageSpinner);
+			rotateTransition.setByAngle(360);
+			rotateTransition.setCycleCount(Timeline.INDEFINITE);
+			rotateTransition.setInterpolator(Interpolator.LINEAR);
+			rotateTransition.play();			
 			imageSpinner.setVisible(true);
 			rotateTransition.play();
 			int port = 65412; // Port d'écoute
@@ -354,12 +356,12 @@ public class ControleurExporter {
 			} finally {
 				serverThread = null;
 				labelEcouteLancee.setText("Aucune écoute en cours");
-				//Arrêter la rotation de l'image
-				rotateTransition.stop();
-				imageSpinner.setVisible(false);
-
 			}
 		}
+		if(rotateTransition != null) {
+			rotateTransition.stop();
+		}
+		imageSpinner.setVisible(false);
 	}
 	@FXML
 	void choisirFichierConferencier(ActionEvent event) {
