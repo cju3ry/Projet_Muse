@@ -9,8 +9,6 @@ public class ControleurConsulter {
 	
 	public String elementAAfficher;
 
-
-
 	@FXML
     private Button btnConferencier;
 
@@ -45,6 +43,9 @@ public class ControleurConsulter {
 	private Button btnSauvegarder;
     
     @FXML
+    public Button statistiques;
+    
+    @FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
@@ -75,7 +76,10 @@ public class ControleurConsulter {
     	Main.quitterApllication();
     }
     
-
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 
     @FXML
     void consulterConferencier(ActionEvent event) {

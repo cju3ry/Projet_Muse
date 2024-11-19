@@ -32,11 +32,19 @@ public class ControleurImporter {
     
     @FXML
 	private Button btnSauvegarder;
+    
+    @FXML
+    public Button statistiques;
 	
 	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 
     @FXML
     void consulter(ActionEvent event) {
@@ -52,6 +60,7 @@ public class ControleurImporter {
     void importer(ActionEvent event) {
     	Main.setPageImporter();
     }
+    
     @FXML
     void notice(ActionEvent event) {
 
@@ -61,6 +70,7 @@ public class ControleurImporter {
     void quitter(ActionEvent event) {
     	Main.quitterApllication();
     }
+    
     @FXML
     void importerDistance(ActionEvent event) {
     	Main.setPageImporterDistance();
@@ -76,7 +86,4 @@ public class ControleurImporter {
     void revenirArriere(ActionEvent event) {
     	Main.setPageDeGarde();
     }
-
-   
-
 }

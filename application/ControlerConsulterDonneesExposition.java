@@ -1,3 +1,4 @@
+
 package application;
 
 import java.text.ParseException;
@@ -7,19 +8,22 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import gestion_donnees.DonneesApplication;
-
 import gestion_donnees.Exposition;
-
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
@@ -66,6 +70,9 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private ChoiceBox<String> heureDebut;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private ChoiceBox<String> heureFin;
@@ -81,6 +88,15 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private Button btnSauvegarder;
+	
+	@FXML
+    private Label texteTrie;
+	
+	@FXML
+	private ChoiceBox<String> triePar;
+	
+	@FXML
+	private CheckBox moyennesOk;
 
 	private StringBuilder strExpositionsLocal;
 
@@ -98,6 +114,7 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void initialize() {
+		
 		textAreaConsultation.setEditable(false);
 		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
@@ -109,6 +126,9 @@ public class ControlerConsulterDonneesExposition {
 		scrollPaneFiltres.setVisible(false);
 		btnLancerFiltre.setVisible(false);
 		btnReinitialiserFiltre.setVisible(false);
+		triePar.setVisible(false);
+		texteTrie.setVisible(false);
+		moyennesOk.setVisible(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
@@ -117,8 +137,8 @@ public class ControlerConsulterDonneesExposition {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
-		filtresExpositions = new Filtre();
 		boolean listeFiltreOk;
+		
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
 		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
@@ -135,23 +155,24 @@ public class ControlerConsulterDonneesExposition {
 		}
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
-			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrExpositions().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
-			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterDistance.getStrExpositions().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
 			donnees = ControleurPageDeGarde.getDonnees();
-			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurPageDeGarde.getStrExpositions().toString());
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
 
 		if (premierAffichageOk && !listeFiltreOk) {
+			filtresExpositions = new Filtre();
 			listeFiltreOk = true;
 			heureDebut.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",
@@ -170,6 +191,9 @@ public class ControlerConsulterDonneesExposition {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
+			
+			triePar.setVisible(false);
+			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
 
 
@@ -181,6 +205,9 @@ public class ControlerConsulterDonneesExposition {
 		scrollPaneFiltres.setVisible(!isVisible);
 		btnLancerFiltre.setVisible(!isVisible);
 		btnReinitialiserFiltre.setVisible(!isVisible);
+		triePar.setVisible(!isVisible);
+		texteTrie.setVisible(!isVisible);
+		moyennesOk.setVisible(!isVisible);
 	}
 
 	@FXML 
@@ -189,12 +216,16 @@ public class ControlerConsulterDonneesExposition {
 		filtresExpositions.reset();
 
 		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		HashMap<Exposition, Double> moyennes = new HashMap<>();
+		Set<Entry<Exposition, Double>> moyennesExpo;
+		double[] tableauMoyennes;
 
-		String strDateDebut;
-		String strDateFin;
+		String strDateDebut = "";
+		String strDateFin = "";
 		String strHeureDebut;
 		String strHeureFin;
 		String aAfficher = "";
+		int i = 0;
 
 		// Vérification et application du filtre par période de date
 		if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
@@ -223,14 +254,50 @@ public class ControlerConsulterDonneesExposition {
 				textAreaConsultation.setText("Erreur dans le format des heures.");
 			}
 		}
+		
+		if(triePar.getValue() != null && triePar.getValue().equals("Nombre de visite croissant")) {
+			filtresExpositions.expositionstrie(filtresExpositions.getListeExposition(), true);
+		} else if (triePar.getValue() != null && triePar.getValue().equals("Nombre de visite décroissant")) {
+			filtresExpositions.expositionstrie(filtresExpositions.getListeExposition(), false);
+		}
+		
+		tableauMoyennes = new double[filtresExpositions.getListeConferencier().size()];
+
+		if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
+			try {
+				moyennes = filtresExpositions.expoMoyennesPeriode(filtresExpositions.getListeExposition(), strDateDebut, strDateFin);
+				moyennesExpo = moyennes.entrySet();
+				for (Entry<Exposition, Double> paire : moyennesExpo) {
+					tableauMoyennes[i] = paire.getValue();
+					i++;
+				}
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		i = 0;
 
 		// Affichage des résultats filtrés
-		if (!filtresExpositions.getListeExposition().isEmpty()) {
+		if (!filtresExpositions.getListeExposition().isEmpty() && !moyennesOk.isSelected()) {
 			for (Exposition exposition : filtresExpositions.getListeExposition()) {
 				aAfficher += exposition.toString() + "\n";
 			}
-			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-					+ "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
+			
+			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche." 
+					+ "\n\t\t\t\t               Nombre d'exposition(s) trouvée(s) : " 
+					+ filtresExpositions.getListeExposition().size() + ".\n\n\n"
+					+ aAfficher);
+			
+		} else if (moyennesOk.isSelected() == true && expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
+			for (Exposition exposition : filtresExpositions.getListeExposition()) {
+				aAfficher += tableauMoyennes[i] + "\n" + exposition + "\n\n";
+				i++;
+			}
+			
+			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche." 
+					+ "\n\t\t\t\t               Nombre de conférencier(s) trouvée(s) : " 
 					+ filtresExpositions.getListeExposition().size() + ".\n\n\n"
 					+ aAfficher);
 		} else {
@@ -249,11 +316,11 @@ public class ControlerConsulterDonneesExposition {
 		strExpositonsSave = ControleurPageDeGarde.getStrExpositions();
 
 		if (donneesChargeesLocal) {
-			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrExpositions().toString());
 		} else if (donnesChargeesDistance) {
-			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterDistance.getStrExpositions().toString());
 		} else if (donnesChargeesSauvegarder) {
-			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
+			textAreaConsultation.setText("\n\n" + ControleurPageDeGarde.getStrExpositions().toString());
 		}
 
 		heureDebut.setItems(FXCollections.observableArrayList(
@@ -273,6 +340,7 @@ public class ControlerConsulterDonneesExposition {
 				"14h00", "14h30", "15h00", 
 				"15h30","16h00", "16h30", "17h00"
 				));
+		triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 
 		expoDateDebut.getEditor().clear();
 		expoDateDebut.setValue(null);
@@ -283,19 +351,32 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void consulter(ActionEvent event) {
-		reinitialiserFiltre();
-		filtresExpositions.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 
 	@FXML
 	void exporter(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageExporter();
 
 	}
 
 	@FXML
 	void importer(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageImporter();
 	}
 
@@ -303,16 +384,29 @@ public class ControlerConsulterDonneesExposition {
 	void notice(ActionEvent event) {
 
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
-	void quitter(ActionEvent event) {
+    void quitter(ActionEvent event) {
     	Main.quitterApllication();
     }
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
-		reinitialiserFiltre();
-		filtresExpositions.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtresExpositions.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 

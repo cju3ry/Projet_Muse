@@ -8,9 +8,7 @@ import gestion_donnees.Conferencier;
 
 import gestion_donnees.DonneesApplication;
 import gestion_donnees.Employe;
-
 import gestion_donnees.Exposition;
-
 import gestion_donnees.Visite;
 
 import javafx.application.Platform;
@@ -25,7 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterLocal {
 	
-
+	
 	
 	private static final String MESSAGE_FICHIER_SELECTIONNE = "     Fichier séléctionné";
 	private static String initialFilePath = null;
@@ -139,6 +137,9 @@ public class ControleurImporterLocal {
 
     @FXML
     private Button btnNotice;
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private Button btnQuitter;
@@ -458,6 +459,11 @@ public class ControleurImporterLocal {
     @FXML
     void quitter(ActionEvent event) {
     	Main.quitterApllication();
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
     @FXML

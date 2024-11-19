@@ -11,12 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 import gestion_donnees.Conferencier;
-
 import gestion_donnees.DonneesApplication;
 import gestion_donnees.Employe;
-
 import gestion_donnees.Exposition;
-
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
 
@@ -58,6 +55,9 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	private Button btnRevenir;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private TextArea textAreaConsultation;
@@ -140,8 +140,6 @@ public class ControlerConsulterDonneesVisite {
 
 	private ToggleGroup categorieToggleGroup;
 
-
-
 	@FXML
 	void initialize() {
 		textAreaConsultation.setEditable(false);
@@ -184,7 +182,6 @@ public class ControlerConsulterDonneesVisite {
 
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
-		filtres = new Filtre();
 		boolean listeFiltreOk;
 		ArrayList<String> nomsConf = new ArrayList<>();
 		ArrayList<String> nomsEmploye = new ArrayList<>();
@@ -226,6 +223,7 @@ public class ControlerConsulterDonneesVisite {
 
 		if (premierAffichageOk && !listeFiltreOk) {
 			listeFiltreOk = true;
+			filtres = new Filtre();
 			for (Conferencier conferencier : donnees.getConferenciers()) {
 				if (!nomsConf.contains(conferencier.getNom())) {
 					nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
@@ -562,19 +560,32 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	void consulter(ActionEvent event) {
-		reinitialiserFiltre();
-		filtres.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 
 	@FXML
 	void exporter(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageExporter();
 
 	}
 
 	@FXML
 	void importer(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageImporter();
 	}
 
@@ -582,16 +593,29 @@ public class ControlerConsulterDonneesVisite {
 	void notice(ActionEvent event) {
 
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
-	void quitter(ActionEvent event) {
+    void quitter(ActionEvent event) {
     	Main.quitterApllication();
     }
 
 	@FXML
 	void revenirEnArriere(ActionEvent event) {
-		reinitialiserFiltre();
-		filtres.reset();
+		if (premierAffichageOk) {
+			reinitialiserFiltre();
+			filtres.reset();
+		}
+		
 		Main.setPageConsulter();
 	}
 

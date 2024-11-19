@@ -13,11 +13,16 @@ import java.util.logging.Logger;
 
 
 import gestion_donnees.DonneesApplication;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class ControleurExporter {
 	@FXML
@@ -52,6 +57,9 @@ public class ControleurExporter {
 
 	@FXML
 	private Button btnArreterEcouter;
+	
+	@FXML
+    public Button statistiques;
 
 	@FXML
 	private Label textAffichageIp;
@@ -80,6 +88,12 @@ public class ControleurExporter {
 	@FXML
 	private Button btnSauvegarder;
 
+	@FXML
+	private ImageView imageSpinner;
+
+	private RotateTransition rotateTransition;
+
+
 	/**
 	 * Indique si les données ont été chargées et sauvegardées.
 	 */
@@ -95,52 +109,51 @@ public class ControleurExporter {
 	 */
 	private ServerSocket serverSocket;
 
-	/**
-	 * Ecoute les demandes de fichiers entrantes.
-	 * @param event l'événement de clic sur le bouton.
-	 */
 	@FXML
+	void initialize() {
+		imageSpinner.setVisible(false);
+	}
+
+@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
-		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
-		if(donnesChargeesSauvegarder) {
+		if (!ControleurImporterLocal.isDonneesConferencierChargees()
+				&& !ControleurImporterLocal.isDonneesEmployesChargees()
+				&& !ControleurImporterLocal.isDonneesExpositionsChargees()
+				&& !ControleurImporterLocal.isDonneesVisitesChargees()
+				&& !ControleurPageDeGarde.isDonneesSaveChargees()) {
+
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText("Par soucis de sécuirité de de compatibilité, vous devez au préalable avoir importé les fichiers en local "
+			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
 					+ "sur votre poste avant de pouvoir les exporter");
 			alert.showAndWait();
 		} else {
-			if (!ControleurImporterLocal.isDonneesConferencierChargees()
-					|| !ControleurImporterLocal.isDonneesEmployesChargees()
-					|| !ControleurImporterLocal.isDonneesExpositionsChargees()
-					|| !ControleurImporterLocal.isDonneesVisitesChargees()) {
-
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
-						+ "sur votre poste avant de pouvoir les exporter");
-				alert.showAndWait();
-			} else {
-				labelEcouteLancee.setText("L'écoute est lancée");
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText("L'écoute a été lancée");
-				alert.showAndWait();
-				int port = 65412; // Port d'écoute
-				serverThread = new Thread(() -> {
-					try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
-						System.out.println("Serveur en attente de connexion...");
-						while (true) {
-							// Attente d'une connexion
-							Socket socket = serverSocket.accept();
-							System.out.println("Connexion établie avec " + socket.getInetAddress());
-							// Lance un thread pour gérer la requête
-							new Thread(() -> handleRequest(socket)).start();
-						}
-					} catch (IOException e) {
-						System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
-						//Mets un message plus robuste
+			labelEcouteLancee.setText("L'écoute est lancée");
+			rotateTransition = new RotateTransition(Duration.seconds(1), imageSpinner);
+			rotateTransition.setByAngle(360);
+			rotateTransition.setCycleCount(Timeline.INDEFINITE);
+			rotateTransition.setInterpolator(Interpolator.LINEAR);
+			rotateTransition.play();			
+			imageSpinner.setVisible(true);
+			rotateTransition.play();
+			rotateTransition.play();
+			int port = 65412; // Port d'écoute
+			serverThread = new Thread(() -> {
+				try (ServerSocket serverSocket = this.serverSocket = new ServerSocket(port)) {
+					System.out.println("Serveur en attente de connexion...");
+					while (true) {
+						// Attente d'une connexion
+						Socket socket = serverSocket.accept();
+						System.out.println("Connexion établie avec " + socket.getInetAddress());
+						// Lance un thread pour gérer la requête
+						new Thread(() -> handleRequest(socket)).start();
 					}
-				});
-				serverThread.setDaemon(true); // Permet de fermer le serveur en même temps que l'application
-				serverThread.start();
-			}
+				} catch (IOException e) {
+					System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
+					//Mets un message plus robuste
+				}
+			});
+			serverThread.setDaemon(true); // Permet de fermer le serveur en même temps que l'application
+			serverThread.start();
 		}
 	}
 
@@ -364,11 +377,14 @@ public class ControleurExporter {
 			} finally {
 				serverThread = null;
 				labelEcouteLancee.setText("Aucune écoute en cours");
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setHeaderText("L'écoute a été arrêtée");
-				alert.showAndWait();
 			}
 		}
+		
+		if(rotateTransition != null) {
+			rotateTransition.stop();
+		}
+		
+		imageSpinner.setVisible(false);
 	}
 	@FXML
 	void choisirFichierConferencier(ActionEvent event) {
@@ -409,6 +425,11 @@ public class ControleurExporter {
 	void importer(ActionEvent event) {
 		Main.setPageImporter();
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 
 	@FXML
 	void notice(ActionEvent event) {
@@ -416,7 +437,7 @@ public class ControleurExporter {
 	}
 
 	@FXML
-	void quitter(ActionEvent event) {
+    void quitter(ActionEvent event) {
     	Main.quitterApllication();
     }
 

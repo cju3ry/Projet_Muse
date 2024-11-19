@@ -1,7 +1,6 @@
 package application;
 
 import gestion_donnees.DonneesApplication;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,7 +30,9 @@ public class ControlerConsulterDonneesEmploye {
     
     @FXML
     private Button btnSauvegarder;
-
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private TextArea textAreaConsultation;
@@ -104,6 +105,11 @@ public class ControlerConsulterDonneesEmploye {
     @FXML
     void notice(ActionEvent event) {
     	
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
     @FXML

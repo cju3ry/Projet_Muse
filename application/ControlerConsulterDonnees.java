@@ -32,6 +32,9 @@ public class ControlerConsulterDonnees {
     public TextArea textAreaConsultation;
     
     @FXML
+    public Button statistiques;
+    
+    @FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
@@ -49,6 +52,11 @@ public class ControlerConsulterDonnees {
     @FXML
     void consulter(ActionEvent event) {
     	Main.setPageConsulter();
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
     @FXML

@@ -19,6 +19,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+
 
 public class ControleurImporterDistance {
 
@@ -92,12 +94,18 @@ public class ControleurImporterDistance {
 
     @FXML
     private Button btnRevenirArriere;
+    
+    @FXML
+    public Button statistiques;
 
     @FXML
     private Label labelFichierSelectionne;
 
     @FXML
     private ComboBox<String> conboBoxFichier;
+
+    @FXML
+    private ImageView imageIpOK;
 
     @FXML
     private Button btnDemanderFichier;
@@ -210,7 +218,7 @@ public class ControleurImporterDistance {
      */
     public void initialize() {
         btnDemanderFichier.setDisable(true);
-
+        imageIpOK.setVisible(false);
         conboBoxFichier.getItems().clear();
         conboBoxFichier.getItems().addAll("Selectionner le fichier", "Employés", "Conférenciers", "Expositions", "Visites");
         conboBoxFichier.getSelectionModel().select("Selectionner le fichier");
@@ -246,10 +254,12 @@ public class ControleurImporterDistance {
                 "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
         ipServ = textIpServ.getText();
         if (ipServ.matches(ipPattern)) {
+            imageIpOK.setVisible(true);
             ipEstChoisit = true;
             mettreAJourEtatBtnDemande();
             System.out.print("L'ip du serveur est " + ipServ);
         } else {
+            imageIpOK.setVisible(false);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setHeaderText("Adresse IP invalide");
             alert.setContentText("Veuillez entrer une adresse IP valide.\nExemple : 192.168.1.22 " +
@@ -635,18 +645,22 @@ public class ControleurImporterDistance {
     void importerFichier(ActionEvent event) {
 
     }
+    
     @FXML
     void exporter(ActionEvent event) {
         Main.setPageExporter();
     }
+    
     @FXML
     void notice(ActionEvent event) {
         Main.afficherNotice();
     }
+    
     @FXML
     void consulter(ActionEvent event) {
         Main.setPageConsulter();
     }
+    
     @FXML
     void quitter(ActionEvent event) {
     	Main.quitterApllication();
@@ -656,6 +670,11 @@ public class ControleurImporterDistance {
     void revenirArriere(ActionEvent event) {
         Main.setPageImporter();
 
+    }
+    
+    @FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
     }
 
 }

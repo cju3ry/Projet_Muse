@@ -2,11 +2,8 @@ package application;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -18,25 +15,16 @@ import gestion_donnees.Visite;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class ControleurPageDeGarde {
 
 	private static DonneesApplication donnees = new DonneesApplication();
 
-	private static boolean donneesEmployesChargees = false;
+	private static boolean isDonneesChargees = false;
 
 	private  static StringBuilder strConferencier;
 
@@ -89,7 +77,7 @@ public class ControleurPageDeGarde {
 	//    }
 
 	@FXML
-	void quitter(ActionEvent event) {
+    void quitter(ActionEvent event) {
     	Main.quitterApllication();
     }
 
@@ -190,8 +178,7 @@ public class ControleurPageDeGarde {
 		for (int i = 0; i < listeDesConfernciers.size(); i++) {
 			strConferencier.append(listeDesConfernciers.get(i).toString()).append("\n");
 		}
-
-		donneesEmployesChargees = true;
+		isDonneesChargees = true;
 	}
 
 
@@ -224,6 +211,11 @@ public class ControleurPageDeGarde {
 	}
 
 	public static boolean isDonneesSaveChargees() {
-		return donneesEmployesChargees;
+		return isDonneesChargees;
 	}
+	
+	@FXML
+    void statistiques(ActionEvent event) {
+    	Main.setPageConsulterStatistiques();
+    }
 }
