@@ -102,5 +102,7 @@
 				<Font name="Calibri" size="17.0" />
 			</font>
 		</Button>
+      <ChoiceBox fx:id="triePar" layoutX="735.0" layoutY="144.0" prefHeight="25.0" prefWidth="100.0" />
+      <Label fx:id="texteTrie" layoutX="674.0" layoutY="148.0" text="Trier par :" />
 	</children>
 </AnchorPane>
