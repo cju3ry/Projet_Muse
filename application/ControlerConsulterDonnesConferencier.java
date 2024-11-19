@@ -5,7 +5,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import gestion_donnees.Conferencier;
 import gestion_donnees.DonneesApplication;
@@ -15,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -71,24 +77,27 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	private Button btnSauvegarder;
-	
+
 	@FXML
-    public Button statistiques;
+	public Button statistiques;
 
 	@FXML
 	private ChoiceBox<String> heureDebut;
 
 	@FXML
 	private ChoiceBox<String> heureFin;
+
+	@FXML
+	private TextArea textAreaConsultation;
 	
 	@FXML
     private Label texteTrie;
 	
 	@FXML
-	private ChoiceBox<String> triePar;
-
+	private CheckBox moyennesOk;
+	
 	@FXML
-	private TextArea textAreaConsultation;
+	private ChoiceBox<String> triePar;
 
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
@@ -117,6 +126,7 @@ public class ControlerConsulterDonnesConferencier {
 		btnReinitialiserFiltre.setVisible(false);
 		triePar.setVisible(false);
 		texteTrie.setVisible(false);
+		moyennesOk.setVisible(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
@@ -143,17 +153,17 @@ public class ControlerConsulterDonnesConferencier {
 		}
 
 		if (donneesChargeesLocal && !premierAffichageOk) {
-			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrConferencier().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
-			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterDistance.getStrConferencier().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurPageDeGarde.getStrConferencier().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
@@ -178,6 +188,7 @@ public class ControlerConsulterDonnesConferencier {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
+			
 			triePar.setVisible(false);
 			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
@@ -191,6 +202,7 @@ public class ControlerConsulterDonnesConferencier {
 		btnReinitialiserFiltre.setVisible(!isVisible);
 		triePar.setVisible(!isVisible);
 		texteTrie.setVisible(!isVisible);
+		moyennesOk.setVisible(!isVisible);
 	}
 
 	@FXML 
@@ -199,12 +211,16 @@ public class ControlerConsulterDonnesConferencier {
 		filtres.reset();
 
 		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-		String strDateDebut;
-		String strDateFin;
+		HashMap<Conferencier, Double> moyennes = new HashMap<>();
+		Set<Entry<Conferencier, Double>> moyennesConf;
+		double[] tableauMoyennes;
+		
+		String strDateDebut = "";
+		String strDateFin = "";
 		String strHeureDebut;
 		String strHeureFin;
 		String aAfficher = "";
+		int i = 0;
 
 		// Vérification et application du filtre par période de date
 		if (confDateDebut.getValue() != null && confDateFin.getValue() != null) {
@@ -232,21 +248,51 @@ public class ControlerConsulterDonnesConferencier {
 			} catch (ParseException e) {
 				e.printStackTrace();
 				textAreaConsultation.setText("Erreur dans le format des heures.");
-
 			}
 		}
-		if(triePar.getValue().equals("Nombre de visite croissant")) {
+		
+		tableauMoyennes = new double[filtres.getListeConferencier().size()];
+
+		if (confDateDebut.getValue() != null && confDateFin.getValue() != null) {
+			try {
+				moyennes = filtres.confMoyennesPeriode(filtres.getListeConferencier(), strDateDebut, strDateFin);
+				moyennesConf = moyennes.entrySet();
+				
+				for (Entry<Conferencier, Double> paire : moyennesConf) {
+					tableauMoyennes[i] = paire.getValue();
+					i++;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(triePar.getValue() != null && triePar.getValue().equals("Nombre de visite croissant")) {
 			filtres.conferenciersTrie(filtres.getListeConferencier(), true);
-		} else if (triePar.getValue().equals("Nombre de visite décroissant")) {
+		} else if (triePar.getValue() != null && triePar.getValue().equals("Nombre de visite décroissant")) {
 			filtres.conferenciersTrie(filtres.getListeConferencier(), false);
 		}
-
-		if (!filtres.getListeConferencier().isEmpty()) {
+		
+		i = 0;
+		
+		if (!filtres.getListeConferencier().isEmpty() && !moyennesOk.isSelected()) {
 			for (Conferencier conferencier : filtres.getListeConferencier()) {
 				aAfficher += conferencier + "\n\n";
+				i++;
 			}
-			textAreaConsultation.setText("\t\t\t\t\tRésultat pour votre recherche." 
-					+ "\n\t\t\t\t    Nombre de conférencier(s) trouvée(s) : " 
+			
+			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche." 
+					+ "\n\t\t\t\t            Nombre de conférencier(s) trouvée(s) : " 
+					+ filtres.getListeConferencier().size() + ".\n\n\n"
+					+ aAfficher);
+		} else if (moyennesOk.isSelected() && confDateDebut.getValue() != null && confDateFin.getValue() != null) {
+			for (Conferencier conferencier : filtres.getListeConferencier()) {
+				aAfficher += tableauMoyennes[i] + "\n" + conferencier + "\n\n";
+				i++;
+			}
+			
+			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche." 
+					+ "\n\t\t\t\t            Nombre de conférencier(s) trouvée(s) : " 
 					+ filtres.getListeConferencier().size() + ".\n\n\n"
 					+ aAfficher);
 		} else {
@@ -261,11 +307,11 @@ public class ControlerConsulterDonnesConferencier {
 		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 
 		if (donneesChargeesLocal) {
-			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrConferencier().toString());
 		} else if (donnesChargeesDistance) {
-			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurImporterDistance.getStrConferencier().toString());
 		} else if (donnesChargeesSauvegarder) {
-			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
+			textAreaConsultation.setText("\n\n" + ControleurPageDeGarde.getStrConferencier().toString());
 		}
 
 		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
@@ -305,19 +351,19 @@ public class ControlerConsulterDonnesConferencier {
 			reinitialiserFiltre();
 			filtres.reset();
 		}
-		
+
 		Main.setPageConsulter();
 	}
-	
+
 	@FXML
-    void statistiques(ActionEvent event) {
+	void statistiques(ActionEvent event) {
 		if (premierAffichageOk) {
 			reinitialiserFiltre();
 			filtres.reset();
 		}
-		
-    	Main.setPageConsulterStatistiques();
-    }
+
+		Main.setPageConsulterStatistiques();
+	}
 
 	@FXML
 	void exporter(ActionEvent event) {
@@ -325,7 +371,7 @@ public class ControlerConsulterDonnesConferencier {
 			reinitialiserFiltre();
 			filtres.reset();
 		}
-		
+
 		Main.setPageExporter();
 
 	}
@@ -336,7 +382,7 @@ public class ControlerConsulterDonnesConferencier {
 			reinitialiserFiltre();
 			filtres.reset();
 		}
-		
+
 		Main.setPageImporter();
 	}
 
@@ -346,9 +392,9 @@ public class ControlerConsulterDonnesConferencier {
 	}
 
 	@FXML
-    void quitter(ActionEvent event) {
-    	Main.quitterApllication();
-    }
+	void quitter(ActionEvent event) {
+		Main.quitterApllication();
+	}
 
 	@FXML
 	void sauvegarder(ActionEvent event) {
@@ -361,7 +407,7 @@ public class ControlerConsulterDonnesConferencier {
 			reinitialiserFiltre();
 			filtres.reset();
 		}
-		
+
 		Main.setPageConsulter();
 	}
 }
