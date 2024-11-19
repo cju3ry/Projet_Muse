@@ -84,7 +84,7 @@ public class ControleurExporter {
 
 	@FXML
 	private Button btnCleCommune;
-	
+
 	@FXML
 	private Button btnSauvegarder;
 
@@ -93,17 +93,28 @@ public class ControleurExporter {
 
 	private RotateTransition rotateTransition;
 
+
+	/**
+	 * Indique si les données ont été chargées et sauvegardées.
+	 */
+	private boolean donnesChargeesSauvegarder;
+
+	/**
+	 * Thread du serveur.
+	 */
 	private Thread serverThread;
 
+	/**
+	 * Socket du serveur.
+	 */
 	private ServerSocket serverSocket;
-
 
 	@FXML
 	void initialize() {
 		imageSpinner.setVisible(false);
 	}
 
-	@FXML
+@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
 		if (!ControleurImporterLocal.isDonneesConferencierChargees()
 				&& !ControleurImporterLocal.isDonneesEmployesChargees()
@@ -162,7 +173,7 @@ public class ControleurExporter {
 				chemin = ControleurImporterLocal.cheminFichierEmployes;
 			}
 
-            // Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Déterminer le chemin du fichier à envoyer en fonction de la requête
 			if ("conferenciers".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierConferenciers;
 			}
@@ -278,14 +289,14 @@ public class ControleurExporter {
 					} catch (IOException e) {
 						System.err.println("Erreur lors de l'acceptation de la connexion : " + e.getMessage());
 					}
-				// Si l'utilisateur refuse, on envoie un message de refus
+					// Si l'utilisateur refuse, on envoie un message de refus
 				} else {
 
 					try {System.out.println("Demande refusée par l'utilisateur.");
-						OutputStream output = socket.getOutputStream();
-						output.write("REFUS".getBytes(StandardCharsets.UTF_8));
-						output.flush();System.out.println("Demande refusée par l'utilisateur.");
-						socket.close(); // Fermer la connexion si refusé
+					OutputStream output = socket.getOutputStream();
+					output.write("REFUS".getBytes(StandardCharsets.UTF_8));
+					output.flush();System.out.println("Demande refusée par l'utilisateur.");
+					socket.close(); // Fermer la connexion si refusé
 					} catch (IOException e) {
 						Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 					}
@@ -306,8 +317,8 @@ public class ControleurExporter {
 	 */
 	private void sendFile(Socket socket, String chemin) {
 		try (OutputStream output = socket.getOutputStream();
-			 BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
-			 FileInputStream fileInput = new FileInputStream(chemin)) {
+				BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
+				FileInputStream fileInput = new FileInputStream(chemin)) {
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 
@@ -329,10 +340,13 @@ public class ControleurExporter {
 		}
 	}
 
+	/**
+	 * Affiche l'adresse IP locale de la machine.
+	 * @param event l'événement de clic sur le bouton.
+	 */
 	@FXML
 	void afficherIp(ActionEvent event) {
-		String adresseIPLocale ;
-
+		String adresseIPLocale;
 		try {
 			InetAddress inetadr = InetAddress.getLocalHost();
 			//adresse ip sur le réseau
@@ -345,6 +359,10 @@ public class ControleurExporter {
 		}
 	}
 
+	/**
+	 * Arrête l'écoute des demandes de fichiers.
+	 * @param event l'événement de clic sur le bouton.
+	 */
 	@FXML
 	void arreterEcouter(ActionEvent event) {
 		if (serverThread != null && serverThread.isAlive()) {
@@ -386,7 +404,6 @@ public class ControleurExporter {
 	@FXML
 	void consulter(ActionEvent event) {
 		Main.setPageConsulter();
-
 	}
 
 	@FXML
@@ -397,7 +414,6 @@ public class ControleurExporter {
 	@FXML
 	void exporter(ActionEvent event) {
 		Main.setPageExporter();
-
 	}
 
 	@FXML
@@ -408,7 +424,6 @@ public class ControleurExporter {
 	@FXML
 	void importer(ActionEvent event) {
 		Main.setPageImporter();
-
 	}
 	
 	@FXML
@@ -431,12 +446,9 @@ public class ControleurExporter {
 		Main.setPageDeGarde();
 
 	}
-	
+
 	@FXML
 	void sauvegarder(ActionEvent event) {
 		Main.sauvegarder();
 	}
-
-
-
 }

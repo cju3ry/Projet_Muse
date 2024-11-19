@@ -332,4 +332,17 @@ public class Main extends Application {
 	    });
 	}
 
+	public static void quitterApllication() {
+	  
+	    Alert alert = new Alert(AlertType.CONFIRMATION);
+	    alert.setTitle("Confirmation");
+	    alert.setHeaderText("Êtes-vous sûr de vouloir quitter ? Les données non sauvegardées seront perdu");
+	    alert.setContentText("Cliquez sur OK pour quitter, ou sur Annuler pour rester.");
+
+	    alert.showAndWait().ifPresent(response -> {
+	        if (response == javafx.scene.control.ButtonType.OK) {
+	        	Platform.exit();
+	        }
+	    });
+	}
 }

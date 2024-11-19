@@ -1,6 +1,7 @@
 package application;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -16,6 +17,7 @@ import gestion_donnees.Conferencier;
 import gestion_donnees.DonneesApplication;
 import gestion_donnees.Exposition;
 import gestion_donnees.Filtre;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -395,6 +397,7 @@ public class ControlerConsulterDonnesConferencier {
 	void quitter(ActionEvent event) {
 		Main.quitterApllication();
 	}
+
 
 	@FXML
 	void sauvegarder(ActionEvent event) {

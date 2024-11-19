@@ -1,6 +1,7 @@
 package application;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,7 @@ import gestion_donnees.Employe;
 import gestion_donnees.Exposition;
 import gestion_donnees.Filtre;
 import gestion_donnees.Visite;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

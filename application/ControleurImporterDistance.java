@@ -1,6 +1,7 @@
 package application;
 
 import java.io.*;
+
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -46,8 +47,10 @@ public class ControleurImporterDistance {
 
     // Variables pour stocker les données importées
     private  static StringBuilder strExpositions;
+
     // Variables pour stocker les données importées
     private  static StringBuilder strVisites;
+
     // Variables pour vérifier si les données ont été importées
     private static boolean donneesConferencierChargees = false;
 
@@ -72,6 +75,8 @@ public class ControleurImporterDistance {
     // Variables pour stocker le chemin du fichier des visites
     private String cheminFichierVisites;
 
+    private boolean donnesChargeesSauvegarder;
+    
     @FXML
     private Button btnConsulter;
 
@@ -131,29 +136,33 @@ public class ControleurImporterDistance {
 		Main.sauvegarder();
 	}
 
-    /** Getters pour les données importées des conférenciers
+    /**
+     * Getters pour les données importées des conférenciers
      * @return strConferencier la liste des conférenciers importés
-     * */
+     */
     public static StringBuilder getStrConferencier() {
         return strConferencier;
     }
-    /** Getters pour les données importées des employés
+    /**
+     * Getters pour les données importées des employés
      * @return strEmployes la liste des employés importés
-     * */
+     */
     public static StringBuilder getStrEmployes() {
         return strEmployes;
     }
 
-    /** Getters pour les données importées des expositions
+    /**
+     * Getters pour les données importées des expositions
      * @return strExpositions la liste des expositions importées
-     * */
+     */
     public static StringBuilder getStrExpositions() {
         return strExpositions;
     }
 
-    /** Getters pour les données importées des visites
+    /**
+     * Getters pour les données importées des visites
      * @return strVisites la liste des visites importées
-     * */
+     */
     public static StringBuilder getStrVisites() {
         return strVisites;
     }
@@ -161,7 +170,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des conférenciers ont été importées
      * @return donneesConferencierChargees true si les données des conférenciers ont été importées
-     * */
+     */
     public static boolean isDonneesConferencierChargees() {
         return donneesConferencierChargees;
     }
@@ -169,14 +178,14 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des employés ont été importées
      * @return donneesEmployesChargees true si les données des employés ont été importées
-     * */
+     */
     public static boolean isDonneesEmployesChargees() {
         return donneesEmployesChargees;
     }
     /**
      * Getters pour vérifier si les données des expositions ont été importées
      * @return donneesExpositionsChargees true si les données des expositions ont été importées
-     **/
+     */
     public static boolean isDonneesExpositionsChargees() {
         return donneesExpositionsChargees;
     }
@@ -184,7 +193,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour vérifier si les données des visites ont été importées
      * @return donneesVisitesChargees true si les données des visites ont été importées
-     **/
+     */
     public static boolean isDonneesVisitesChargees() {
         return donneesVisitesChargees;
     }
@@ -192,7 +201,7 @@ public class ControleurImporterDistance {
     /**
      * Getters pour le chemin du fichier des conférenciers
      * @return cheminFichierConferenciers le chemin du fichier des conférenciers
-     **/
+     */
     private static DonneesApplication donnees = new DonneesApplication();
     
     public static DonneesApplication getDonnees() {
@@ -201,9 +210,12 @@ public class ControleurImporterDistance {
 
     /**
      * Socket pour la connexion au serveur
-     * */
+     */
     private Socket socket;
 
+    /**
+     * Méthode pour initialiser la page
+     */
     public void initialize() {
         btnDemanderFichier.setDisable(true);
         imageIpOK.setVisible(false);
@@ -231,9 +243,10 @@ public class ControleurImporterDistance {
         btnDemanderFichier.setDisable(!(ipEstChoisit && fichierEstChoisit));
     }
 
-
-
-
+    /**
+     * Méthode pour récupérer l'adresse IP du serveur
+     * @param event l'événement de clic sur le bouton "OK"
+     */
     @FXML
     void recupIp(ActionEvent event) {
         // Vérifier si l'adresse IP est valide
@@ -255,6 +268,10 @@ public class ControleurImporterDistance {
         }
     }
 
+    /**
+     * Méthode pour demander le fichier au serveur
+     * @param event l'événement de clic sur le bouton "Demander fichier"
+     */
     @FXML
     void demanderFichier(ActionEvent event) {
         // Vérifier si le fichier demandé a déjà été importé
@@ -508,6 +525,10 @@ public class ControleurImporterDistance {
         strConferencier = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierConferenciers = userHome + "/Downloads/conferenciersRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListConferenciers();
+    	}
         try {
             donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
             donneesConferencierChargees = true;
@@ -533,6 +554,10 @@ public class ControleurImporterDistance {
         strEmployes = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierEmployes = userHome + "/Downloads/employesRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListEmployes();
+    	}
         try {
             donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
             donneesEmployesChargees = true;
@@ -560,6 +585,9 @@ public class ControleurImporterDistance {
         strVisites = new StringBuilder();
         String userHome = System.getProperty("user.home");
         cheminFichierVisites = userHome + "/Downloads/visitesRecu.csv";
+        if(donnesChargeesSauvegarder) {
+    		donnees.clearListVisites();
+    	}
         try {
             donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
             donneesVisitesChargees = true;
@@ -585,6 +613,10 @@ public class ControleurImporterDistance {
         strExpositions = new StringBuilder();
         String userHome = System.getProperty("user.home");
         String cheminFichierExpositions = userHome + "/Downloads/expositionsRecu.csv";
+        donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListExpositions();
+    	}
         try {
             donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
             donneesExpositionsChargees = true;

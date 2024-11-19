@@ -1,13 +1,16 @@
 package application;
 
 import java.io.File;
+
 import java.util.ArrayList;
 
 import gestion_donnees.Conferencier;
+
 import gestion_donnees.DonneesApplication;
 import gestion_donnees.Employe;
 import gestion_donnees.Exposition;
 import gestion_donnees.Visite;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,6 +50,10 @@ public class ControleurImporterLocal {
 	private static boolean cheminFichierExpositionsChoisit = false;
 	
 	private static boolean cheminFichierVisitesChoisit = false;
+	
+	private boolean donnesChargeesSauvegarder;
+	
+	private boolean donnesChargeesLocal;
 
 	private  static StringBuilder strConferencier;
 	
@@ -307,6 +314,10 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierConferenciers(ActionEvent event) {
     	strConferencier = new StringBuilder();
+    	donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListConferenciers();
+    	}
     	try {
 			donnees.importerConferenciers(DonneesApplication.LireCsv(cheminFichierConferenciers));
 			importationConferenciersOk = true;
@@ -340,6 +351,10 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierEmployes(ActionEvent event) {
 		strEmployes = new StringBuilder();
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListEmployes();
+    	}
     	try {
 			donnees.importerEmployes(DonneesApplication.LireCsv(cheminFichierEmployes));
 			importationEmployesOk = true;
@@ -372,6 +387,10 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierExpositions(ActionEvent event) {
 		strExpositions = new StringBuilder();
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListExpositions();
+    	}
     	try {
 			donnees.importerExpositions(DonneesApplication.LireCsv(cheminFichierExpositions));
 			importationExpositionsOk = true;
@@ -404,7 +423,10 @@ public class ControleurImporterLocal {
     @FXML
     void importerFichierVisites(ActionEvent event) {
 		strVisites = new StringBuilder();
-		
+		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
+    	if(donnesChargeesSauvegarder) {
+    		donnees.clearListVisites();
+    	}
     	try {
 			donnees.importerVisites(DonneesApplication.LireCsv(cheminFichierVisites));
 			Alert alerteOk = new Alert(AlertType.INFORMATION);
