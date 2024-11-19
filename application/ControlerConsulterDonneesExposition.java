@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
@@ -81,6 +82,12 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	private Button btnSauvegarder;
+	
+	@FXML
+    private Label texteTrie;
+	
+	@FXML
+	private ChoiceBox<String> triePar;
 
 	private StringBuilder strExpositionsLocal;
 
@@ -98,6 +105,7 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void initialize() {
+		
 		textAreaConsultation.setEditable(false);
 		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
@@ -109,6 +117,8 @@ public class ControlerConsulterDonneesExposition {
 		scrollPaneFiltres.setVisible(false);
 		btnLancerFiltre.setVisible(false);
 		btnReinitialiserFiltre.setVisible(false);
+		triePar.setVisible(false);
+		texteTrie.setVisible(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
@@ -118,6 +128,7 @@ public class ControlerConsulterDonneesExposition {
 	// Méthode pour charger et afficher les données
 	private void afficherDonnees() {
 		boolean listeFiltreOk;
+		
 		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
 		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
 		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
@@ -170,6 +181,8 @@ public class ControlerConsulterDonneesExposition {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
+			triePar.setVisible(false);
+			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
 
 
@@ -181,6 +194,8 @@ public class ControlerConsulterDonneesExposition {
 		scrollPaneFiltres.setVisible(!isVisible);
 		btnLancerFiltre.setVisible(!isVisible);
 		btnReinitialiserFiltre.setVisible(!isVisible);
+		triePar.setVisible(!isVisible);
+		texteTrie.setVisible(!isVisible);
 	}
 
 	@FXML 
@@ -223,14 +238,21 @@ public class ControlerConsulterDonneesExposition {
 				textAreaConsultation.setText("Erreur dans le format des heures.");
 			}
 		}
+		
+		if(triePar.getValue().equals("Nombre de visite croissant")) {
+			filtresExpositions.expositionstrie(filtresExpositions.getListeExposition(), true);
+			System.out.print(filtresExpositions.getListeExposition().size());
+		} else if (triePar.getValue().equals("Nombre de visite décroissant")) {
+			filtresExpositions.expositionstrie(filtresExpositions.getListeExposition(), false);
+		}
 
 		// Affichage des résultats filtrés
 		if (!filtresExpositions.getListeExposition().isEmpty()) {
 			for (Exposition exposition : filtresExpositions.getListeExposition()) {
 				aAfficher += exposition.toString() + "\n";
 			}
-			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-					+ "\n\t\t\t\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
+			textAreaConsultation.setText("\t\t\t\t\t\tRésultat pour votre recherche." 
+					+ "\n\t\t\t\t\t     Nombre d'exposition(s) trouvée(s) : " 
 					+ filtresExpositions.getListeExposition().size() + ".\n\n\n"
 					+ aAfficher);
 		} else {
@@ -273,6 +295,7 @@ public class ControlerConsulterDonneesExposition {
 				"14h00", "14h30", "15h00", 
 				"15h30","16h00", "16h30", "17h00"
 				));
+		triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 
 		expoDateDebut.getEditor().clear();
 		expoDateDebut.setValue(null);

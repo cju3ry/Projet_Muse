@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
@@ -79,6 +80,12 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	private ChoiceBox<String> heureFin;
+	
+	@FXML
+    private Label texteTrie;
+	
+	@FXML
+	private ChoiceBox<String> triePar;
 
 	@FXML
 	private TextArea textAreaConsultation;
@@ -108,6 +115,8 @@ public class ControlerConsulterDonnesConferencier {
 		scrollPaneFiltres.setVisible(false);
 		btnLancerFiltre.setVisible(false);
 		btnReinitialiserFiltre.setVisible(false);
+		triePar.setVisible(false);
+		texteTrie.setVisible(false);
 
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
@@ -169,6 +178,8 @@ public class ControlerConsulterDonnesConferencier {
 					"14h00", "14h30", "15h00", 
 					"15h30","16h00", "16h30", "17h00"
 					));
+			triePar.setVisible(false);
+			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
 	}
 
@@ -178,6 +189,8 @@ public class ControlerConsulterDonnesConferencier {
 		scrollPaneFiltres.setVisible(!isVisible);
 		btnLancerFiltre.setVisible(!isVisible);
 		btnReinitialiserFiltre.setVisible(!isVisible);
+		triePar.setVisible(!isVisible);
+		texteTrie.setVisible(!isVisible);
 	}
 
 	@FXML 
@@ -222,13 +235,18 @@ public class ControlerConsulterDonnesConferencier {
 
 			}
 		}
+		if(triePar.getValue().equals("Nombre de visite croissant")) {
+			filtres.conferenciersTrie(filtres.getListeConferencier(), true);
+		} else if (triePar.getValue().equals("Nombre de visite décroissant")) {
+			filtres.conferenciersTrie(filtres.getListeConferencier(), false);
+		}
 
 		if (!filtres.getListeConferencier().isEmpty()) {
 			for (Conferencier conferencier : filtres.getListeConferencier()) {
 				aAfficher += conferencier + "\n\n";
 			}
-			textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche." 
-					+ "\n\t\t\t\t\t\t\t\t     Nombre de conférencier(s) trouvée(s) : " 
+			textAreaConsultation.setText("\t\t\t\t\tRésultat pour votre recherche." 
+					+ "\n\t\t\t\t    Nombre de conférencier(s) trouvée(s) : " 
 					+ filtres.getListeConferencier().size() + ".\n\n\n"
 					+ aAfficher);
 		} else {
