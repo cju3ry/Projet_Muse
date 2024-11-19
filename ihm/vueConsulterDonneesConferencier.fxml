@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -110,5 +111,6 @@
 		</Button>
       <Label fx:id="texteTrie" layoutX="674.0" layoutY="148.0" text="Trier par :" />
       <ChoiceBox fx:id="triePar" layoutX="735.0" layoutY="144.0" prefHeight="25.0" prefWidth="100.0" />
+      <CheckBox fx:id="moyennesOk" layoutX="257.0" layoutY="148.0" mnemonicParsing="false" text="Afficher les moyennes" />
 	</children>
 </AnchorPane>
