@@ -200,7 +200,7 @@ public class ControlerConsulterDonneesVisite {
 		listeFiltreOk = true;
 
 		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
-				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+				&& (!donnesChargeesSauvegarder || strVisitesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 
@@ -452,16 +452,9 @@ public class ControlerConsulterDonneesVisite {
 		ArrayList<String> IntituleVisites = new ArrayList<>();
 		ArrayList<String> numtels = new ArrayList<>();
 
-		donneesChargeesLocal = ControleurImporterLocal.isDonneesVisitesChargees();
-		donnesChargeesDistance = ControleurImporterDistance.isDonneesVisitesChargees();
-		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
-
-		strVisitesLocal = ControleurImporterLocal.getStrVisites();
-		strVisitesDistance = ControleurImporterDistance.getStrVisites();
-		strVisitesSave = ControleurPageDeGarde.getStrVisites();
 
 		if ((!donneesChargeesLocal || strVisitesLocal == null) && (!donnesChargeesDistance || strVisitesDistance == null)
-				&& !donnesChargeesSauvegarder || strVisitesSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+				&& (!donnesChargeesSauvegarder || strVisitesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 

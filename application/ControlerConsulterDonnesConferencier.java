@@ -150,7 +150,7 @@ public class ControlerConsulterDonnesConferencier {
 		listeFiltreOk = true;
 
 		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
-				&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+				&& (!donnesChargeesSauvegarder || strConferencierSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
 		}
 
@@ -304,9 +304,13 @@ public class ControlerConsulterDonnesConferencier {
 
 	@FXML
 	void reinitialiserFiltre() {
-		strConferencierLocal = ControleurImporterLocal.getStrConferencier();
-		strConferencierDistance = ControleurImporterDistance.getStrConferencier();
+
+
 		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
+		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
+				&& (!donnesChargeesSauvegarder || strConferencierSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
+		}
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrConferencier().toString());
@@ -316,10 +320,6 @@ public class ControlerConsulterDonnesConferencier {
 			textAreaConsultation.setText("\n\n" + ControleurPageDeGarde.getStrConferencier().toString());
 		}
 
-		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
-				&& !donnesChargeesSauvegarder || strConferencierSave == null )  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
-			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
-		}
 
 		heureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",

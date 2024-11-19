@@ -307,13 +307,6 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void reinitialiserFiltre() {
-		donneesChargeesLocal = ControleurImporterLocal.isDonneesExpositionsChargees();
-		donnesChargeesDistance = ControleurImporterDistance.isDonneesExpositionsChargees();
-		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
-
-		strExpositionsLocal = ControleurImporterLocal.getStrExpositions();
-		strExpositionsDistance = ControleurImporterDistance.getStrExpositions();
-		strExpositonsSave = ControleurPageDeGarde.getStrExpositions();
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText("\n\n" + ControleurImporterLocal.getStrExpositions().toString());
