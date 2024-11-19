@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import application.ControleurImporterLocal;
 
@@ -208,7 +209,7 @@ public class Filtre {
 			}
 		}
 	}
-	
+
 	public void expoVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserExpositionFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -293,10 +294,52 @@ public class Filtre {
 			}
 		}
 	}
+
+	public void expositionstrie(ArrayList<Exposition> listExposition, boolean ordreCroissant) {
+		trierExpositions(listExposition, ordreCroissant);
+	}
+
+	public void trierExpositions(ArrayList<Exposition> listExposition, boolean ordreCroissant) {
+		// Compter les visites pour chaque exposition
+		Map<String, Integer> visiteCount = new HashMap<>();
+		for (Visite visite : donnees.getVisites()) {
+			visiteCount.put(visite.getExpositionId(), visiteCount.getOrDefault(visite.getExpositionId(), 0) + 1);
+		}
+
+		// Trier la liste des expositions en fonction du nombre de visites
+		listExposition.sort((a, b) -> {
+			int compA = visiteCount.getOrDefault(a.getId(), 0);
+			int compB = visiteCount.getOrDefault(b.getId(), 0);
+
+			// Retourner selon l'ordre croissant ou décroissant
+			return ordreCroissant ? Integer.compare(compA, compB) : Integer.compare(compB, compA);
+		});
+	}
+
 	
+	public void conferenciersTrie(ArrayList<Conferencier> listConferencier, boolean ordreCroissant) {
+		trierConferencier(listConferencier, ordreCroissant);
+	}
+
+	public void trierConferencier(ArrayList<Conferencier> listConferencier, boolean ordreCroissant) {
+		// Compter les visites pour chaque exposition
+		Map<String, Integer> visiteCount = new HashMap<>();
+		for (Visite visite : donnees.getVisites()) {
+			visiteCount.put(visite.getConferencierId(), visiteCount.getOrDefault(visite.getConferencierId(), 0) + 1);
+		}
+
+		// Trier la liste des conferenciers en fonction du nombre de visites
+		listConferencier.sort((a, b) -> {
+			int compA = visiteCount.getOrDefault(a.getId(), 0);
+			int compB = visiteCount.getOrDefault(b.getId(), 0);
+
+			// Retourner selon l'ordre croissant ou décroissant
+			return ordreCroissant ? Integer.compare(compA, compB) : Integer.compare(compB, compA);
+		});
+	}
 	public HashMap<String, Integer> confMoyennesPeriode(ArrayList<Conferencier> liste, String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
-		
+
 		HashMap<String, Integer> moyennes = new HashMap<>();
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -304,7 +347,7 @@ public class Filtre {
 		Date dateFin = format.parse(fin);
 		long moyenne = 0;
 		int nbVisite = 0;
-		
+
 		for (Conferencier conferencier : liste) {
 			for (Visite visite : visiteInitial) {
 				Date dateVisite = visite.getDateVisite();
@@ -313,17 +356,17 @@ public class Filtre {
 					nbVisite++;
 				}
 			}
-			
+
 			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
 			moyennes.put(conferencier.getId(), (int) moyenne);
 		}
-		
+
 		return moyennes;
 	}
-	
+
 	public HashMap<String, Integer> expoMoyennesPeriode(ArrayList<Exposition> liste, String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
-		
+
 		HashMap<String, Integer> moyennes = new HashMap<>();
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -331,7 +374,7 @@ public class Filtre {
 		Date dateFin = format.parse(fin);
 		long moyenne = 0;
 		int nbVisite = 0;
-		
+
 		for (Exposition exposition : liste) {
 			for (Visite visite : visiteInitial) {
 				Date dateVisite = visite.getDateVisite();
@@ -340,11 +383,11 @@ public class Filtre {
 					nbVisite++;
 				}
 			}
-			
+
 			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
 			moyennes.put(exposition.getId(), (int) moyenne);
 		}
-		
+
 		return moyennes;
 	}
 
