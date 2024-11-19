@@ -209,7 +209,7 @@ public class Filtre {
 			}
 		}
 	}
-
+	
 	public void expoVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserExpositionFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -294,7 +294,35 @@ public class Filtre {
 			}
 		}
 	}
+	
+	public HashMap<Conferencier, Double> confMoyennesPeriode(ArrayList<Conferencier> liste, String debut, String fin) throws ParseException {
+		initialiserConferencierFiltre();
+		
+		HashMap<Conferencier, Double> moyennes = new HashMap<>();
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
+		Date dateDebut = format.parse(debut);
+		Date dateFin = format.parse(fin);
+		double moyenne = 0;
+		double nbVisite = 0;
+		
+		for (Conferencier conferencier : liste) {
+			nbVisite = 0;
+			for (Visite visite : visiteInitial) {
+				Date dateVisite = visite.getDateVisite();
+				if (conferencier.getId().equals(visite.getConferencierId())
+						&& !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
+					nbVisite++;
+				}
+			}
+			
+			moyenne = nbVisite / ((dateFin.getTime() - dateDebut.getTime()) / 86400000);
+			moyennes.put(conferencier, (double) moyenne);
+		}
+		
+		return moyennes;
+	}
+	
 	public void expositionstrie(ArrayList<Exposition> listExposition, boolean ordreCroissant) {
 		trierExpositions(listExposition, ordreCroissant);
 	}
@@ -337,45 +365,20 @@ public class Filtre {
 			return ordreCroissant ? Integer.compare(compA, compB) : Integer.compare(compB, compA);
 		});
 	}
-	public HashMap<String, Integer> confMoyennesPeriode(ArrayList<Conferencier> liste, String debut, String fin) throws ParseException {
-		initialiserConferencierFiltre();
-
-		HashMap<String, Integer> moyennes = new HashMap<>();
+	
+	public HashMap<Exposition, Double> expoMoyennesPeriode(ArrayList<Exposition> liste, String debut, String fin) throws ParseException {
+		initialiserExpositionFiltre();
+		
+		HashMap<Exposition, Double> moyennes = new HashMap<>();
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
 		Date dateDebut = format.parse(debut);
 		Date dateFin = format.parse(fin);
-		long moyenne = 0;
-		int nbVisite = 0;
-
-		for (Conferencier conferencier : liste) {
-			for (Visite visite : visiteInitial) {
-				Date dateVisite = visite.getDateVisite();
-				if (conferencier.getId().equals(visite.getConferencierId())
-						&& !dateVisite.before(dateDebut) && !dateVisite.after(dateFin)) {
-					nbVisite++;
-				}
-			}
-
-			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
-			moyennes.put(conferencier.getId(), (int) moyenne);
-		}
-
-		return moyennes;
-	}
-
-	public HashMap<String, Integer> expoMoyennesPeriode(ArrayList<Exposition> liste, String debut, String fin) throws ParseException {
-		initialiserConferencierFiltre();
-
-		HashMap<String, Integer> moyennes = new HashMap<>();
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-
-		Date dateDebut = format.parse(debut);
-		Date dateFin = format.parse(fin);
-		long moyenne = 0;
-		int nbVisite = 0;
-
+		double moyenne = 0;
+		double nbVisite = 0;
+		
 		for (Exposition exposition : liste) {
+			nbVisite = 0;
 			for (Visite visite : visiteInitial) {
 				Date dateVisite = visite.getDateVisite();
 				if (exposition.getId().equals(visite.getExpositionId())
@@ -383,11 +386,11 @@ public class Filtre {
 					nbVisite++;
 				}
 			}
-
-			moyenne = nbVisite / ((dateDebut.getTime() / (60*60*24*1000)) - (dateFin.getTime() / (60*60*24*1000)));
-			moyennes.put(exposition.getId(), (int) moyenne);
+			
+			moyenne = nbVisite / ((dateFin.getTime() - dateDebut.getTime()) / 86400000);
+			moyennes.put(exposition, (double) moyenne);
 		}
-
+		
 		return moyennes;
 	}
 
