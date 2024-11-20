@@ -281,9 +281,8 @@ public class ControlerStatistiques {
 			listeFiltreOk = false;
 		}
 		
-		if (premierAffichageOk) {
+		if (premierAffichageOk && !listeFiltreOk) {
 			stats = new Statistiques();
-			premierAffichageOk = false;
 
 			confHeureDebut.setItems(FXCollections.observableArrayList(
 					"8h00", "8h30", "9h00",
@@ -451,30 +450,36 @@ public class ControlerStatistiques {
 	}
 
 	private void toggleFiltreExpoConf() {
-		if (donneesChargeesLocalConferencier
+		if (donneesChargeesLocalConferencier && !premierAffichageOk 
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
 			donnees = ControleurImporterLocal.getDonnees();
-		} else if (donneesChargeesLocalExposition 
+			premierAffichageOk = true;
+		} else if (donneesChargeesLocalExposition && !premierAffichageOk 
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 			donnees = ControleurImporterLocal.getDonnees();
-		} else if (donnesChargeesDistanceConferencier
+			premierAffichageOk = true;
+		} else if (donnesChargeesDistanceConferencier && !premierAffichageOk
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
 			donnees = ControleurImporterDistance.getDonnees();
-		} else if (donnesChargeesDistanceExposition
+			premierAffichageOk = true;
+		} else if (donnesChargeesDistanceExposition && !premierAffichageOk
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 			donnees = ControleurImporterDistance.getDonnees();
-		} else if (donnesChargeesSauvegarderConferencier 
+			premierAffichageOk = true;
+		} else if (donnesChargeesSauvegarderConferencier && !premierAffichageOk
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
-		} else if (donnesChargeesSauvegarderExposition
+			premierAffichageOk = true;
+		} else if (donnesChargeesSauvegarderExposition && !premierAffichageOk
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
+			premierAffichageOk = true;
 		}
 		
 		// Basculer la visibilité des filtres
@@ -522,6 +527,10 @@ public class ControlerStatistiques {
 			expoLabelHeureDebut.setVisible(true);
 			expoLabelHeureFin.setVisible(true);
 			expoLabelEtat.setVisible(true);
+		}
+		
+		if (premierAffichageOk) {
+			stats = new Statistiques();
 		}
 	}
 
