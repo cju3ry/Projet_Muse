@@ -1,0 +1,9 @@
+Ident;Nom;Prenom;Specialité;Telephone;Employe;Indisponibilite;;;
+C000001;Dupont;Pierre;#peinture, sculture#;0600000000;oui;16/10/2024;16/10/2024;;
+C000002;Lexpert;Noemie;#peinture, impressionnisme, art contemporain#;0600000001;oui;22/10/2024;26/10/2024;;
+C000003;Dujardin;Océane;#art moderne#;0611111111;oui;07/11/2024;07/11/2024;19/11/2024;22/11/2024
+C000004;Durand;Bill;#photo#;0622222222;oui;;;;
+C000005;Dupont;Max;#photo, peinture#;0633333333;oui;;;;
+C000006;Martin;Martin;#peinture, sculture#;0606060606;non;18/10/2024;18/10/2024;;
+C000007;Legrand;Jean-Pierre;#art moderne, peinture#;0600000002;non;18/12/2024;18/12/2024;;
+C000008;Deneuve;Zoé;#photo, peinture#;0600000003;non;;;;
