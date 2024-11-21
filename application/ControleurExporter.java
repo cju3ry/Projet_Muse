@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-import gestion_donnees.Crypto;
 import gestion_donnees.DonneesApplication;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -45,6 +44,15 @@ public class ControleurExporter {
 	private Button btnQuitter;
 
 	@FXML
+	private Button btnRecupA;
+
+	@FXML
+	private Button btnRecupB;
+
+	@FXML
+	private Button btnRecupNombre;
+
+	@FXML
 	private Button btnRevenirArriere;
 
 	@FXML
@@ -56,6 +64,17 @@ public class ControleurExporter {
 	@FXML
 	private Label textAffichageIp;
 
+	@FXML
+	private CheckBox cBCryptage;
+
+	@FXML
+	private TextField tfA;
+
+	@FXML
+	private TextField tfB;
+
+	@FXML
+	private TextField tfBorneMax;
 
 	@FXML
 	private Button btnEcouterDemandeFichiers;
@@ -64,12 +83,16 @@ public class ControleurExporter {
 	private Label labelEcouteLancee;
 
 	@FXML
+	private Button btnCleCommune;
+
+	@FXML
 	private Button btnSauvegarder;
 
 	@FXML
 	private ImageView imageSpinner;
 
 	private RotateTransition rotateTransition;
+
 
 	/**
 	 * Indique si les données ont été chargées et sauvegardées.
@@ -91,7 +114,7 @@ public class ControleurExporter {
 		imageSpinner.setVisible(false);
 	}
 
-	@FXML
+@FXML
 	void ecouterDemandeFichiers(ActionEvent event) {
 		if (!ControleurImporterLocal.isDonneesConferencierChargees()
 				&& !ControleurImporterLocal.isDonneesEmployesChargees()
@@ -179,7 +202,7 @@ public class ControleurExporter {
 				Optional<ButtonType> result = alert.showAndWait();
 
 				// Si l'utilisateur accepte, on crypte et envoie le fichier
-				if (result.get() == ButtonType.OK) {
+				if (result.get() == ButtonType.OK &&  result.isPresent()) {
 					try {
 						BufferedReader reader2 = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 						System.out.println("Demande aceptée par l'utilisateur.");
@@ -189,61 +212,69 @@ public class ControleurExporter {
 
 						// Envoie START pour indiquer le début de la communication
 						output.write("START\n".getBytes(StandardCharsets.UTF_8));
-
-						/*
-						 * Création de la clé commune pour le chiffrement de Vigenère
-						 */
-
-						// Le serveur initialise la borne maximale aléatoire
-						int min = 1000;
+						int min = 0;
 						int max = 8000;
 						int range = max - min + 1;
 						int borneMax = (int) (Math.random() * range) + min;
 
-						// Crée un objet Crypto pour pouvoir instancier le serveur.
+						// Création de l'objet Crypto avec une borne max aléatoire
 						Crypto vigenere = new Crypto(borneMax);
 
-						// Initialisation du chiffre a grâce à Math.random
 						int a = (int) (Math.random() * range) + min;
-
-						// Récupération de p et de g
 						int p = vigenere.getP();
 						int g = vigenere.getG();
 
-						// Envoi de p dans le flux
+						// envoie de p dans le flux
 						output.write((p + "\n").getBytes(StandardCharsets.UTF_8));
 						System.out.print("\np envoyé : " + p);
 
-						// Envoi de g dans le flux
+						// envoye de g dans le flux
 						output.write((g + "\n").getBytes(StandardCharsets.UTF_8));
 						System.out.print("\ng envoyé : " + g);
 
-						// Création et envoie de g^a dans le flux
+						// création et envoie de g ^ a dans le flux
 						long gA = vigenere.genererGA(g,a,p);
 						output.write((gA + "\n").getBytes(StandardCharsets.UTF_8));
-						System.out.print("\ng^a envoyé : " + gA);
+						System.out.print("\ng ^ a envoyé : " + gA);
 
-						// Reception de g^b du client par le flux
+						// recoit g ^ b du client par le flux
 						String gBstr = reader2.readLine();
-						long gB = Long.parseLong(gBstr);
-						System.out.println("\ng^b reçu du client : " + gB);
+						Long gB = Long.parseLong(gBstr);
+						System.out.println("\ng ^ b reçu du client : " + gB);
 
-						// Calcul de la clé commune
+						// calcul de g ^ ab
 						long cleCommune = vigenere.genererGAB(gB,a,p);
 						System.out.print("\nLa clé commune pour serv est : " + cleCommune);
-                        vigenere.setCleCommune(cleCommune);
+
+						long gABserv;
+
+						long gBAclient;
+
+						// Reception de g ^ ba du client
+						String cleClient = reader2.readLine();
+						long cleB  = Long.parseLong(cleClient);
+						System.out.println("\nla clee du client : " + cleClient);
+
+						gBAclient = cleB;
+
+						gABserv = cleCommune;
+
+						// Comparaison des clés communes du serveur et du client
+						if (gABserv != gBAclient) {
+							throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat du serv est : " + gABserv + "\n Le résultat du client est : " + gBAclient);
+						} else {
+							System.out.println("\nParfait, il ont tous les 2, ce résultat : " + gABserv);
+						}
+						System.out.println("\nLa clé commune est : " + gABserv);
+						vigenere.setCleCommune(gABserv);
 						output.flush();
 
-						// Lecture du fichier .csv à envoyer
 						String message = String.valueOf(DonneesApplication.LireCsv(cheminFinal));
 
-						/*
-						 * Chiffrement du message avec la clé commune
-						 */
 						String messageChiffre = vigenere.chiffrerVigenere(message);
 						String cheminFichierCrypte = cheminFinal.replace(".csv", "Crypte.csv");
 
-						// Écriture des caractères dans le fichier crypté
+						// ecriture du fichier crypté
 						try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichierCrypte))) {
 							writer.write(messageChiffre);
 							writer.flush();
@@ -252,7 +283,7 @@ public class ControleurExporter {
 						}
 						output.write((vigenere.getCleCommune()+"\n").getBytes(StandardCharsets.UTF_8));
 						output.flush();
-
+						//sendFile(socket, cheminFinal); // sans cryptage
 						// Envoyer le fichier crypté au client
 						sendFile(socket, cheminFichierCrypte);
 					} catch (IOException e) {
@@ -260,11 +291,12 @@ public class ControleurExporter {
 					}
 					// Si l'utilisateur refuse, on envoie un message de refus
 				} else {
+
 					try {System.out.println("Demande refusée par l'utilisateur.");
 					OutputStream output = socket.getOutputStream();
 					output.write("REFUS".getBytes(StandardCharsets.UTF_8));
 					output.flush();System.out.println("Demande refusée par l'utilisateur.");
-					socket.close(); // Fermer la connexion si refusée
+					socket.close(); // Fermer la connexion si refusé
 					} catch (IOException e) {
 						Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 					}
@@ -317,11 +349,14 @@ public class ControleurExporter {
 		String adresseIPLocale;
 		try {
 			InetAddress inetadr = InetAddress.getLocalHost();
-			//adresse ip sur le réseau
 			adresseIPLocale = inetadr.getHostAddress();
-			System.out.println("Adresse IP locale = "+adresseIPLocale );
-			textAffichageIp.setText(adresseIPLocale);
-
+			if (adresseIPLocale.startsWith("10.")) {
+				System.out.println("Adresse IP locale = " + adresseIPLocale);
+				textAffichageIp.setText(adresseIPLocale);
+			} else {
+				System.out.println("L'adresse IP locale ne commence pas par 10.");
+				textAffichageIp.setText("L'adresse IP locale ne commence pas par 10.");
+			}
 		} catch (UnknownHostException e) {
 			Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération de l'adresse IP locale", e);
 		}
@@ -401,7 +436,7 @@ public class ControleurExporter {
 
 	@FXML
 	void notice(ActionEvent event) {
-		Main.afficherNotice();
+
 	}
 
 	@FXML
@@ -412,6 +447,7 @@ public class ControleurExporter {
 	@FXML
 	void revenirArriere(ActionEvent event) {
 		Main.setPageDeGarde();
+
 	}
 
 	@FXML
