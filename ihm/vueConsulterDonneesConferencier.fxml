@@ -80,9 +80,10 @@
 						<DatePicker fx:id="confDateDebut" style="-fx-background-color: #a8d0e6;" />
                   <Label text="Au" />
 						<DatePicker fx:id="confDateFin" style="-fx-background-color: #a8d0e6;" />
+                  <CheckBox fx:id="moyennesOk" mnemonicParsing="false" text="Afficher les moyennes" />
 						<Label text="De">
                      <padding>
-                        <Insets top="50.0" />
+                        <Insets top="30.0" />
                      </padding></Label>
 						<ChoiceBox fx:id="heureDebut" prefWidth="150.0" style="-fx-background-color: #a8d0e6;" />
 						<Label text="A" />
@@ -111,6 +112,10 @@
 		</Button>
       <Label fx:id="texteTrie" layoutX="674.0" layoutY="148.0" text="Trier par :" />
       <ChoiceBox fx:id="triePar" layoutX="735.0" layoutY="144.0" prefHeight="25.0" prefWidth="100.0" />
-      <CheckBox fx:id="moyennesOk" layoutX="257.0" layoutY="148.0" mnemonicParsing="false" text="Afficher les moyennes" />
+      <Button fx:id="genererPdf" alignment="CENTER" contentDisplay="CENTER" layoutX="247.0" layoutY="616.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#notice" prefHeight="33.0" prefWidth="163.0" style="-fx-background-radius: 5; -fx-background-color: #2e9cca;" text="Générer un rapport">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
 	</children>
 </AnchorPane>

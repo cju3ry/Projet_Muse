@@ -218,5 +218,10 @@
 				<Font name="Calibri" size="17.0" />
 			</font>
 		</Button>
+		<Button fx:id="genererPdf" alignment="CENTER" contentDisplay="CENTER" layoutX="247.0" layoutY="616.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#notice" prefHeight="33.0" prefWidth="163.0" style="-fx-background-radius: 5; -fx-background-color: #2e9cca;" text="Générer un rapport">
+         <font>
+            <Font name="Calibri" size="17.0" />
+         </font>
+      </Button>
 	</children>
 </AnchorPane>
