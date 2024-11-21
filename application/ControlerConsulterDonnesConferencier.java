@@ -100,6 +100,9 @@ public class ControlerConsulterDonnesConferencier {
 	
 	@FXML
 	private ChoiceBox<String> triePar;
+	
+	@FXML
+	private Button genererPdf;
 
 	private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
@@ -129,7 +132,9 @@ public class ControlerConsulterDonnesConferencier {
 		triePar.setVisible(false);
 		texteTrie.setVisible(false);
 		moyennesOk.setVisible(false);
-
+		
+		confDateDebut.setOnAction(event -> afficherMoyenne());
+		confDateFin.setOnAction(event -> afficherMoyenne());
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
 		btnReinitialiserFiltre.setOnAction(event -> reinitialiserFiltre());
@@ -195,6 +200,14 @@ public class ControlerConsulterDonnesConferencier {
 			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
 	}
+	
+	private void afficherMoyenne() {
+		if (confDateDebut.getValue() != null && confDateFin.getValue() != null) {
+			moyennesOk.setVisible(true);
+		} else {
+			moyennesOk.setVisible(false);
+		}
+	}
 
 	private void toggleFiltrePanel() {
 		// Basculer la visibilité du panneau de filtres
@@ -204,7 +217,6 @@ public class ControlerConsulterDonnesConferencier {
 		btnReinitialiserFiltre.setVisible(!isVisible);
 		triePar.setVisible(!isVisible);
 		texteTrie.setVisible(!isVisible);
-		moyennesOk.setVisible(!isVisible);
 	}
 
 	@FXML 

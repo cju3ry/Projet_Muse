@@ -58,6 +58,9 @@ public class ControlerConsulterDonneesVisite {
 	
 	@FXML
     public Button statistiques;
+	
+	@FXML
+	private Button genererPdf;
 
 	@FXML
 	private TextArea textAreaConsultation;

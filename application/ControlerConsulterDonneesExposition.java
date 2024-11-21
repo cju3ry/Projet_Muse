@@ -97,6 +97,9 @@ public class ControlerConsulterDonneesExposition {
 	
 	@FXML
 	private CheckBox moyennesOk;
+	
+	@FXML
+	private Button genererPdf;
 
 	private StringBuilder strExpositionsLocal;
 
@@ -129,7 +132,9 @@ public class ControlerConsulterDonneesExposition {
 		triePar.setVisible(false);
 		texteTrie.setVisible(false);
 		moyennesOk.setVisible(false);
-
+		
+		expoDateDebut.setOnAction(event -> afficherMoyenne());
+		expoDateFin.setOnAction(event -> afficherMoyenne());
 		btnFiltre.setOnAction(event -> toggleFiltrePanel());
 		btnLancerFiltre.setOnAction(event -> appliquerFiltre());
 		btnReinitialiserFiltre.setOnAction(event -> reinitialiserFiltre());
@@ -195,8 +200,14 @@ public class ControlerConsulterDonneesExposition {
 			triePar.setVisible(false);
 			triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 		}
-
-
+	}
+	
+	private void afficherMoyenne() {
+		if (expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
+			moyennesOk.setVisible(true);
+		} else {
+			moyennesOk.setVisible(false);
+		}
 	}
 
 	private void toggleFiltrePanel() {
@@ -207,7 +218,6 @@ public class ControlerConsulterDonneesExposition {
 		btnReinitialiserFiltre.setVisible(!isVisible);
 		triePar.setVisible(!isVisible);
 		texteTrie.setVisible(!isVisible);
-		moyennesOk.setVisible(!isVisible);
 	}
 
 	@FXML 

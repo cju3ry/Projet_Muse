@@ -56,6 +56,9 @@ public class ControlerStatistiques {
 
 	@FXML
 	private Button btnRevenir;
+	
+	@FXML
+	private Button genererPdf;
 
 	@FXML
 	private ChoiceBox<String> choixConfExpo;
