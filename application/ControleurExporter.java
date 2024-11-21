@@ -2,16 +2,19 @@ package application;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+import gestion_donnees.Crypto;
 import gestion_donnees.DonneesApplication;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -346,20 +349,28 @@ public class ControleurExporter {
 	 */
 	@FXML
 	void afficherIp(ActionEvent event) {
-		String adresseIPLocale;
-		try {
-			InetAddress inetadr = InetAddress.getLocalHost();
-			adresseIPLocale = inetadr.getHostAddress();
-			if (adresseIPLocale.startsWith("10.")) {
-				System.out.println("Adresse IP locale = " + adresseIPLocale);
-				textAffichageIp.setText(adresseIPLocale);
-			} else {
-				System.out.println("L'adresse IP locale ne commence pas par 10.");
-				textAffichageIp.setText("L'adresse IP locale ne commence pas par 10.");
-			}
-		} catch (UnknownHostException e) {
-			Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération de l'adresse IP locale", e);
-		}
+	    try {
+	        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+	        StringBuilder ipAddresses = new StringBuilder();
+	        while (interfaces.hasMoreElements()) {
+	            NetworkInterface networkInterface = interfaces.nextElement();
+	            Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+	            while (inetAddresses.hasMoreElements()) {
+	                InetAddress inetAddress = inetAddresses.nextElement();
+	                String ipAddress = inetAddress.getHostAddress();
+	                if (ipAddress.startsWith("10.")) {
+	                    ipAddresses.append(ipAddress).append("\n");
+	                }
+	            }
+	        }
+	        if (ipAddresses.length() > 0) {
+	            textAffichageIp.setText(ipAddresses.toString());
+	        } else {
+	            textAffichageIp.setText("Aucune adresse IP ne commence par 10.");
+	        }
+	    } catch (SocketException e) {
+	        Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération des adresses IP", e);
+	    }
 	}
 
 	/**
