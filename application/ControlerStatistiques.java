@@ -281,44 +281,44 @@ public class ControlerStatistiques {
 			listeFiltreOk = false;
 		}
 		
+		confHeureDebut.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00",
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00",
+				"15h30","16h00", "16h30", "17h00"
+		));
+
+		confHeureFin.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00",
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00",
+				"15h30","16h00", "16h30", "17h00"
+		));
+
+		expoHeureDebut.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00",
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00",
+				"15h30","16h00", "16h30", "17h00"
+		));
+
+		expoHeureFin.setItems(FXCollections.observableArrayList(
+				"8h00", "8h30", "9h00",
+				"9h30", "10h00", "10h30",
+				"11h00", "11h30", "12h00",
+				"12h30", "13h30", "13h30",
+				"14h00", "14h30", "15h00",
+				"15h30","16h00", "16h30", "17h00"
+		));
+		
 		if (premierAffichageOk && !listeFiltreOk) {
 			stats = new Statistiques();
-
-			confHeureDebut.setItems(FXCollections.observableArrayList(
-					"8h00", "8h30", "9h00",
-					"9h30", "10h00", "10h30",
-					"11h00", "11h30", "12h00",
-					"12h30", "13h30", "13h30",
-					"14h00", "14h30", "15h00",
-					"15h30","16h00", "16h30", "17h00"
-			));
-
-			confHeureFin.setItems(FXCollections.observableArrayList(
-					"8h00", "8h30", "9h00",
-					"9h30", "10h00", "10h30",
-					"11h00", "11h30", "12h00",
-					"12h30", "13h30", "13h30",
-					"14h00", "14h30", "15h00",
-					"15h30","16h00", "16h30", "17h00"
-			));
-
-			expoHeureDebut.setItems(FXCollections.observableArrayList(
-					"8h00", "8h30", "9h00",
-					"9h30", "10h00", "10h30",
-					"11h00", "11h30", "12h00",
-					"12h30", "13h30", "13h30",
-					"14h00", "14h30", "15h00",
-					"15h30","16h00", "16h30", "17h00"
-			));
-
-			expoHeureFin.setItems(FXCollections.observableArrayList(
-					"8h00", "8h30", "9h00",
-					"9h30", "10h00", "10h30",
-					"11h00", "11h30", "12h00",
-					"12h30", "13h30", "13h30",
-					"14h00", "14h30", "15h00",
-					"15h30","16h00", "16h30", "17h00"
-			));
 		}
 	}
 
