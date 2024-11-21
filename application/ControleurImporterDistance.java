@@ -216,7 +216,8 @@ public class ControleurImporterDistance {
     /**
      * Méthode pour initialiser la page
      */
-    public void initialize() {
+    @FXML
+    void initialize() {
         btnDemanderFichier.setDisable(true);
         imageIpOK.setVisible(false);
         conboBoxFichier.getItems().clear();
@@ -332,44 +333,43 @@ public class ControleurImporterDistance {
                     }
                     if ("START".equals(message)) {
                     	System.out.print("\nle serveur a accepté l'envoi");
+
+                        // Crée un objet Crypto pour pouvoir instancier le client.
                         Crypto vigenere = new Crypto();
 
-                        // recoi p
+                        // Le client reçoit p
                         String pStr = reader.readLine();
                         int p = Integer.parseInt(pStr);
                         System.out.println("\np reçu du serveur : " + p);
 
-                        // recoi g
+                        // Le client reçoit g
                         String gStr = reader.readLine();
                         int g = Integer.parseInt(gStr);
                         System.out.println("\ng reçu du serveur : " + g);
 
-                        // recoi g ^ a
+                        // Le client reçoit g ^ a
                         String gAstr = reader.readLine();
                         long gA = Long.parseLong(gAstr);
                         System.out.println("\ng ^ a reçu du serveur : " + gA);
-                        int min = 0;
+
+                        // Le client génère aléatoirement b
+                        int min = 1000;
                         int max = 8000;
                         int range = max - min + 1;
                         int b = (int) (Math.random() * range) + min;
 
-                        // calcul de g ^ b
+                        // Le client calcul de g ^ b
                         long gB = vigenere.genererGB(g,b,p);
 
-                        // envoi de g ^ b
+                        // Le client envoit g ^ b
                         writer.println(gB);
                         System.out.println("g ^ b envoyé au serveur : " + gB);
 
-                        // calcul de g ^ ab
+                        // Le client calcul de g ^ ab et affecte le résultat a la clé commune
                         long cleCommune = vigenere.genererGBA(gA,b,p);
                         vigenere.setCleCommune(cleCommune);
 
-                        System.out.print("\ncleCommune pour le client est " + cleCommune);
-                        // envoi de la cle commune au serv
-                        writer.println(cleCommune);
-                        writer.flush();
-
-                        System.out.print("le serveur a aceppeté l'envoi");
+                        System.out.print("Le serveur a accepté l'envoi");
                         byte[] buffer = new byte[4096];
                         int bytesRead;
 
@@ -378,7 +378,11 @@ public class ControleurImporterDistance {
                             fileOutput.write(buffer, 0, bytesRead);
                         }
 
-                      String messageCrypte = "";
+                        /*
+                         * Déchiffrer le fichier reçu
+                         */
+                        String messageCrypte = "";
+                        // Lire le contenu du fichier crypté
 						try (BufferedReader reader2 = new BufferedReader(new FileReader(getFileName()))) {
 							StringBuilder sb = new StringBuilder();
 							String line;
@@ -389,13 +393,11 @@ public class ControleurImporterDistance {
 						} catch (IOException e) {
 							System.err.println("Erreur lors de la lecture du fichier crypté : " + e.getMessage());
 						}
-
-
                         vigenere.setCleCommune(cleCommune);
 						String messageDechiffre = vigenere.dechiffrerVigenere(messageCrypte);
-                        // enlever les caractères inutiles / en trop avant le contenu du fichier, ainsi que [
+                        // enlever les caractères inutiles / en trop avant le contenu du fichier, ainsi que : [
                         messageDechiffre = messageDechiffre.replaceAll(".*Ident;", "Ident;");
-                        // remplacer le caractère oe qui se transforme en S lors du cryptage
+                        // remplacer le caractère œ qui se transforme en S lors du cryptage
                         messageDechiffre = messageDechiffre.replaceAll("Suvres", "œuvres");
                         // enlever le dernier caractère qui est un ]
                         messageDechiffre = messageDechiffre.substring(0, messageDechiffre.length() - 1);
