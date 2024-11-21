@@ -14,14 +14,14 @@ public class Statistiques {
 
     final ArrayList<Visite> visiteInitial = donnees.getVisites();
 
-    ArrayList<Visite> visiteFiltre;
+    public ArrayList<Visite> visiteFiltre;
 
     public Statistiques() {
         format = new SimpleDateFormat("dd/MM/yyyy");
         visiteFiltre = donnees.getVisites();
     }
     
-    private void initialiserVisiteFiltre() {
+    public void initialiserVisiteFiltre() {
         if (visiteFiltre.isEmpty()) {
             this.visiteFiltre = new ArrayList<>(visiteInitial);
         }

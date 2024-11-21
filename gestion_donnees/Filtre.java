@@ -111,6 +111,9 @@ public class Filtre {
 	}
 
 	public void datePeriode(Date dateDebut, Date dateFin) {
+		if(dateDebut.after(dateFin)) {
+			throw new IllegalArgumentException("La date de fin ne peut être inféreiure à la date de début");
+		}
 		initialiserVisiteFiltre();
 		this.visiteFiltre.removeIf(visite -> 
 		visite.getDateVisite().before(dateDebut) || visite.getDateVisite().after(dateFin));
