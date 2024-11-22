@@ -204,7 +204,7 @@ public class ControleurExporter {
 				Optional<ButtonType> result = alert.showAndWait();
 
 				// Si l'utilisateur accepte, on crypte et envoie le fichier
-				if (result.get() == ButtonType.OK &&  result.isPresent()) {
+				if (result.get() == ButtonType.OK) {
 					try {
 						BufferedReader reader2 = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 						System.out.println("Demande aceptée par l'utilisateur.");
@@ -241,34 +241,13 @@ public class ControleurExporter {
 
 						// recoit g ^ b du client par le flux
 						String gBstr = reader2.readLine();
-						Long gB = Long.parseLong(gBstr);
+						long gB = Long.parseLong(gBstr);
 						System.out.println("\ng ^ b reçu du client : " + gB);
 
 						// calcul de g ^ ab
 						long cleCommune = vigenere.genererGAB(gB,a,p);
-						System.out.print("\nLa clé commune pour serv est : " + cleCommune);
-
-						long gABserv;
-
-						long gBAclient;
-
-						// Reception de g ^ ba du client
-						String cleClient = reader2.readLine();
-						long cleB  = Long.parseLong(cleClient);
-						System.out.println("\nla clee du client : " + cleClient);
-
-						gBAclient = cleB;
-
-						gABserv = cleCommune;
-
-						// Comparaison des clés communes du serveur et du client
-						if (gABserv != gBAclient) {
-							throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat du serv est : " + gABserv + "\n Le résultat du client est : " + gBAclient);
-						} else {
-							System.out.println("\nParfait, il ont tous les 2, ce résultat : " + gABserv);
-						}
-						System.out.println("\nLa clé commune est : " + gABserv);
-						vigenere.setCleCommune(gABserv);
+						System.out.println("\nLa clé commune est : " + cleCommune);
+						vigenere.setCleCommune(cleCommune);
 						output.flush();
 
 						String message = String.valueOf(DonneesApplication.LireCsv(cheminFinal));
