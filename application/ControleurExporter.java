@@ -123,7 +123,7 @@ public class ControleurExporter {
 				&& !ControleurImporterLocal.isDonneesEmployesChargees()
 				&& !ControleurImporterLocal.isDonneesExpositionsChargees()
 				&& !ControleurImporterLocal.isDonneesVisitesChargees()
-				&& !ControleurPageDeGarde.isDonneesSaveChargees()) {
+				&& ControleurPageDeGarde.isDonneesSaveChargees()) {
 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
