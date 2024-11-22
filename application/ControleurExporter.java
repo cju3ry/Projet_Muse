@@ -122,7 +122,7 @@ public class ControleurExporter {
 		if (!ControleurImporterLocal.isDonneesConferencierChargees()
 				&& !ControleurImporterLocal.isDonneesEmployesChargees()
 				&& !ControleurImporterLocal.isDonneesExpositionsChargees()
-				&& !ControleurImporterLocal.isDonneesVisitesChargees())) {
+				&& !ControleurImporterLocal.isDonneesVisitesChargees()) {
 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
@@ -351,6 +351,7 @@ public class ControleurExporter {
 	    try {
 	        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 	        StringBuilder ipAddresses = new StringBuilder();
+			String fallBackIp = null;
 	        while (interfaces.hasMoreElements()) {
 	            NetworkInterface networkInterface = interfaces.nextElement();
 	            Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
@@ -359,12 +360,16 @@ public class ControleurExporter {
 	                String ipAddress = inetAddress.getHostAddress();
 	                if (ipAddress.startsWith("10.")) {
 	                    ipAddresses.append(ipAddress).append("\n");
+	                } else if (fallBackIp == null && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()) {
+						fallBackIp = ipAddress;
 	                }
 	            }
 	        }
-	        if (ipAddresses.length() > 0) {
+	        if (!ipAddresses.isEmpty()) {
 	            textAffichageIp.setText(ipAddresses.toString());
-	        } else {
+			} else if (fallBackIp != null) {
+				textAffichageIp.setText(fallBackIp);
+			} else {
 	            textAffichageIp.setText("Aucune adresse IP ne commence par 10.");
 	        }
 	    } catch (SocketException e) {
