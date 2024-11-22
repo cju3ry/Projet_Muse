@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -191,7 +192,7 @@ public class ControlerStatistiques {
 		confDateDebut.setVisible(false);
 		confDateFin.setVisible(false);
 		confHeureDebut.setVisible(false);
-		confHeureDebut.setVisible(false);
+		confHeureFin.setVisible(false);
 		confExterne.setVisible(false);
 		confInterne.setVisible(false);
 		confLabelDate.setVisible(false);
@@ -202,7 +203,7 @@ public class ControlerStatistiques {
 		expoDateDebut.setVisible(false);
 		expoDateFin.setVisible(false);
 		expoHeureDebut.setVisible(false);
-		expoHeureDebut.setVisible(false);
+		expoHeureFin.setVisible(false);
 		expoPerm.setVisible(false);
 		expoTemp.setVisible(false);
 		expoLabelDates.setVisible(false);
@@ -535,6 +536,8 @@ public class ControlerStatistiques {
 	}
 
 	private void toggleFiltreExpoConf() {
+		Insets insetPaddingConf = new Insets(0, 0, 0, 0);
+		Insets insetPaddingExpo = new Insets(-415, 0, 0, 0);
 		if (donneesChargeesLocalConferencier
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
@@ -590,6 +593,7 @@ public class ControlerStatistiques {
 			expoLabelHeureDebut.setVisible(false);
 			expoLabelHeureFin.setVisible(false);
 			expoLabelEtat.setVisible(false);
+			panneauFiltres.setPadding(insetPaddingConf);
 		} else if (choixConfExpo.getValue().equals("Exposition")) {
 			confDateDebut.setVisible(false);
 			confDateFin.setVisible(false);
@@ -612,6 +616,7 @@ public class ControlerStatistiques {
 			expoLabelHeureDebut.setVisible(true);
 			expoLabelHeureFin.setVisible(true);
 			expoLabelEtat.setVisible(true);
+			panneauFiltres.setPadding(insetPaddingExpo);
 		}
 		
 		if (premierAffichageOk) {
