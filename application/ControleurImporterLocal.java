@@ -23,15 +23,13 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ControleurImporterLocal {
 	
-	
-	
 	private static final String MESSAGE_FICHIER_SELECTIONNE = "     Fichier séléctionné";
+
 	private static String initialFilePath = null;
 
 	public static String getInitialFilePath() {
 		return initialFilePath;
 	}
-
 
 	public static String getCheminFichierEmployes() {
 		return cheminFichierEmployes;

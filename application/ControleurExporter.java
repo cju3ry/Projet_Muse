@@ -2,19 +2,16 @@ package application;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import gestion_donnees.Crypto;
+
 import gestion_donnees.DonneesApplication;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -122,7 +119,8 @@ public class ControleurExporter {
 		if (!ControleurImporterLocal.isDonneesConferencierChargees()
 				&& !ControleurImporterLocal.isDonneesEmployesChargees()
 				&& !ControleurImporterLocal.isDonneesExpositionsChargees()
-				&& !ControleurImporterLocal.isDonneesVisitesChargees()) {
+				&& !ControleurImporterLocal.isDonneesVisitesChargees()
+				&& !ControleurPageDeGarde.isDonneesSaveChargees()) {
 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setHeaderText("Vous devez au préalable avoir importé les fichiers en local "
@@ -204,7 +202,7 @@ public class ControleurExporter {
 				Optional<ButtonType> result = alert.showAndWait();
 
 				// Si l'utilisateur accepte, on crypte et envoie le fichier
-				if (result.get() == ButtonType.OK) {
+				if (result.get() == ButtonType.OK &&  result.isPresent()) {
 					try {
 						BufferedReader reader2 = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 						System.out.println("Demande aceptée par l'utilisateur.");
@@ -241,13 +239,34 @@ public class ControleurExporter {
 
 						// recoit g ^ b du client par le flux
 						String gBstr = reader2.readLine();
-						long gB = Long.parseLong(gBstr);
+						Long gB = Long.parseLong(gBstr);
 						System.out.println("\ng ^ b reçu du client : " + gB);
 
 						// calcul de g ^ ab
 						long cleCommune = vigenere.genererGAB(gB,a,p);
-						System.out.println("\nLa clé commune est : " + cleCommune);
-						vigenere.setCleCommune(cleCommune);
+						System.out.print("\nLa clé commune pour serv est : " + cleCommune);
+
+						long gABserv;
+
+						long gBAclient;
+
+						// Reception de g ^ ba du client
+						String cleClient = reader2.readLine();
+						long cleB  = Long.parseLong(cleClient);
+						System.out.println("\nla clee du client : " + cleClient);
+
+						gBAclient = cleB;
+
+						gABserv = cleCommune;
+
+						// Comparaison des clés communes du serveur et du client
+						if (gABserv != gBAclient) {
+							throw new IllegalArgumentException("\nIl y a eu un problème\nLe résultat du serv est : " + gABserv + "\n Le résultat du client est : " + gBAclient);
+						} else {
+							System.out.println("\nParfait, il ont tous les 2, ce résultat : " + gABserv);
+						}
+						System.out.println("\nLa clé commune est : " + gABserv);
+						vigenere.setCleCommune(gABserv);
 						output.flush();
 
 						String message = String.valueOf(DonneesApplication.LireCsv(cheminFinal));
@@ -327,33 +346,20 @@ public class ControleurExporter {
 	 */
 	@FXML
 	void afficherIp(ActionEvent event) {
-	    try {
-	        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-	        StringBuilder ipAddresses = new StringBuilder();
-			String fallBackIp = null;
-	        while (interfaces.hasMoreElements()) {
-	            NetworkInterface networkInterface = interfaces.nextElement();
-	            Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-	            while (inetAddresses.hasMoreElements()) {
-	                InetAddress inetAddress = inetAddresses.nextElement();
-	                String ipAddress = inetAddress.getHostAddress();
-	                if (ipAddress.startsWith("10.")) {
-	                    ipAddresses.append(ipAddress).append("\n");
-	                } else if (fallBackIp == null && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()) {
-						fallBackIp = ipAddress;
-	                }
-	            }
-	        }
-	        if (!ipAddresses.isEmpty()) {
-	            textAffichageIp.setText(ipAddresses.toString());
-			} else if (fallBackIp != null) {
-				textAffichageIp.setText(fallBackIp);
+		String adresseIPLocale;
+		try {
+			InetAddress inetadr = InetAddress.getLocalHost();
+			adresseIPLocale = inetadr.getHostAddress();
+			if (adresseIPLocale.startsWith("10.")) {
+				System.out.println("Adresse IP locale = " + adresseIPLocale);
+				textAffichageIp.setText(adresseIPLocale);
 			} else {
-	            textAffichageIp.setText("Aucune adresse IP ne commence par 10.");
-	        }
-	    } catch (SocketException e) {
-	        Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération des adresses IP", e);
-	    }
+				System.out.println("L'adresse IP locale ne commence pas par 10.");
+				textAffichageIp.setText("L'adresse IP locale ne commence pas par 10.");
+			}
+		} catch (UnknownHostException e) {
+			Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la récupération de l'adresse IP locale", e);
+		}
 	}
 
 	/**

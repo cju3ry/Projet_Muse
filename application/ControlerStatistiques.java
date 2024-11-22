@@ -10,19 +10,20 @@ import java.util.Date;
 
 import gestion_donnees.Conferencier;
 import gestion_donnees.DonneesApplication;
+import gestion_donnees.FichierPdf;
 import gestion_donnees.Statistiques;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ControlerStatistiques {
 
@@ -163,10 +164,21 @@ public class ControlerStatistiques {
 
 	private ToggleGroup categorieToggleGroup;
 
+	// String pour le titre de la page
+	private String titre;
+
+	// Liste contenant les filtres appliqués
+	private ArrayList<String> listeDesFiltres= new ArrayList<>();
+
+	// Liste contenant le contenu du fichier
+	private String contenuFichier;
+
 	@FXML
 	void initialize() {
 		textAreaConsultation.setEditable(false);
-		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
+		textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t" +
+				"Sélectionnez un type de données à afficher à l'aide de la liste déroulante en haut à droite, " +
+				"\n\t\t\t\t\t\t\t\t\tPuis cliquez sur la zone de texte pour afficher les données.");
 
 		premierAffichageOk = false;
 		// Déclenchement de l'événement au clic sur la TextArea
@@ -283,7 +295,7 @@ public class ControlerStatistiques {
 			premierAffichageOk = true;
 			listeFiltreOk = false;
 		}
-		
+		contenuFichier = textAreaConsultation.getText();
 		confHeureDebut.setItems(FXCollections.observableArrayList(
 				"8h00", "8h30", "9h00",
 				"9h30", "10h00", "10h30",
@@ -329,12 +341,25 @@ public class ControlerStatistiques {
 	void appliquerFiltreStat() {
 		if (choixConfExpo.getValue().equals("Conferencier")) {
 			afficherStatConf();
+			listeDesFiltres.add("Statistiques sur les conferenciers");
 		} else if (choixConfExpo.getValue().equals("Exposition")) {
 			afficherStatExpo();
+			listeDesFiltres.add("Statistiques sur les expositions");
 		}
 	}
 
 	private void afficherStatConf() {
+		listeDesFiltres.clear();
+		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
+		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		if (stats == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Veuillez cliquer sur la zone de texte pour afficher les données avant de filtrer.");
+			alert.showAndWait();
+			return;
+		}
 		stats.reset();
 
 		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -363,8 +388,18 @@ public class ControlerStatistiques {
 				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
 
 				stats.visitePeriode(dateDebut, dateFin);
+				listeDesFiltres.add("Date de début : " + strAnalyser);
+				listeDesFiltres.add("Date de fin : " + strAnalyserBis);
 			} catch (ParseException e) {
 				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				// boite d'alerte pour avertir l'utilisateur
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Avertissement");
+				alert.setHeaderText(null);
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				reinitialiserFiltre();
 			}
 		}
 
@@ -374,8 +409,18 @@ public class ControlerStatistiques {
 			strAnalyserBis = confHeureFin.getValue();
 			try {
 				stats.visitePlageHoraire(strAnalyser, strAnalyserBis);
+				listeDesFiltres.add("Heure de début : " + strAnalyser);
+				listeDesFiltres.add("Heure de fin : " + strAnalyserBis);
 			} catch (ParseException e) {
 				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				// boite d'alerte pour avertir l'utilisateur
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Avertissement");
+				alert.setHeaderText(null);
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				reinitialiserFiltre();
 			}
 		}
 
@@ -387,9 +432,22 @@ public class ControlerStatistiques {
 
 		textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche.\n\n\n" 
 				+ stats.afficherPVisitesConferencier());
+		contenuFichier = textAreaConsultation.getText();
 	}
 
 	private void afficherStatExpo() {
+		listeDesFiltres.clear();
+		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
+		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		if (stats == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Veuillez cliquer sur la zone de texte pour afficher les données avant de filtrer.");
+			alert.showAndWait();
+			return;
+		}
+
 		stats.reset();
 
 		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -418,8 +476,18 @@ public class ControlerStatistiques {
 				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
 
 				stats.visitePeriode(dateDebut, dateFin);
+				listeDesFiltres.add("Date de début : " + strAnalyser);
+				listeDesFiltres.add("Date de fin : " + strAnalyserBis);
 			} catch (ParseException e) {
 				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				// boite d'alerte pour avertir l'utilisateur
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Avertissement");
+				alert.setHeaderText(null);
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				reinitialiserFiltre();
 			}
 		}
 
@@ -429,19 +497,33 @@ public class ControlerStatistiques {
 			strAnalyserBis = expoHeureFin.getValue();
 			try {
 				stats.visitePlageHoraire(strAnalyser, strAnalyserBis);
+				listeDesFiltres.add("Heure de début : " + strAnalyser);
+				listeDesFiltres.add("Heure de fin : " + strAnalyserBis);
 			} catch (ParseException e) {
 				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				// boite d'alerte pour avertir l'utilisateur
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Avertissement");
+				alert.setHeaderText(null);
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				reinitialiserFiltre();
 			}
 		}
 
 		if (expoPerm.isSelected()) {
 			stats.expositionPermanente();
+			listeDesFiltres.add("Exposition permanente");
 		} else if (expoTemp.isSelected()) {
 			stats.expositionTemporaire();
+			listeDesFiltres.add("Exposition temporaire");
 		}
 
 		textAreaConsultation.setText("\t\t\t\t\t\t\t\t\tRésultat pour votre recherche.\n\n\n" 
 				+ stats.affichagePVisitesExposition());
+		contenuFichier = textAreaConsultation.getText();
+
 	}
 
 	private void toggleFiltrePanel() {
@@ -453,32 +535,32 @@ public class ControlerStatistiques {
 	}
 
 	private void toggleFiltreExpoConf() {
-		if (donneesChargeesLocalConferencier && !premierAffichageOk 
+		if (donneesChargeesLocalConferencier
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
-		} else if (donneesChargeesLocalExposition && !premierAffichageOk 
+		} else if (donneesChargeesLocalExposition
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrExpositions().toString());
 			donnees = ControleurImporterLocal.getDonnees();
 			premierAffichageOk = true;
-		} else if (donnesChargeesDistanceConferencier && !premierAffichageOk
+		} else if (donnesChargeesDistanceConferencier
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrConferencier().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
-		} else if (donnesChargeesDistanceExposition && !premierAffichageOk
+		} else if (donnesChargeesDistanceExposition
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrExpositions().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
-		} else if (donnesChargeesSauvegarderConferencier && !premierAffichageOk
+		} else if (donnesChargeesSauvegarderConferencier
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrConferencier().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 			premierAffichageOk = true;
-		} else if (donnesChargeesSauvegarderExposition && !premierAffichageOk
+		} else if (donnesChargeesSauvegarderExposition
 				&& choixConfExpo.getValue().equals("Exposition")) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
@@ -535,10 +617,12 @@ public class ControlerStatistiques {
 		if (premierAffichageOk) {
 			stats = new Statistiques();
 		}
+		contenuFichier = textAreaConsultation.getText();
 	}
 
 	@FXML
 	void reinitialiserFiltre() {
+		listeDesFiltres.clear();
 		if (donneesChargeesLocalConferencier
 				&& choixConfExpo.getValue().equals("Conferencier")) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrConferencier().toString());
@@ -564,7 +648,7 @@ public class ControlerStatistiques {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrExpositions().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 		}
-
+		contenuFichier = textAreaConsultation.getText();
 		confDateDebut.getEditor().clear();
 		confDateDebut.setValue(null);
 
@@ -681,4 +765,71 @@ public class ControlerStatistiques {
 		Main.sauvegarder();
 	}
 
+	@FXML
+	void genererPdf(ActionEvent event) {
+		// Si le contenu afficher est null on affiche une boite d'alerte
+		// pour informer l'utilisateur qu'il ne peut pas générer de fichier pdf
+		if (contenuFichier == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Aucun résultat n'est disponible. Impossible de générer le PDF.");
+			alert.showAndWait();
+			return;
+		}
+		if (contenuFichier.isEmpty()) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Aucun résultat n'est disponible. Impossible de générer le PDF.");
+			alert.showAndWait();
+			return;
+		}
+		titre = "Statistiques";
+		System.out.println("tire du pdf " + titre );
+		System.out.println("conttenu du fichier" + contenuFichier);
+		// Si aucun filtre n'a été appliqué, on ajoute dans la liste des filtres "Aucun filtre appliqué"
+		if (listeDesFiltres.isEmpty()) {
+			listeDesFiltres.add("Aucun filtre appliqué");
+		}
+
+		FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
+		fichierPdf.genererPdf();
+		System.out.println("Fichier pdf généré avec succès !");
+		afficherPopUp("Fichier pdf généré avec succès !", event);
+		listeDesFiltres.clear();
+	}
+
+	private void afficherPopUp(String message, Event event){
+		// Fenetre popup pour informer l'utilisateur que l'action a été effectuée
+		Stage popupStage = new Stage();
+		popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+		popupStage.setX(((Node) event.getSource()).getScene().getWindow().getX() + 10);
+		popupStage.setY(((Node) event.getSource()).getScene().getWindow().getY() + 10);
+		popupStage.setResizable(false);
+		Label messageLabel = new Label(message);
+		messageLabel.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
+
+		// Recupérer la fenêtre parente
+		Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		double parentWidth = parentStage.getWidth();
+		double parentHeight = parentStage.getHeight();
+
+		double centerX = parentStage.getX() + 400;
+		double centerY= parentStage.getY() + 20;
+		// Set la position de la fenêtre popup
+		popupStage.setX(centerX);
+		popupStage.setY(centerY);
+
+		// Créer une scène
+		Scene scene = new Scene(new StackPane(messageLabel));
+		popupStage.setScene(scene);
+		popupStage.show();
+
+		// Close the pop-up after 2 seconds
+		PauseTransition delay = new PauseTransition(Duration.seconds(2));
+		delay.setOnFinished(e -> popupStage.close());
+		delay.play();
+	}
+		//TODO Regeler le probleme de generation de pdf
 }

@@ -1,5 +1,6 @@
 package application;
 
+import java.sql.SQLOutput;
 import java.text.ParseException;
 
 import java.text.SimpleDateFormat;
@@ -10,25 +11,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import gestion_donnees.Conferencier;
-import gestion_donnees.DonneesApplication;
-import gestion_donnees.Employe;
-import gestion_donnees.Exposition;
-import gestion_donnees.Filtre;
-import gestion_donnees.Visite;
+import gestion_donnees.*;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ControlerConsulterDonneesVisite {
 
@@ -143,6 +139,15 @@ public class ControlerConsulterDonneesVisite {
 
 	private ToggleGroup categorieToggleGroup;
 
+	// String pour le titre de la page
+	private String titre;
+
+	// Liste contenant les filtres appliqués
+	private ArrayList<String> listeDesFiltres= new ArrayList<>();
+
+	// Liste contenant le contenu du fichier
+	private String contenuFichier;
+
 	@FXML
 	void initialize() {
 		textAreaConsultation.setEditable(false);
@@ -212,16 +217,19 @@ public class ControlerConsulterDonneesVisite {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
 			premierAffichageOk = true;
 			listeFiltreOk = false;
+			contenuFichier = textAreaConsultation.getText();
 		} else if (donnesChargeesDistance && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
 			donnees = ControleurImporterDistance.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
+			contenuFichier = textAreaConsultation.getText();
 		} else if (donnesChargeesSauvegarder && !premierAffichageOk) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrVisites().toString());
 			donnees = ControleurPageDeGarde.getDonnees();
 			premierAffichageOk = true;
 			listeFiltreOk = false;
+			contenuFichier = textAreaConsultation.getText();
 		}
 
 		if (premierAffichageOk && !listeFiltreOk) {
@@ -300,6 +308,18 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML 
 	void appliquerFiltre() {
+		listeDesFiltres.clear();
+		contenuFichier = "";
+		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
+		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		if (filtres == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Veuillez cliquer sur la zone de texte pour afficher les données avant de filtrer.");
+			alert.showAndWait();
+			return;
+		}
 		filtres.reset();
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -329,6 +349,7 @@ public class ControlerConsulterDonneesVisite {
 			nom = champs[0];
 			prenom = champs[1];
 			filtres.conferencierNom(nom, prenom);
+			listeDesFiltres.add("Nom de l'employé : " + nom + " " + prenom);
 		}
 
 		if (nomPrenomEmploye.getValue() != null 
@@ -338,24 +359,28 @@ public class ControlerConsulterDonneesVisite {
 			nom = champs[0];
 			prenom = champs[1];
 			filtres.employeNom(nom, prenom);
+			listeDesFiltres.add("Nom du conférencier : " + nom + " " + prenom);
 		}
 
 		if (intituleExpo.getValue() != null 
 				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = intituleExpo.getValue();
 			filtres.expositionIntitule(strAnalyser);
+			listeDesFiltres.add("Intitulé de l'exposition : " + strAnalyser);
 		}
 
 		if (intituleVisite.getValue() != null 
 				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = intituleVisite.getValue();
 			filtres.visiteIntitule(strAnalyser);
+			listeDesFiltres.add("Intitulé de la visite : " + strAnalyser);
 		}
 
 		if (numTel.getValue() != null 
 				&& !filtres.getListeVisite().isEmpty()) {
 			strAnalyser = numTel.getValue();
 			filtres.visiteNumTel(strAnalyser);
+			listeDesFiltres.add("Numéro de téléphone : " + strAnalyser);
 		}
 
 		if (heurePrecise.getValue() != null 
@@ -363,6 +388,7 @@ public class ControlerConsulterDonneesVisite {
 			strAnalyser = heurePrecise.getValue();
 			try {
 				filtres.heurePrecise(strAnalyser);
+				listeDesFiltres.add("Heure précise : " + strAnalyser);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -375,8 +401,18 @@ public class ControlerConsulterDonneesVisite {
 			strAnalyserBis = heureFin.getValue();
 			try {
 				filtres.heurePeriode(strAnalyser, strAnalyserBis);
+				listeDesFiltres.add("Heure de début : " + strAnalyser);
+				listeDesFiltres.add("heure de fin : " + strAnalyserBis);
 			} catch (ParseException e) {
 				e.printStackTrace();
+			} catch (IllegalArgumentException e){
+				// boite d'alerte pour avertir l'utilisateur
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Avertissement");
+				alert.setHeaderText(null);
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				reinitialiserFiltre();
 			}
 		}
 
@@ -391,6 +427,7 @@ public class ControlerConsulterDonneesVisite {
 				date = format.parse(datePrecise.format(dateTimeFormat).toString());
 
 				filtres.datePrecise(date);
+				listeDesFiltres.add("Date précise : " + datePrecise);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -411,8 +448,19 @@ public class ControlerConsulterDonneesVisite {
 
 				dateDebut = format.parse(dateIntervalleDebut.format(dateTimeFormat).toString());
 				dateFin = format.parse(dateIntervalleFin.format(dateTimeFormat).toString());
-
-				filtres.datePeriode(dateDebut, dateFin);
+				try {
+					filtres.datePeriode(dateDebut, dateFin);
+				} catch (IllegalArgumentException e){
+					// boite d'alerte pour avertir l'utilisateur
+					Alert alert = new Alert(Alert.AlertType.WARNING);
+					alert.setTitle("Avertissement");
+					alert.setHeaderText(null);
+					alert.setContentText(e.getMessage());
+					alert.showAndWait();
+					reinitialiserFiltre();
+				}
+				listeDesFiltres.add("Date de début : " + dateIntervalleDebut);
+				listeDesFiltres.add("Date de fin : " + dateIntervalleFin);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -421,15 +469,19 @@ public class ControlerConsulterDonneesVisite {
 		if (expoPerm.isSelected() 
 				&& !filtres.getListeVisite().isEmpty()) {
 			filtres.expositionPermanente();
+			listeDesFiltres.add("Exposition permanente");
 		} else if (expoTemp.isSelected()) {
 			filtres.expositionTemporaire();
+			listeDesFiltres.add("Exposition temporaire");
 		}
 
 		if (confInterne.isSelected() 
 				&& !filtres.getListeVisite().isEmpty()) {
 			filtres.conferencierInterne();
+			listeDesFiltres.add("Conférencier interne");
 		} else if (confExterne.isSelected()) {
 			filtres.conferencierExterne();
+			listeDesFiltres.add("Conférencier externe");
 		}
 
 		if (!filtres.getListeVisite().isEmpty()) {
@@ -440,6 +492,7 @@ public class ControlerConsulterDonneesVisite {
 					+ "\n\t\t\t\t\t\t\t\t     Nombre de visite(s) trouvée(s) : " 
 					+ filtres.getListeVisite().size() + ".\n\n\n"
 					+ aAfficher);
+			contenuFichier = aAfficher;
 		} else if (filtres.getListeVisite().size() == donnees.getVisites().size()) {
 			textAreaConsultation.setText("Aucun(s) filtre(s) appliqué(s).");
 		} else {
@@ -449,6 +502,7 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	void reinitialiserFiltre() {
+		listeDesFiltres.clear();
 		ArrayList<String> nomsConf = new ArrayList<>();
 		ArrayList<String> nomsEmploye = new ArrayList<>();
 		ArrayList<String> IntituleExpo = new ArrayList<>();
@@ -463,10 +517,13 @@ public class ControlerConsulterDonneesVisite {
 
 		if (donneesChargeesLocal) {
 			textAreaConsultation.setText(ControleurImporterLocal.getStrVisites().toString());
+			contenuFichier = textAreaConsultation.getText();
 		} else if (donnesChargeesDistance) {
 			textAreaConsultation.setText(ControleurImporterDistance.getStrVisites().toString());
+			contenuFichier = textAreaConsultation.getText();
 		} else if (donnesChargeesSauvegarder) {
 			textAreaConsultation.setText(ControleurPageDeGarde.getStrVisites().toString());
+			contenuFichier = textAreaConsultation.getText();
 		}
 
 		for (Conferencier conferencier : donnees.getConferenciers()) {
@@ -620,4 +677,71 @@ public class ControlerConsulterDonneesVisite {
 		Main.sauvegarder();
 	}
 
+	@FXML
+	void genererPdf(ActionEvent event) {
+		// Si le contenu afficher est null on affiche une boite d'alerte
+		// pour informer l'utilisateur qu'il ne peut pas générer de fichier pdf
+		if (contenuFichier == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Aucun résultat n'est disponible. Impossible de générer le PDF.");
+			alert.showAndWait();
+			return;
+		}
+		if (contenuFichier.isEmpty()) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Avertissement");
+			alert.setHeaderText(null);
+			alert.setContentText("Aucun résultat n'est disponible. Impossible de générer le PDF.");
+			alert.showAndWait();
+			return;
+		}
+		titre = "Conférenciers";
+		System.out.println("tire du pdf " + titre );
+		System.out.println("conttenu du fichier" + contenuFichier);
+		// Si aucun filtre n'a été appliqué, on ajoute dans la liste des filtres "Aucun filtre appliqué"
+		if (listeDesFiltres.isEmpty()) {
+			listeDesFiltres.add("Aucun filtre appliqué");
+		}
+
+		FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
+		fichierPdf.genererPdf();
+		System.out.println("Fichier pdf généré avec succès !");
+		afficherPopUp("Fichier pdf généré avec succès !", event);
+		listeDesFiltres.clear();
+	}
+
+	private void afficherPopUp(String message, Event event){
+		// Fenetre popup pour informer l'utilisateur que l'action a été effectuée
+		Stage popupStage = new Stage();
+		popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+		popupStage.setX(((Node) event.getSource()).getScene().getWindow().getX() + 10);
+		popupStage.setY(((Node) event.getSource()).getScene().getWindow().getY() + 10);
+		popupStage.setResizable(false);
+		Label messageLabel = new Label(message);
+		messageLabel.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
+
+		// Recupérer la fenêtre parente
+		Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		double parentWidth = parentStage.getWidth();
+		double parentHeight = parentStage.getHeight();
+
+		double centerX = parentStage.getX() + 400;
+		double centerY= parentStage.getY() + 20;
+		// Set la position de la fenêtre popup
+		popupStage.setX(centerX);
+		popupStage.setY(centerY);
+
+		// Créer une scène
+		Scene scene = new Scene(new StackPane(messageLabel));
+		popupStage.setScene(scene);
+		popupStage.show();
+
+		// Close the pop-up after 2 seconds
+		PauseTransition delay = new PauseTransition(Duration.seconds(2));
+		delay.setOnFinished(e -> popupStage.close());
+		delay.play();
+	}
+	//TODO regler le probleme que si on n'applique aucun filtre ca met rien dans le rapport
 }
