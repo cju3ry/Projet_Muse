@@ -1,9 +1,11 @@
 package application;
 
+import java.awt.*;
 import java.io.FileOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.URI;
 
 import gestion_donnees.DonneesApplication;
 import javafx.application.Application;
@@ -204,51 +206,24 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	/**
+	 * Affiche l'aide à l'utilisateur dans une page web
+	 */
 	public static void afficherNotice() {
-		VBox vbox = new VBox();
-		vbox.setSpacing(10);
+		String cheminFichier = "notice/Notice.pdf";
+		File fichierPdf = new File(cheminFichier);
 
-
-		//		String[] images = {"/resources/rules/materiel.png", "/resources/rules/pieces1.png", "/resources/rules/pieces2.png", 
-		//				"/resources/rules/prise1.png", "/resources/rules/prise2.png", "/resources/rules/prise3.png", 
-		//				"/resources/rules/prise4.png", "/resources/rules/irregularite.png", "/resources/rules/finpartie.png", 
-		//		"/resources/rules/resultat.png"};
-		String[] images = {"/imagesNotice/NoticeIntro.PNG", "/imagesNotice/Importer_1.PNG","/imagesNotice/Importer_1.PNG",
-				"/imagesNotice/Importer_2.PNG","/imagesNotice/Importer_3.PNG","/imagesNotice/Importer_4.PNG" ,
-				"/imagesNotice/Importer_5.PNG", "/imagesNotice/Consulter_1.PNG", "/imagesNotice/Consulter_2.PNG",
-				"/imagesNotice/Consulter_3.PNG","/imagesNotice/Consulter_4.PNG"};
-		int i = 0;
-		for (String imagePath : images) {
-			Image image = new Image(images[i]);
-			ImageView imageView = new ImageView(image);
-			imageView.setPreserveRatio(true);
-			imageView.setFitWidth(600); 
-			vbox.getChildren().add(imageView);
-			i++;
+		if (fichierPdf.exists()) {
+			try {
+				URI uri = fichierPdf.toURI();
+				String url = uri.toString();
+				Desktop.getDesktop().browse(new URI(url));
+			} catch (Exception e) {
+				System.err.println("Erreur lors de l'ouverture du fichier PDF: " + e.getMessage());
+			}
+		} else {
+			System.err.println("Le fichier PDF n'existe pas.");
 		}
-
-		ScrollPane scrollPane = new ScrollPane(vbox);
-		scrollPane.setFitToWidth(true);
-		scrollPane.setPrefViewportHeight(400); 
-
-		scrollPane.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
-			vbox.getChildren().stream()
-			.filter(node -> node instanceof ImageView)
-			.map(node -> (ImageView) node)
-			.forEach(imageView -> imageView.setFitWidth(newValue.getWidth()));
-		});
-
-		Stage stage = new Stage();
-		//		stage.initModality(Modality.APPLICATION_MODAL); // bloque et fait en sorte qu'on ne puisse pas cliquer sur la fentre principage
-		stage.initStyle(StageStyle.DECORATED);
-		stage.setHeight(700);
-		stage.setWidth(1000);
-		stage.setTitle("Notice");
-
-		Scene scene = new Scene(scrollPane);
-		stage.setScene(scene);
-
-		stage.showAndWait();
 	}
 
 	private static DonneesApplication donnees = new DonneesApplication();
