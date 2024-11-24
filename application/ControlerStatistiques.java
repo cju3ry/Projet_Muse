@@ -663,8 +663,8 @@ public class ControlerStatistiques {
 		expoDateDebut.getEditor().clear();
 		expoDateDebut.setValue(null);
 
-		expoDateDebut.getEditor().clear();
-		expoDateDebut.setValue(null);
+		expoDateFin.getEditor().clear();
+		expoDateFin.setValue(null);
 
 		confInterne.setSelected(false);
 		confExterne.setSelected(false);
