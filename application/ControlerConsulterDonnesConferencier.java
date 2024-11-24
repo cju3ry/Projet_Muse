@@ -352,14 +352,16 @@ public class ControlerConsulterDonnesConferencier {
 			contenuFichier = aAfficher;
 		} else if (moyennesOk.isSelected() && confDateDebut.getValue() != null && confDateFin.getValue() != null) {
 			for (Conferencier conferencier : filtres.getListeConferencier()) {
-				aAfficher += tableauMoyennes[i] + "\n" + conferencier + "\n\n";
+				aAfficher += "\tMoyenne = " + tableauMoyennes[i] + "\n" + conferencier + "\n\n";
 				i++;
 			}
 			listeDesFiltres.add("Moyenne des visites");
 			contenuFichier = aAfficher;
 			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche."
 					+ "\n\t\t\t\t            Nombre de conférencier(s) trouvée(s) : " 
-					+ filtres.getListeConferencier().size() + ".\n\n\n"
+					+ filtres.getListeConferencier().size() + "."
+					+ "\n\t\t            Avec moyennes de nombre de visites par nombre de jours"
+					+ ".\n\n\n"
 					+ aAfficher);
 			contenuFichier = aAfficher;
 		} else {
