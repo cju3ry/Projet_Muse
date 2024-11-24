@@ -713,6 +713,7 @@ public class ControlerStatistiques {
 	void consulter(ActionEvent event) {
 		if (premierAffichageOk) {
 			stats.reset();
+			reinitialiserFiltre();
 		}
 		
 		Main.setPageConsulter();
@@ -722,6 +723,7 @@ public class ControlerStatistiques {
     void statistiques(ActionEvent event) {
 		if (premierAffichageOk) {
 			stats.reset();
+			reinitialiserFiltre();
 		}
 		
     	Main.setPageConsulterStatistiques();
@@ -731,6 +733,7 @@ public class ControlerStatistiques {
 	void exporter(ActionEvent event) {
 		if (premierAffichageOk) {
 			stats.reset();
+			reinitialiserFiltre();
 		}
 		
 		Main.setPageExporter();
@@ -741,6 +744,7 @@ public class ControlerStatistiques {
 	void importer(ActionEvent event) {
 		if (premierAffichageOk) {
 			stats.reset();
+			reinitialiserFiltre();
 		}
 		
 		Main.setPageImporter();
