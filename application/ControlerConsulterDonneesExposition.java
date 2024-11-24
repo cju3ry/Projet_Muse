@@ -352,14 +352,16 @@ public class ControlerConsulterDonneesExposition {
 			
 		} else if (moyennesOk.isSelected() == true && expoDateDebut.getValue() != null && expoDateFin.getValue() != null) {
 			for (Exposition exposition : filtresExpositions.getListeExposition()) {
-				aAfficher += tableauMoyennes[i] + "\n" + exposition + "\n\n";
+				aAfficher += "\tMoyenne = " + tableauMoyennes[i] + "\n" + exposition + "\n\n";
 				i++;
 			}
 			contenuFichier = aAfficher;
 			listeDesFiltres.add("Moyenne des visites");
 			textAreaConsultation.setText("\t\t\t\t\t\t     Résultat pour votre recherche." 
 					+ "\n\t\t\t\t               Nombre de conférencier(s) trouvée(s) : " 
-					+ filtresExpositions.getListeExposition().size() + ".\n\n\n"
+					+ filtresExpositions.getListeExposition().size() + "."
+					+ "\n\t\t            Avec moyennes de nombre de visites par nombre de jours"
+					+ ".\n\n\n"
 					+ aAfficher);
 			contenuFichier = aAfficher;
 		} else {
