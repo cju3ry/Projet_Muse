@@ -405,6 +405,7 @@ public class ControlerConsulterDonnesConferencier {
 				"14h00", "14h30", "15h00", 
 				"15h30","16h00", "16h30", "17h00"
 				));
+		triePar.setItems(FXCollections.observableArrayList("Nombre de visite croissant", "Nombre de visite décroissant"));
 
 		confDateDebut.getEditor().clear();
 		confDateDebut.setValue(null);
