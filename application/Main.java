@@ -144,7 +144,6 @@ public class Main extends Application {
 			scenePageStatitiques = new Scene(conteneur);
 			scenePageStatitiques.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-			primaryStage.setTitle("PadeDeGarde");
 			primaryStage.setScene(scenePageDeGarde);
 			//		primaryStage.initStyle(StageStyle.UNDECORATED);
 			fenetrePrincipale = primaryStage;
