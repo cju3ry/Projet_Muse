@@ -208,20 +208,31 @@ public class Main extends Application {
 	/**
 	 * Affiche l'aide à l'utilisateur dans une page web
 	 */
-	public static void afficherNotice() {
-		String cheminFichier = "notice/Notice.pdf";
-		File fichierPdf = new File(cheminFichier);
+//	public static void afficherNotice() {
+//		String cheminFichier = "notice/Notice.pdf";
+//		File fichierPdf = new File(cheminFichier);
+//
+//		if (fichierPdf.exists()) {
+//			try {
+//				URI uri = fichierPdf.toURI();
+//				String url = uri.toString();
+//				Desktop.getDesktop().browse(new URI(url));
+//			} catch (Exception e) {
+//				System.err.println("Erreur lors de l'ouverture du fichier PDF: " + e.getMessage());
+//			}
+//		} else {
+//			System.err.println("Le fichier PDF n'existe pas.");
+//		}
+//	}
 
-		if (fichierPdf.exists()) {
-			try {
-				URI uri = fichierPdf.toURI();
-				String url = uri.toString();
-				Desktop.getDesktop().browse(new URI(url));
-			} catch (Exception e) {
-				System.err.println("Erreur lors de l'ouverture du fichier PDF: " + e.getMessage());
-			}
-		} else {
-			System.err.println("Le fichier PDF n'existe pas.");
+	public static void afficherNotice() {
+		String cheminFichier = "Notice.pdf";
+		try {
+			File fichierPdf = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+			File pdfFile = new File(fichierPdf, cheminFichier);
+			Desktop.getDesktop().browse(pdfFile.toURI());
+		} catch (Exception e) {
+			System.err.println("Erreur lors de l'ouverture du fichier PDF: " + e.getMessage());
 		}
 	}
 
