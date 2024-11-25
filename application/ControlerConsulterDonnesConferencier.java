@@ -25,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -483,16 +484,14 @@ public class ControlerConsulterDonnesConferencier {
 	}
 	@FXML
 	void genererPdf(ActionEvent event) {
+		titre = "Conférencier ";
+		System.out.println("Titre du PDF : " + titre);
+		System.out.println("Contenu du fichier : " + contenuFichier);
 
-		titre = "Conférenciers";
-		System.out.println("tire du pdf " + titre );
-		System.out.println("conttenu du fichier" + contenuFichier);
-		// Si aucun filtre n'a été appliqué, on ajoute dans la liste des filtres "Aucun filtre appliqué"
 		if (listeDesFiltres.isEmpty()) {
 			listeDesFiltres.add("Aucun filtre appliqué");
 		}
-		// Si le contenu afficher est null on affiche une boite d'alerte
-		// pour informer l'utilisateur qu'il ne peut pas générer de fichier pdf
+
 		if (contenuFichier == null) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("Avertissement");
@@ -501,11 +500,37 @@ public class ControlerConsulterDonnesConferencier {
 			alert.showAndWait();
 			return;
 		}
-		FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
-		fichierPdf.genererPdf();
-		System.out.println("Fichier pdf généré avec succès !");
-		afficherPopUp("Fichier pdf généré avec succès !", event);
-		listeDesFiltres.clear();
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Enregistrer le fichier PDF");
+		fileChooser.getExtensionFilters().add(
+				new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
+		);
+
+		// Ouvrir la boîte de dialogue de sauvegarde
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		java.io.File file = fileChooser.showSaveDialog(stage);
+
+		if (file != null) {
+			String filePath = file.getAbsolutePath();
+			if (!filePath.endsWith(".pdf")) {
+				filePath += ".pdf";
+			}
+			FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
+			boolean success = fichierPdf.genererPdf(filePath);
+			if (success) {
+				System.out.println("Fichier PDF généré avec succès à : " + filePath);
+				afficherPopUp("Fichier PDF généré avec succès à : " + filePath, event);
+			} else {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Erreur");
+				alert.setHeaderText(null);
+				alert.setContentText("Une erreur est survenue lors de la génération du PDF.");
+				alert.showAndWait();
+			}
+		} else {
+			System.out.println("Sauvegarde annulée par l'utilisateur.");
+		}
 	}
 
 	private void afficherPopUp(String message, Event event){

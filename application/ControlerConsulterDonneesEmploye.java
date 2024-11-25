@@ -13,14 +13,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class ControlerConsulterDonneesEmploye {
-	
-	private DonneesApplication donnees;
+
+    private DonneesApplication donnees;
 
     @FXML
     private Button btnConsulter;
@@ -39,15 +40,15 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     private Button btnRevenir;
-    
+
     @FXML
     private Button btnSauvegarder;
-    
+
     @FXML
     public Button statistiques;
-    
+
     @FXML
-	private Button genererPdf;
+    private Button genererPdf;
 
     @FXML
     private TextArea textAreaConsultation;
@@ -55,7 +56,7 @@ public class ControlerConsulterDonneesEmploye {
     private boolean donneesChargeesLocal; // Pour vérifier si les données sont déjà chargées en local
 
     private boolean donnesChargeesDistance; // Pour vérifier si les données sont déjà chargées a distance
-    
+
 
     private boolean premierAffichageOk;
 
@@ -69,18 +70,18 @@ public class ControlerConsulterDonneesEmploye {
 
     // Liste contenant le contenu du fichier
     private String contenuFichier;
-    
+
     @FXML
     void initialize() {
         textAreaConsultation.setEditable(false);
         textAreaConsultation.setText("\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t\t\t\t\t\tCliquez ici pour afficher les données.");
 
         premierAffichageOk = false;
-        
+
         // Déclenchement de l'événement au clic sur la TextArea
         textAreaConsultation.setOnMouseClicked(event -> afficherDonnees());
     }
-    
+
     // Méthode pour charger et afficher les données
     private void afficherDonnees() {
         donneesChargeesLocal = ControleurImporterLocal.isDonneesEmployesChargees();
@@ -89,12 +90,12 @@ public class ControlerConsulterDonneesEmploye {
         StringBuilder strEmployesLocal = ControleurImporterLocal.getStrEmployes();
         StringBuilder strEmployesDistance = ControleurImporterDistance.getStrEmployes();
         StringBuilder strEmployesSave = ControleurPageDeGarde.getStrEmployes();
-        
-        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null) 
-        	&& (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
+
+        if ((!donneesChargeesLocal || strEmployesLocal == null) && (!donnesChargeesDistance || strEmployesDistance == null)
+                && (!donnesChargeesSauvegarder || strEmployesSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
             textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
         }
-        
+
         if (donneesChargeesLocal && !premierAffichageOk) {
             textAreaConsultation.setText(ControleurImporterLocal.getStrEmployes().toString());
             donnees = ControleurImporterLocal.getDonnees();
@@ -106,65 +107,64 @@ public class ControlerConsulterDonneesEmploye {
             premierAffichageOk = true;
             contenuFichier = textAreaConsultation.getText();
         } else if (donnesChargeesSauvegarder && !premierAffichageOk) {
-        	 textAreaConsultation.setText(ControleurPageDeGarde.getStrEmployes().toString());
-           donnees = ControleurPageDeGarde.getDonnees();
-           premierAffichageOk = true;
+            textAreaConsultation.setText(ControleurPageDeGarde.getStrEmployes().toString());
+            donnees = ControleurPageDeGarde.getDonnees();
+            premierAffichageOk = true;
             contenuFichier = textAreaConsultation.getText();
         }
     }
-    
+
     @FXML
     void consulter(ActionEvent event) {
-    	Main.setPageConsulter();
+        Main.setPageConsulter();
     }
 
     @FXML
     void exporter(ActionEvent event) {
-    	Main.setPageExporter();
+        Main.setPageExporter();
 
     }
 
     @FXML
     void importer(ActionEvent event) {
-    	Main.setPageImporter();
+        Main.setPageImporter();
     }
 
     @FXML
     void notice(ActionEvent event) {
-    	
+
     }
-    
+
     @FXML
     void statistiques(ActionEvent event) {
-    	Main.setPageConsulterStatistiques();
+        Main.setPageConsulterStatistiques();
     }
 
     @FXML
     void quitter(ActionEvent event) {
-    	Main.quitterApllication();
+        Main.quitterApllication();
     }
 
     @FXML
     void revenirEnArriere(ActionEvent event) {
-    	Main.setPageConsulter();
+        Main.setPageConsulter();
     }
-    
+
     @FXML
-	void sauvegarder(ActionEvent event) {
-		Main.sauvegarder();
-	}
+    void sauvegarder(ActionEvent event) {
+        Main.sauvegarder();
+    }
 
     @FXML
     void genererPdf(ActionEvent event) {
         titre = "Employés";
-        System.out.println("tire du pdf " + titre );
-        System.out.println("conttenu du fichier" + contenuFichier);
-        // Si aucun filtre n'a été appliqué, on ajoute dans la liste des filtres "Aucun filtre appliqué"
+        System.out.println("Titre du PDF : " + titre);
+        System.out.println("Contenu du fichier : " + contenuFichier);
+
         if (listeDesFiltres.isEmpty()) {
             listeDesFiltres.add("Aucun filtre appliqué");
         }
-        // Si le contenu afficher est null on affiche une boite d'alerte
-        // pour informer l'utilisateur qu'il ne peut pas générer de fichier pdf
+
         if (contenuFichier == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Avertissement");
@@ -173,12 +173,41 @@ public class ControlerConsulterDonneesEmploye {
             alert.showAndWait();
             return;
         }
-        FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
-        fichierPdf.genererPdf();
-        System.out.println("Fichier pdf généré avec succès !");
-        afficherPopUp("Fichier pdf généré avec succès !", event);
-        listeDesFiltres.clear();
+
+        // Créer une instance de FileChooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Enregistrer le fichier PDF");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
+        );
+
+        // Ouvrir la boîte de dialogue de sauvegarde
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        java.io.File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            // Utiliser l'emplacement choisi pour sauvegarder le PDF
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(".pdf")) {
+                filePath += ".pdf"; // Ajouter l'extension si elle est manquante
+            }
+            FichierPdf fichierPdf = new FichierPdf(titre, listeDesFiltres, contenuFichier);
+            boolean success = fichierPdf.genererPdf(filePath); // Adaptez la méthode genererPdf pour accepter un chemin de fichier
+            if (success) {
+                System.out.println("Fichier PDF généré avec succès à : " + filePath);
+                afficherPopUp("Fichier PDF généré avec succès à : " + filePath, event);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Une erreur est survenue lors de la génération du PDF.");
+                alert.showAndWait();
+            }
+        } else {
+            System.out.println("Sauvegarde annulée par l'utilisateur.");
+        }
     }
+
 
     private void afficherPopUp(String message, Event event){
         // Fenetre popup pour informer l'utilisateur que l'action a été effectuée
@@ -206,7 +235,6 @@ public class ControlerConsulterDonneesEmploye {
         popupStage.setScene(scene);
         popupStage.show();
 
-        // Close the pop-up after 2 seconds
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> popupStage.close());
         delay.play();
