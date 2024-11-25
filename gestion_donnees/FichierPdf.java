@@ -47,12 +47,11 @@ public class FichierPdf {
 
 	}
 
-	public void genererPdf() {
+	public boolean genererPdf(String filePath) {
 
 		// Chemin du fichier PDF à générer placé
 		// dans le dossier de téléchargement de l'utilisateur
-		String dest = System.getProperty("user.home")
-				+ "/Downloads/Rapport_Pdf"
+		String dest = filePath
 				+ System.currentTimeMillis() + ".pdf";
 		try {
 			// Créer un PdfWriter
@@ -91,9 +90,10 @@ public class FichierPdf {
 			document.close();
 
 			System.out.println("Le fichier PDF a été généré avec succès !");
-
+			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}
