@@ -71,11 +71,6 @@ public class ControleurPageDeGarde {
 		Main.setPageImporter();
 	}
 
-	//    @FXML
-	//    void notice(ActionEvent event) {
-	//    	 displayImages();
-	//    }
-
 	@FXML
     void quitter(ActionEvent event) {
     	Main.quitterApllication();

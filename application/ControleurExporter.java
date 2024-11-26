@@ -162,26 +162,26 @@ public class ControleurExporter {
 	private void handleRequest(Socket socket) {
 		final String cheminFinal;
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
-			// Lire la requête du client
+			// Lit la requête du client
 			String requete = reader.readLine();
 			String chemin = "";
 
-			// Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Détermine le chemin du fichier à envoyer en fonction de la requête
 			if ("employes".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierEmployes;
 			}
 
-			// Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Détermine le chemin du fichier à envoyer en fonction de la requête
 			if ("conferenciers".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierConferenciers;
 			}
 
-			// Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Détermine le chemin du fichier à envoyer en fonction de la requête
 			if ("expositions".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierExpositions;
 			}
 
-			// Déterminer le chemin du fichier à envoyer en fonction de la requête
+			// Détermine le chemin du fichier à envoyer en fonction de la requête
 			if ("visites".equals(requete)) {
 				chemin = ControleurImporterLocal.cheminFichierVisites;
 			}
@@ -191,7 +191,7 @@ public class ControleurExporter {
 			// Crée un CountDownLatch pour synchroniser l'envoi du fichier avec la réponse de l'utilisateur
 			CountDownLatch latch = new CountDownLatch(1);
 
-			// Afficher une alerte pour demander l'autorisation d'envoi
+			// Affiche une alerte pour demander l'autorisation d'envoi
 			Platform.runLater(() -> {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("Demande de fichier");
@@ -273,7 +273,7 @@ public class ControleurExporter {
 					OutputStream output = socket.getOutputStream();
 					output.write("REFUS".getBytes(StandardCharsets.UTF_8));
 					output.flush();System.out.println("Demande refusée par l'utilisateur.");
-					socket.close(); // Fermer la connexion si refusé
+					socket.close(); // Fermer la connexion si refusée
 					} catch (IOException e) {
 						Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de l'acceptation de la connexion", e);
 					}
@@ -364,7 +364,7 @@ public class ControleurExporter {
 					serverSocket.close();
 				}
 				serverThread.interrupt();
-				serverThread.join(); // Attendre que le thread se termine
+				serverThread.join(); // Attend que le thread se termine
 			} catch (IOException | InterruptedException e) {
 				Logger.getLogger(ControleurExporter.class.getName()).log(Level.SEVERE, "Erreur lors de la fermeture du serveur", e);
 			} finally {
@@ -379,20 +379,6 @@ public class ControleurExporter {
 		
 		imageSpinner.setVisible(false);
 	}
-	@FXML
-	void choisirFichierConferencier(ActionEvent event) {
-
-	}
-
-	@FXML
-	void choisirFichierEmployes(ActionEvent event) {
-
-	}
-
-	@FXML
-	void choisirFichierExpositions(ActionEvent event) {
-
-	}
 
 	@FXML
 	void consulter(ActionEvent event) {
@@ -400,18 +386,8 @@ public class ControleurExporter {
 	}
 
 	@FXML
-	void entrerIp(ActionEvent event) {
-
-	}
-
-	@FXML
 	void exporter(ActionEvent event) {
 		Main.setPageExporter();
-	}
-
-	@FXML
-	void exporterFichiers(ActionEvent event) {
-
 	}
 
 	@FXML

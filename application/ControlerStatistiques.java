@@ -353,7 +353,7 @@ public class ControlerStatistiques {
 	private void afficherStatConf() {
 		listeDesFiltres.clear();
 		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
-		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		// une boite d'alerte lui indique qu'il faut cliquer sur le fenetre avant de filter les données
 		if (stats == null) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("Avertissement");
@@ -440,7 +440,7 @@ public class ControlerStatistiques {
 	private void afficherStatExpo() {
 		listeDesFiltres.clear();
 		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
-		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		// une boite d'alerte lui indique qu'il faut cliquer sur le fenetre avant de filter les données
 		if (stats == null) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("Avertissement");
@@ -857,5 +857,4 @@ public class ControlerStatistiques {
 		delay.setOnFinished(e -> popupStage.close());
 		delay.play();
 	}
-		//TODO Regeler le probleme de generation de pdf
 }

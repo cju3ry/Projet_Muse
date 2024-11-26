@@ -6,8 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 public class ControleurConsulter {
-	
-	public String elementAAfficher;
+
 
 	@FXML
     private Button btnConferencier;

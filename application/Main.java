@@ -145,7 +145,6 @@ public class Main extends Application {
 			scenePageStatitiques.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setScene(scenePageDeGarde);
-			//		primaryStage.initStyle(StageStyle.UNDECORATED);
 			fenetrePrincipale = primaryStage;
 			primaryStage.show();
 		} catch (IOException e) {
@@ -176,10 +175,6 @@ public class Main extends Application {
 	public static void setPageConsulter() {
 		fenetrePrincipale.setScene(scenePageConsulter);
 	}
-
-	//	public static void setPageConsulterDonnees() {
-	//		fenetrePrincipale.setScene(scenePageConsulterDonnees);
-	//	}
 
 	public static void setPageConsulterDonneesConferencier() {
 		fenetrePrincipale.setScene(scenePageConsulterDonneesConferencier);

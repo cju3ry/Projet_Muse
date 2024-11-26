@@ -182,7 +182,7 @@ public class ControlerConsulterDonneesVisite {
 	}
 
 	private void toggleFiltrePanel() {
-		// Basculer la visibilité du panneau de filtres
+		// Bascule la visibilité du panneau de filtres
 		boolean isVisible = scrollPaneFiltres.isVisible();
 		scrollPaneFiltres.setVisible(!isVisible);
 		btnLancerFiltre.setVisible(!isVisible);
@@ -238,31 +238,31 @@ public class ControlerConsulterDonneesVisite {
 			filtres = new Filtre();
 			for (Conferencier conferencier : donnees.getConferenciers()) {
 				if (!nomsConf.contains(conferencier.getNom())) {
-					nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+					nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoute chaque nom et prénom à la liste
 				}
 			}
 
 			for (Employe employe : donnees.getEmployes()) {
 				if (!nomsEmploye.contains(employe.getNom())) {
-					nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+					nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoute chaque nom et prénom à la liste
 				}
 			}
 
 			for (Exposition exposition : donnees.getExpositions()) {
 				if (!IntituleExpo.contains(exposition.getIntitule())) {
-					IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
+					IntituleExpo.add(exposition.getIntitule()); // Ajoute chaque intitulé à la liste
 				}
 			}
 
 			for (Visite visite : donnees.getVisites()) {
 				if (!IntituleVisites.contains(visite.getIntitule())) {
-					IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
+					IntituleVisites.add(visite.getIntitule()); // Ajoute chaque intitulé à la liste
 				}
 			}
 
 			for (Visite visite : donnees.getVisites()) {
 				if (!numtels.contains(visite.getNumTel())) {
-					numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
+					numtels.add(visite.getNumTel()); // Ajoute chaque numéro de téléphone à la liste
 				}
 			}
 
@@ -312,7 +312,7 @@ public class ControlerConsulterDonneesVisite {
 		listeDesFiltres.clear();
 		contenuFichier = "";
 		// si filtres null c'est-à-dire que l'utilisateur n'a pas cliqué que la fenetre
-		// une fentre lui dit quil faut cliquer sur le fenetre avant de filter les données
+		// une boite d'alerte lui dit quil faut cliquer sur le fenetre avant de filter les données
 		if (filtres == null) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("Avertissement");
@@ -529,31 +529,31 @@ public class ControlerConsulterDonneesVisite {
 
 		for (Conferencier conferencier : donnees.getConferenciers()) {
 			if (!nomsConf.contains(conferencier.getNom())) {
-				nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+				nomsConf.add(conferencier.getNom() + " " + conferencier.getPrenom()); // Ajoute chaque nom et prénom à la liste
 			}
 		}
 
 		for (Employe employe : donnees.getEmployes()) {
 			if (!nomsEmploye.contains(employe.getNom())) {
-				nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoutez chaque nom et prénom à la liste
+				nomsEmploye.add(employe.getNom() + " " + employe.getPrenom()); // Ajoute chaque nom et prénom à la liste
 			}
 		}
 
 		for (Exposition exposition : donnees.getExpositions()) {
 			if (!IntituleExpo.contains(exposition.getIntitule())) {
-				IntituleExpo.add(exposition.getIntitule()); // Ajoutez chaque intitulé à la liste
+				IntituleExpo.add(exposition.getIntitule()); // Ajoute chaque intitulé à la liste
 			}
 		}
 
 		for (Visite visite : donnees.getVisites()) {
 			if (!IntituleVisites.contains(visite.getIntitule())) {
-				IntituleVisites.add(visite.getIntitule()); // Ajoutez chaque intitulé à la liste
+				IntituleVisites.add(visite.getIntitule()); // Ajoute chaque intitulé à la liste
 			}
 		}
 
 		for (Visite visite : donnees.getVisites()) {
 			if (!numtels.contains(visite.getNumTel())) {
-				numtels.add(visite.getNumTel()); // Ajoutez chaque numéro de téléphone à la liste
+				numtels.add(visite.getNumTel()); // Ajoute chaque numéro de téléphone à la liste
 			}
 		}
 
@@ -680,9 +680,8 @@ public class ControlerConsulterDonneesVisite {
 
 	@FXML
 	void genererPdf(ActionEvent event) {
+
 		titre = "Visites";
-		System.out.println("Titre du PDF : " + titre);
-		System.out.println("Contenu du fichier : " + contenuFichier);
 
 		if (listeDesFiltres.isEmpty()) {
 			listeDesFiltres.add("Aucun filtre appliqué");
@@ -755,10 +754,9 @@ public class ControlerConsulterDonneesVisite {
 		popupStage.setScene(scene);
 		popupStage.show();
 
-		// Close the pop-up after 2 seconds
+		// Fermer la fenêtre popup après 2 secondes
 		PauseTransition delay = new PauseTransition(Duration.seconds(2));
 		delay.setOnFinished(e -> popupStage.close());
 		delay.play();
 	}
-	//TODO regler le probleme que si on n'applique aucun filtre ca met rien dans le rapport
 }

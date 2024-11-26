@@ -157,9 +157,8 @@ public class ControlerConsulterDonneesEmploye {
 
     @FXML
     void genererPdf(ActionEvent event) {
+
         titre = "Employés";
-        System.out.println("Titre du PDF : " + titre);
-        System.out.println("Contenu du fichier : " + contenuFichier);
 
         if (listeDesFiltres.isEmpty()) {
             listeDesFiltres.add("Aucun filtre appliqué");
@@ -181,12 +180,12 @@ public class ControlerConsulterDonneesEmploye {
                 new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
         );
 
-        // Ouvrir la boîte de dialogue de sauvegarde
+        // Ouvre la boîte de dialogue de sauvegarde
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         java.io.File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            // Utiliser l'emplacement choisi pour sauvegarder le PDF
+            // Utilise l'emplacement choisi pour sauvegarder le PDF
             String filePath = file.getAbsolutePath();
             if (!filePath.endsWith(".pdf")) {
                 filePath += ".pdf"; // Ajouter l'extension si elle est manquante
@@ -219,7 +218,7 @@ public class ControlerConsulterDonneesEmploye {
         Label messageLabel = new Label(message);
         messageLabel.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
 
-        // Recupérer la fenêtre parente
+        // Recupére la fenêtre parente
         Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         double parentWidth = parentStage.getWidth();
         double parentHeight = parentStage.getHeight();
@@ -234,7 +233,7 @@ public class ControlerConsulterDonneesEmploye {
         Scene scene = new Scene(new StackPane(messageLabel));
         popupStage.setScene(scene);
         popupStage.show();
-
+        // Ferme la fenêtre après 2 secondes
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> popupStage.close());
         delay.play();

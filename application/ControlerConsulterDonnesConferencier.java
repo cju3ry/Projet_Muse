@@ -373,7 +373,6 @@ public class ControlerConsulterDonnesConferencier {
 	@FXML
 	void reinitialiserFiltre() {
 		listeDesFiltres.clear();
-		// System.out.print("Donnes Charge distance" + donnesChargeesDistance);
 		if ((!donneesChargeesLocal || strConferencierLocal == null) && (!donnesChargeesDistance || strConferencierDistance == null)
 				&& (!donnesChargeesSauvegarder || strConferencierSave == null ))  { // Vérifie si les données n'ont pas déjà été chargées en local et a distance
 			textAreaConsultation.setText("Les données ne sont pas encore disponibles.");
@@ -484,9 +483,8 @@ public class ControlerConsulterDonnesConferencier {
 	}
 	@FXML
 	void genererPdf(ActionEvent event) {
+
 		titre = "Conférencier ";
-		System.out.println("Titre du PDF : " + titre);
-		System.out.println("Contenu du fichier : " + contenuFichier);
 
 		if (listeDesFiltres.isEmpty()) {
 			listeDesFiltres.add("Aucun filtre appliqué");

@@ -416,11 +416,9 @@ public class ControleurImporterDistance {
                         }
 
                         System.out.println("\nFichier reçu avec succès !");
-                        //System.out.println("avant avoir appelé importerFichierSelonSelection()");
                         System.out.print("le nom du fichier requete est " + getRequest());
                         fichierRecu = getRequest();
                         importerFichierSelonSelection();
-                        //System.out.println("Après avoir appelé importerFichierSelonSelection()");
                         Platform.runLater(() -> {
                             Alert alert = new Alert(AlertType.INFORMATION);
                             alert.setHeaderText("Le fichier a été reçu et les données ont été importées avec succès.");
@@ -463,7 +461,6 @@ public class ControleurImporterDistance {
      * Importe les données du fichier reçu
      * */
     private void importerFichierSelonSelection() {
-        //System.out.println("Début de importerFichierSelonSelection");
         System.out.print("le nom du fichier est " + fichierRecu);
         switch (fichierRecu) {
             case "employes":
@@ -643,10 +640,6 @@ public class ControleurImporterDistance {
         Main.setPageImporter();
     }
 
-    @FXML
-    void importerFichier(ActionEvent event) {
-
-    }
     
     @FXML
     void exporter(ActionEvent event) {

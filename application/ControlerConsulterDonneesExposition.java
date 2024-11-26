@@ -222,7 +222,7 @@ public class ControlerConsulterDonneesExposition {
 	}
 
 	private void toggleFiltrePanel() {
-		// Basculer la visibilité du panneau de filtres
+		// Bascule la visibilité du panneau de filtres
 		boolean isVisible = scrollPaneFiltres.isVisible();
 		scrollPaneFiltres.setVisible(!isVisible);
 		btnLancerFiltre.setVisible(!isVisible);
@@ -476,9 +476,8 @@ public class ControlerConsulterDonneesExposition {
 
 	@FXML
 	void genererPdf(ActionEvent event) {
+
 		titre = "Expositions";
-		System.out.println("Titre du PDF : " + titre);
-		System.out.println("Contenu du fichier : " + contenuFichier);
 
 		if (listeDesFiltres.isEmpty()) {
 			listeDesFiltres.add("Aucun filtre appliqué");
@@ -499,7 +498,7 @@ public class ControlerConsulterDonneesExposition {
 				new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
 		);
 
-		// Ouvrir la boîte de dialogue de sauvegarde
+		// Ouvre la boîte de dialogue de sauvegarde
 		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		java.io.File file = fileChooser.showSaveDialog(stage);
 
@@ -535,7 +534,7 @@ public class ControlerConsulterDonneesExposition {
 		Label messageLabel = new Label(message);
 		messageLabel.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
 
-		// Recupérer la fenêtre parente
+		// Recupère la fenêtre parente
 		Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		double parentWidth = parentStage.getWidth();
 		double parentHeight = parentStage.getHeight();
@@ -551,7 +550,7 @@ public class ControlerConsulterDonneesExposition {
 		popupStage.setScene(scene);
 		popupStage.show();
 
-		// Close the pop-up after 2 seconds
+		// Ferme la pop up après 2 s de délai
 		PauseTransition delay = new PauseTransition(Duration.seconds(2));
 		delay.setOnFinished(e -> popupStage.close());
 		delay.play();

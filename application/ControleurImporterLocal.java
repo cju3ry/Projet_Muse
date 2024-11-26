@@ -50,8 +50,6 @@ public class ControleurImporterLocal {
 	private static boolean cheminFichierVisitesChoisit = false;
 	
 	private boolean donnesChargeesSauvegarder;
-	
-	private boolean donnesChargeesLocal;
 
 	private  static StringBuilder strConferencier;
 	
@@ -306,9 +304,6 @@ public class ControleurImporterLocal {
     	Main.setPageImporter();
     }
 
-    //TODO modifier dans la classe conférencier le toStrinfg pour mettre nom et prenom a la ligne
-    //TODO supprimer les # dans les spécialitée substring 
-    //TODO si 2 indisponibilité les meme 16/10/2024 et 16/10/2024 en mettre qu'une 
     @FXML
     void importerFichierConferenciers(ActionEvent event) {
     	strConferencier = new StringBuilder();
@@ -333,10 +328,7 @@ public class ControleurImporterLocal {
             for (int i = 0; i < listeDesConfernciers.size(); i++) {
             	strConferencier.append(listeDesConfernciers.get(i).toString() + "\n");
             }
-//            System.out.print("liste des conférencier to string " + strConferencier);
-
     	} catch(IllegalArgumentException e) {
-//    		System.out.print("Une erreur s'est produite avec le fichier des conférenciers");
 			Alert alerteNok = new Alert(AlertType.WARNING);
 			alerteNok.setTitle("Importation echouée");
 			alerteNok.setHeaderText("L'importation du fichiers des conférenciers a echouée");
@@ -345,7 +337,7 @@ public class ControleurImporterLocal {
     	}
 
     }
-    //TODO rajouter nom : et prenom : a la lgine dans le to String d'employes 
+
     @FXML
     void importerFichierEmployes(ActionEvent event) {
 		strEmployes = new StringBuilder();
@@ -380,9 +372,7 @@ public class ControleurImporterLocal {
 
     }
 
-    
-    //TODO enlever les # des mots cle (toString)
-    @FXML
+	@FXML
     void importerFichierExpositions(ActionEvent event) {
 		strExpositions = new StringBuilder();
 		donnesChargeesSauvegarder = ControleurPageDeGarde.isDonneesSaveChargees();
