@@ -12,7 +12,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class testStatistiques {
+public class testStatistiques {
 
 	private Statistiques statistiques;
 	private DonneesApplication donneesDeBase;
@@ -20,20 +20,20 @@ class testStatistiques {
 
 	// Initialisation des données avant chaque test
 	@BeforeEach
-	void setUp() {
+	public void setUp() {
 		statistiques = new Statistiques();
 		donneesDeBase = new DonneesApplication();
-		donneesDeBase.importerEmployes(donneesDeBase.LireCsv("testsUnitaires\\employes.csv"));
-		donneesDeBase.importerConferenciers(donneesDeBase.LireCsv("testsUnitaires\\conferenciers.csv"));
-		donneesDeBase.importerExpositions(donneesDeBase.LireCsv("testsUnitaires\\expositions.csv"));
-		donneesDeBase.importerVisites(donneesDeBase.LireCsv("testsUnitaires\\visites.csv"));
+		donneesDeBase.importerEmployes(donneesDeBase.LireCsv("Projet_Musee-main\\testsUnitaires\\employes.csv"));
+		donneesDeBase.importerConferenciers(donneesDeBase.LireCsv("Projet_Musee-main\\testsUnitaires\\conferenciers.csv"));
+		donneesDeBase.importerExpositions(donneesDeBase.LireCsv("Projet_Musee-main\\testsUnitaires\\expositions.csv"));
+		donneesDeBase.importerVisites(donneesDeBase.LireCsv("Projet_Musee-main\\testsUnitaires\\visites.csv"));
 		statistiques.visiteFiltre = donneesDeBase.getVisites();
 		visite = new ArrayList<>(donneesDeBase.getVisites());
 	}
 
 	// test de la methode conferencierInterne
 	@Test
-	void testConferencierInterne() {
+	public void testConferencierInterne() {
 		statistiques.conferencierInterne();
 		for (Visite visite : statistiques.visiteFiltre) {
 			String conferencierId = visite.getConferencierId();
@@ -44,7 +44,7 @@ class testStatistiques {
 
 	// test de la methode conferencierExterne
 	@Test
-	void testConferencierExterne() {
+	public void testConferencierExterne() {
 		statistiques.conferencierExterne();
 		for (Visite visite : statistiques.visiteFiltre) {
 			String conferencierId = visite.getConferencierId();
@@ -55,7 +55,7 @@ class testStatistiques {
 
 	// test de la methode visitePeriode
 	@Test
-	void testVisitePeriode() throws ParseException {
+	public void testVisitePeriode() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		Date dateDebut = format.parse("01/01/2023");
 		Date dateFin = format.parse("31/12/2023");
@@ -69,7 +69,7 @@ class testStatistiques {
 
 	// test de la methode visitePlageHoraire
 	@Test
-	void testVisitePlageHoraire() throws ParseException {
+	public void testVisitePlageHoraire() throws ParseException {
 		String heureDebut = "09h00";
 		String heureFin = "17h00";
 
@@ -86,7 +86,7 @@ class testStatistiques {
 
 	// test de la methode getNbVisitesParConferencier
 	@Test
-	void testGetNbVisitesParExposition() {
+	public void testGetNbVisitesParExposition() {
 		Map<String, Integer> nbVisitesParExposition = statistiques.getNbVisitesParExposition();
 		int totalVisites = statistiques.visiteFiltre.size();
 		int sum = nbVisitesParExposition.values().stream().mapToInt(Integer::intValue).sum();
@@ -95,14 +95,14 @@ class testStatistiques {
 
 	// test de la methode getNbVisitesParConferencier
 	@Test
-	void testGetPVisitesExpositions() {
+	public void testGetPVisitesExpositions() {
 		Map<String, Double> pVisitesExpositions = statistiques.getPVisitesExpositions();
 		double totalPourcentage = calculerSomme(pVisitesExpositions);
 		assertEquals(100.0, totalPourcentage, 0.01);
 	}
 
 	// test de la methode getNbVisitesParConferencier
-	private double calculerSomme(Map<String, Double> pVisitesExpositions) {
+	public  double calculerSomme(Map<String, Double> pVisitesExpositions) {
 		double totalPourcentage = 0.0;
 		for (Map.Entry<String, Double> entry : pVisitesExpositions.entrySet()) {
 			System.out.println(entry.getKey() + " : " + entry.getValue());
@@ -113,7 +113,7 @@ class testStatistiques {
 
 	// test de la methode expositionTemporaire
 	@Test
-	void testExpositionTemporaire() {
+	public void testExpositionTemporaire() {
 		statistiques.expositionTemporaire();
 		for (Visite visite : statistiques.visiteFiltre) {
 			String expositionId = visite.getExpositionId();
@@ -124,7 +124,7 @@ class testStatistiques {
 
 	// test de la methode expositionPermanente
 	@Test
-	void testExpositionPermanente() {
+	public void testExpositionPermanente() {
 		statistiques.expositionPermanente();
 		for (Visite visite : statistiques.visiteFiltre) {
 			String expositionId = visite.getExpositionId();
@@ -135,7 +135,7 @@ class testStatistiques {
 
 	// test de la methode initialiserVisiteFiltre
 	@Test
-	void testVisitePlageHoraire10h00_11h00() throws ParseException {
+	public void testVisitePlageHoraire10h00_11h00() throws ParseException {
 		String heureDebut = "10h00";
 		String heureFin = "11h00";
 
@@ -159,7 +159,7 @@ class testStatistiques {
 
 	// test de la methode visitePlageHoraire
 	@Test
-	void testVisitePlageTemps() throws ParseException {
+	public void testVisitePlageTemps() throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		Date dateDebut = format.parse("08/10/2024");
 		Date dateFin = format.parse("01/11/2024");
@@ -177,7 +177,7 @@ class testStatistiques {
 
 	// test de la methode visiteConfExterne
 	@Test
-	void testVisiteConfExterne() throws ParseException {
+	public void testVisiteConfExterne() throws ParseException {
 		statistiques.conferencierExterne();
 		ArrayList<String> expectedVisites = new ArrayList<>(Arrays.asList("R000004", "R000005", "R000016", "R000017"));
 		ArrayList<String> actualVisites = new ArrayList<>();
@@ -189,7 +189,7 @@ class testStatistiques {
 
 	// test de la methode visiteConfInterne
 	@Test
-	void testVisiteConfInterne() throws ParseException {
+	public void testVisiteConfInterne() throws ParseException {
 		statistiques.conferencierInterne();
 		ArrayList<String> expectedVisites = new ArrayList<>(Arrays.asList(
 				"R000001", "R000002", "R000003", "R000006", "R000007", "R000008", "R000009",
@@ -203,7 +203,7 @@ class testStatistiques {
 
 	// test de la methode visitePeriode
 	@Test
-	void testExpoTemporaire() throws ParseException {
+	public void testExpoTemporaire() throws ParseException {
 		statistiques.expositionTemporaire();
 		ArrayList<String> expectedVisites = new ArrayList<>(Arrays.asList(
 				"R000001", "R000002", "R000003", "R000004", "R000005", "R000006"
@@ -217,7 +217,7 @@ class testStatistiques {
 
 	// test de la methode expositionPermanente
 	@Test
-	void testExpoPemanante() throws ParseException {
+	public void testExpoPemanante() throws ParseException {
 		statistiques.expositionPermanente();
 		ArrayList<String> expectedVisites = new ArrayList<>(Arrays.asList(
 				"R000007", "R000008", "R000009", "R000010", "R000011", "R000012",
@@ -232,7 +232,7 @@ class testStatistiques {
 
 	// test de la methode getExpositionIntituleById
 	@Test
-	void testGetExpositionIntituleById() {
+	public void testGetExpositionIntituleById() {
 		String expositionId = "E000001";
 		String expectedIntitule = "Les paysages impressionnistes";
 		String actualIntitule = statistiques.getExpositionIntituleById(expositionId);
@@ -241,7 +241,7 @@ class testStatistiques {
 
 	// test de la methode getNomPrenomConferencierById
 	@Test
-	void testgetNomPrenomConferencierById() {
+	public void testgetNomPrenomConferencierById() {
 		String conferencierId = "C000001";
 		String expectedNom = "Dupont Pierre";
 		String actualNom = statistiques.getNomPrenomConferencierById(conferencierId);
@@ -250,7 +250,7 @@ class testStatistiques {
 
 	// test de la methode initialiserVisiteFiltre
 	@Test
-	void testInitialiserVisiteFiltre() {
+	public void testInitialiserVisiteFiltre() {
 		statistiques.initialiserVisiteFiltre();
 		statistiques.visiteFiltre = donneesDeBase.getVisites();
 		assertEquals(visite.size(), statistiques.visiteFiltre.size());
@@ -259,7 +259,7 @@ class testStatistiques {
 
 	// test de la methode afficherPVisitesTConferencier
 	@Test
-	void testAfficherPVisitesTConferencier() {
+	public void testAfficherPVisitesTConferencier() {
 		StringBuilder result = statistiques.afficherPVisitesTConferencier();
 		String expected = "Pourcentage de visites effectuées par des conférenciers internes: 77.77777777777779%\n" +
 				"Pourcentage de visites effectuées par des conférenciers externes: 22.22222222222222%";
@@ -268,7 +268,7 @@ class testStatistiques {
 
 	// test de la methode reset
 	@Test
-	void testReset() {
+	public void testReset() {
 		statistiques.reset();
 		// effet de bord on a du mal à tester cette methode
 		assertEquals(14, statistiques.visiteFiltre.size());
@@ -276,7 +276,7 @@ class testStatistiques {
 
 	// test de la methode affichagePVisitesExposition
 	@Test
-	void testAffichagePVisitesExposition() {
+	public void testAffichagePVisitesExposition() {
 		StringBuilder result = statistiques.affichagePVisitesExposition();
 		String expected = "Exposition E000002: Les œuvres majeures de Pierre Soulages: 22.0% des visites\n" +
 				"Exposition E000001: Les paysages impressionnistes: 28.0% des visites\n" +
@@ -288,7 +288,7 @@ class testStatistiques {
 	}
 	// test de la methode afficherPVisitesConferencier
 	@Test
-	void testAfficherPVisitesConferencier() {
+	public void testAfficherPVisitesConferencier() {
 		StringBuilder result = statistiques.afficherPVisitesConferencier();
 		String expected = "Conférencier C000002: Lexpert Noemie: 22% des visites\n"+
 		"Conférencier C000001: Dupont Pierre: 11% des visites\n"+

@@ -32,10 +32,10 @@ public class TestFiltre {
 		filtres = new Filtre();
 
 		// Importation des données depuis des fichiers CSV
-		donnees.importerEmployes(donnees.LireCsv("employes.csv"));
-		donnees.importerExpositions(donnees.LireCsv("expositions.csv"));
-		donnees.importerConferenciers(donnees.LireCsv("conferenciers.csv"));
-		donnees.importerVisites(donnees.LireCsv("visites.csv"));
+		donnees.importerEmployes(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\employes.csv"));
+		donnees.importerExpositions(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\expositions.csv"));
+		donnees.importerConferenciers(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\conferenciers.csv"));
+		donnees.importerVisites(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\visites.csv"));
 	}
 
 	/**
