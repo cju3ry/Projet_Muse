@@ -151,10 +151,28 @@ public class Exposition implements Serializable {
 		this.resume = resume;
 	}
 
+	/*
+         * Permet de set la temporalité de l'exposition
+	 * @param un booléen portant sur la temporalité de l'exposition
+	*/
 	public void setEstTemporaire(boolean tempo) {
 		this.estTemporaire = tempo;
 	}
 
+	/**
+     * Retourne l'intitule, le résumé, le nombre d'oeuvres, si l'exposition est temporaire
+     * les mots clés, la période, la date de début et de fin sous la forme :
+     * "Exposition : [intitule]
+     * Résumé : [résumé]
+     * Nombre d'oeuvres : [nbOeuvre]
+     * Temporaire : [estTemporaire]"
+     * Mots-clés : [motsCles]
+     * Période : [periodeDebut-periodeFin]
+     * Début de l'exposition : [debutExpo]
+     * Fin de l'exposition : [finExpo]
+     * 
+     * @return Une chaîne de caractères représentant l'exposition.
+     */
 	@Override
 	public String toString() {
 		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
@@ -171,15 +189,23 @@ public class Exposition implements Serializable {
 				"\tFin de l'exposition : " + (this.finExpo != null ? formatDate.format(this.finExpo) : "Non spécifiée") + "\n";
 	}
 
-	// Méthode pour vérifier si une exposition est temporaire
+	/*
+	 * Méthode qui renvoit si exposition est temporaire
+	 */
 	public boolean estTemporaire() {
 		return this.estTemporaire;
 	}
 
+	/*
+	 * Méthode qui renvoit la période du début
+	 */
 	public Date getPeriodeDebut() {
 		return this.periodeDebut;
 	}
 
+	/*
+	 * Méthode qui renvoit la période de fin
+	 */
 	public Date getPeriodeFin() {
 		return this.periodeFin;
 	}
