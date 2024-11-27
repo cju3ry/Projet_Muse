@@ -11,6 +11,8 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.layout.property.VerticalAlignment;
 
+//import org.slf4j.SimpleLoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,9 +49,14 @@ public class FichierPdf {
 
 	public boolean genererPdf(String filePath) {
 
-		// Chemin du fichier PDF à générer placé depuis le fileChooser
-		String dest = filePath
-				+ System.currentTimeMillis() + ".pdf";
+		// Chemin du fichier PDF à générer placé
+		// dans le dossier choisi par l'utilisateur
+		String dest;
+		if (!filePath.endsWith(".pdf")) {
+			dest = filePath + ".pdf";
+		} else {
+			dest = filePath;
+		}
 		try {
 			// Créer un PdfWriter
 			PdfWriter writer = new PdfWriter(dest);
