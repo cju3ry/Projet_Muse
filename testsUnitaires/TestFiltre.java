@@ -32,6 +32,8 @@ public class TestFiltre {
 		filtres = new Filtre();
 
 		// Importation des données depuis des fichiers CSV
+		// modifier le path des fichiers en cas de bug avec inteliji, eclipse, ou autre ide selon l'extraction du zip
+		// mettre une path correspondant à vos fichiers csv, si les fichies ne sont pas trouvés
 		donnees.importerEmployes(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\employes.csv"));
 		donnees.importerExpositions(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\expositions.csv"));
 		donnees.importerConferenciers(donnees.LireCsv("Projet_Musee-main\\testsUnitaires\\conferenciers.csv"));

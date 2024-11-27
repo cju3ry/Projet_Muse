@@ -115,7 +115,7 @@ public class TestExposition {
     @Test
     public void testToString() {
         String expected = "\tExposition : Exposition Art Moderne\n" +
-                "\tRésumé : Une exposition présentant les œuvres d'art moderne.\n" +
+                "\tRésumé : Une exposition présentant les œuvres d'art\n\tmoderne.\n" +
                 "\tNombre d'œuvres : 20\n" +
                 "\tTemporaire : Oui\n" +
                 "\tMots-clés : art, moderne, peinture\n" +

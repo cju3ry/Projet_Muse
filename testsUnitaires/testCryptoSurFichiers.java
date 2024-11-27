@@ -14,10 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class testCryptoSurFichiers {
 
     private Crypto crypto;
-    private static final String cheminFichierEncrypte = "Projet_Musee-main\\testsUnitaires\\employesCrypte.csv";
-    private static final String cheminFichierEncrypteConferencier = "Projet_Musee-main\\conferencierCrypte.csv";
-    private static final String cheminFichierEncrypteExpositions = "Projet_Musee-main\\testsUnitaires\\expositionsCrypte.csv";
-    private static final String cheminFichierEncrypteVisites = "Projet_Musee-main\\testsUnitaires\\visitesCrypte.csv";
+    // modifier le path des fichiers en cas de bug avec inteliji, eclipse, ou autre ide selon l'extraction du zip
+    // mettre une path correspondant à vos fichiers csv, si les fichies ne sont pas trouvés
+    private static final String cheminFichierEncrypte = "testsUnitaires\\employesCrypte.csv";
+    private static final String cheminFichierEncrypteConferencier = "testsUnitaires\\conferencierCrypte.csv";
+    private static final String cheminFichierEncrypteExpositions = "testsUnitaires\\expositionsCrypte.csv";
+    private static final String cheminFichierEncrypteVisites = "testsUnitaires\\visitesCrypte.csv";
 
 
     private final String contenuEmployes = "Ident;Nom;Prenom;Telephone\n" +
