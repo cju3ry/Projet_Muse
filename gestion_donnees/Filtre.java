@@ -10,41 +10,53 @@ import java.util.Map;
 import application.ControleurImporterLocal;
 
 public class Filtre {
-
+	// Données de l'application
 	private DonneesApplication donnees = ControleurImporterLocal.getDonnees();
-
+	// Données filtrées
 	private ArrayList<Visite> visiteFiltre;
 	private ArrayList<Exposition> expositionFiltre;
 	private ArrayList<Conferencier> conferencierFiltre;
-
+	// Données initiales
 	private final ArrayList<Visite> visiteInitial = donnees.getVisites();
 	private final ArrayList<Exposition> expositionInitial = donnees.getExpositions();
 	private final ArrayList<Conferencier> conferencierInitial = donnees.getConferenciers();
-
+	/**
+	 * Constructeur de la classe Filtre
+	 */
 	public Filtre() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
 		this.expositionFiltre = new ArrayList<>();
 		this.conferencierFiltre = new ArrayList<>();
 	}
-
+	/**
+	 * Méthode pour initialiser les visites filtrées
+	 */
 	private void initialiserVisiteFiltre() {
 		if (visiteFiltre.isEmpty()) {
 			this.visiteFiltre = new ArrayList<>(visiteInitial);
 		}
 	}
-
+	/**
+	 * Méthode pour initialiser les expositions filtrées
+	 */
 	private void initialiserExpositionFiltre() {
 		if (expositionFiltre.isEmpty()) {
 			this.expositionFiltre = new ArrayList<>(expositionInitial);
 		}
 	}
-
+	/**
+	 * Méthode pour initialiser les conférenciers filtrés
+	 */
 	private void initialiserConferencierFiltre() {
 		if (conferencierFiltre.isEmpty()) {
 			this.conferencierFiltre = new ArrayList<>(conferencierInitial);
 		}
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par nom de l'employé
+	 * @param nom Nom de l'employé
+	 * @param prenom Prénom de l'employé
+	 */
 	public void conferencierNom(String nom, String prenom) {
 		initialiserVisiteFiltre();
 		String idConferencier = "";
@@ -59,7 +71,11 @@ public class Filtre {
 		String finalIdConferencier = idConferencier;
 		this.visiteFiltre.removeIf(visite -> !finalIdConferencier.equals(visite.getConferencierId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par nom de l'employé
+	 * @param nom Nom de l'employé
+	 * @param prenom Prénom de l'employé
+	 */
 	public void employeNom(String nom, String prenom) {
 		initialiserVisiteFiltre();
 		String idEmploye = "";
@@ -73,7 +89,10 @@ public class Filtre {
 		String finalIdEmploye = idEmploye;
 		this.visiteFiltre.removeIf(visite -> !finalIdEmploye.equals(visite.getEmployeId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par intitulé de l'exposition
+	 * @param intituleExpo Intitulé de l'exposition
+	 */
 	public void expositionIntitule(String intituleExpo) {
 		initialiserVisiteFiltre();
 		String idExposition = "";
@@ -87,29 +106,45 @@ public class Filtre {
 		String finalIdExposition = idExposition;
 		this.visiteFiltre.removeIf(visite -> !finalIdExposition.equals(visite.getExpositionId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par intitulé de la visite
+	 * @param intituleVisite Intitulé de la visite
+	 */
 	public void visiteIntitule(String intituleVisite) {
 		initialiserVisiteFiltre();
 		this.visiteFiltre.removeIf(visite -> !intituleVisite.equals(visite.getIntitule()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par numéro de téléphone
+	 * @param numTel Numéro de téléphone
+	 */
 	public void visiteNumTel(String numTel) {
 		initialiserVisiteFiltre();
 		this.visiteFiltre.removeIf(visite -> !numTel.equals(visite.getNumTel()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par date précise
+	 * @param datePrecise la Date précise
+	 */
 	public void datePrecise(Date datePrecise) {
 		initialiserVisiteFiltre();
 		this.visiteFiltre.removeIf(visite -> !datePrecise.equals(visite.getDateVisite()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par heure précise
+	 * @param heurePrecise l'heure précise
+	 */
 	public void heurePrecise(String heurePrecise) throws ParseException {
 		initialiserVisiteFiltre();
 		SimpleDateFormat format = new SimpleDateFormat("HH'h'mm");
 		Date heurePreciseDate = format.parse(heurePrecise);
 		this.visiteFiltre.removeIf(visite -> !heurePreciseDate.equals(visite.getHeureVisite()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par période
+	 * @param dateDebut Date de début de la période
+	 * @param dateFin Date de fin de la période
+	 */
 	public void datePeriode(Date dateDebut, Date dateFin) {
 		if(dateDebut.after(dateFin)) {
 			throw new IllegalArgumentException("La date de fin ne peut être inféreiure à la date de début");
@@ -118,7 +153,11 @@ public class Filtre {
 		this.visiteFiltre.removeIf(visite -> 
 		visite.getDateVisite().before(dateDebut) || visite.getDateVisite().after(dateFin));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par période
+	 * @param dateHeureDebut Date de début de la période
+	 * @param dateHeureFin Date de fin de la période
+	 */
 	public void heurePeriode(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserVisiteFiltre();
 		SimpleDateFormat format = new SimpleDateFormat("HH'h'mm");
@@ -127,7 +166,9 @@ public class Filtre {
 		this.visiteFiltre.removeIf(visite -> 
 		visite.getHeureVisite().before(heureDebut) || visite.getHeureVisite().after(heureFin));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par conférencier internes
+	 */
 	public void conferencierInterne() {
 		initialiserVisiteFiltre();
 		ArrayList<String> idConferencier = new ArrayList<>();
@@ -140,7 +181,9 @@ public class Filtre {
 
 		this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par conférencier externes
+	 */
 	public void conferencierExterne() {
 		initialiserVisiteFiltre();
 		ArrayList<String> idConferencier = new ArrayList<>();
@@ -153,7 +196,9 @@ public class Filtre {
 
 		this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par exposition permanente
+	 */
 	public void expositionPermanente() {
 		initialiserVisiteFiltre();
 		ArrayList<String> idExposition = new ArrayList<>();
@@ -166,7 +211,9 @@ public class Filtre {
 
 		this.visiteFiltre.removeIf(visite -> !idExposition.contains(visite.getExpositionId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par exposition temporaire
+	 */
 	public void expositionTemporaire() {
 		initialiserVisiteFiltre();
 		ArrayList<String> idExposition = new ArrayList<>();
@@ -179,7 +226,11 @@ public class Filtre {
 
 		this.visiteFiltre.removeIf(visite -> !idExposition.contains(visite.getExpositionId()));
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par période de l'exposition
+	 * @param debut Date de début de la période
+	 * @param fin Date de fin de la période
+	 */
 	public void expoVisitePeriode(String debut, String fin) throws ParseException {
 		initialiserExpositionFiltre();
 
@@ -212,7 +263,13 @@ public class Filtre {
 			}
 		}
 	}
-	
+
+	/**
+	 * Méthode pour filtrer les visites par horaire de l'exposition
+	 * @param dateHeureDebut
+	 * @param dateHeureFin
+	 * @throws ParseException
+	 */
 	public void expoVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserExpositionFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -240,7 +297,11 @@ public class Filtre {
 			}
 		}
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par période concernant les conférenciers
+	 * @param debut Date de début de la période
+	 * @param fin Date de fin de la période
+	 */
 	public void confVisitePeriode(String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
 
@@ -269,7 +330,11 @@ public class Filtre {
 			}
 		}
 	}
-
+	/**
+	 * Méthode pour filtrer les visites par horaire concernant les conférenciers
+	 * @param dateHeureDebut Date de début de la période
+	 * @param dateHeureFin Date de fin de la période
+	 */
 	public void confVisiteHoraire(String dateHeureDebut, String dateHeureFin) throws ParseException {
 		initialiserConferencierFiltre();
 		SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -297,7 +362,12 @@ public class Filtre {
 			}
 		}
 	}
-	
+	/**
+	 * Méthode pour obtenir la moyenne des visites par conférencier dans une période
+	 * @param liste Liste des conférenciers
+	 * @param debut Date de début de la période
+	 * @param fin Date de fin de la période
+	 */
 	public HashMap<Conferencier, Double> confMoyennesPeriode(ArrayList<Conferencier> liste, String debut, String fin) throws ParseException {
 		initialiserConferencierFiltre();
 		
@@ -325,11 +395,20 @@ public class Filtre {
 		
 		return moyennes;
 	}
-	
+
+	/**
+	 * Trie les expositions en fonction du nombre de visites par ordre croissant ou décroissant
+	 * @param listExposition
+	 * @param ordreCroissant
+	 */
 	public void expositionstrie(ArrayList<Exposition> listExposition, boolean ordreCroissant) {
 		trierExpositions(listExposition, ordreCroissant);
 	}
-
+	/**
+	 * Trie les expositions en fonction du nombre de visites par ordre croissant ou décroissant
+	 * @param listExposition
+	 * @param ordreCroissant
+	 */
 	public void trierExpositions(ArrayList<Exposition> listExposition, boolean ordreCroissant) {
 		// Compter les visites pour chaque exposition
 		Map<String, Integer> visiteCount = new HashMap<>();
@@ -347,11 +426,19 @@ public class Filtre {
 		});
 	}
 
-	
+	/**
+	 * Trie les conférenciers en fonction du nombre de visites par ordre croissant ou décroissant
+	 * @param listConferencier
+	 * @param ordreCroissant
+	 */
 	public void conferenciersTrie(ArrayList<Conferencier> listConferencier, boolean ordreCroissant) {
 		trierConferencier(listConferencier, ordreCroissant);
 	}
-
+	/**
+	 * Trie les conférenciers en fonction du nombre de visites par ordre croissant ou décroissant
+	 * @param listConferencier
+	 * @param ordreCroissant
+	 */
 	public void trierConferencier(ArrayList<Conferencier> listConferencier, boolean ordreCroissant) {
 		// Compter les visites pour chaque exposition
 		Map<String, Integer> visiteCount = new HashMap<>();
@@ -368,7 +455,10 @@ public class Filtre {
 			return ordreCroissant ? Integer.compare(compA, compB) : Integer.compare(compB, compA);
 		});
 	}
-	
+	/**
+	 * Permets d'obtenir la moyenne des visites par exposition dans une période
+	 * @param liste Liste des expositions
+	 */
 	public HashMap<Exposition, Double> expoMoyennesPeriode(ArrayList<Exposition> liste, String debut, String fin) throws ParseException {
 		initialiserExpositionFiltre();
 		
@@ -396,21 +486,29 @@ public class Filtre {
 		
 		return moyennes;
 	}
-
+	/**
+	 * Permets de réinitialiser les données filtrées
+	 */
 	public void reset() {
 		this.visiteFiltre = new ArrayList<>(visiteInitial);
 		this.expositionFiltre = new ArrayList<>(expositionInitial);
 		this.conferencierFiltre = new ArrayList<>(conferencierInitial);
 	}
-
+	/**
+	 * Permets d'obtenir la liste des visites filtrées
+	 */
 	public ArrayList<Visite> getListeVisite() {
 		return this.visiteFiltre;
 	}
-
+	/**
+	 * Permets d'obtenir la liste des expositions filtrées
+	 */
 	public ArrayList<Exposition> getListeExposition() {
 		return this.expositionFiltre;
 	}
-
+	/**
+	 * Permets d'obtenir la liste des conférenciers filtrés
+	 */
 	public ArrayList<Conferencier> getListeConferencier() {
 		return this.conferencierFiltre;
 	}

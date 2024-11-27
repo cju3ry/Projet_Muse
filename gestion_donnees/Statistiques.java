@@ -13,20 +13,26 @@ public class Statistiques {
     DonneesApplication donnees = ControleurImporterLocal.getDonnees();
 
     final ArrayList<Visite> visiteInitial = donnees.getVisites();
-
+    /** Liste des visites filtrées */
     public ArrayList<Visite> visiteFiltre;
-
+    /** Constructeur de la classe Statistique*/
     public Statistiques() {
         format = new SimpleDateFormat("dd/MM/yyyy");
         visiteFiltre = donnees.getVisites();
     }
-    
+
+    /**
+     * Méthode pour initialiser la liste des visites filtrées
+     */
     public void initialiserVisiteFiltre() {
         if (visiteFiltre.isEmpty()) {
             this.visiteFiltre = new ArrayList<>(visiteInitial);
         }
     }
 
+    /**
+     * Méthode pour filtrer les visites pour ne conserver que celles effectuées par un conférencier interne
+     */
     public void conferencierInterne() {
         initialiserVisiteFiltre();
         ArrayList<String> idConferencier = new ArrayList<>();
@@ -37,7 +43,9 @@ public class Statistiques {
         }
         this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
     }
-
+    /**
+     * Méthode pour filtrer les visites pour ne conserver que celles effectuées par un conférencier externe
+     */
     public void conferencierExterne() {
         initialiserVisiteFiltre();
         ArrayList<String> idConferencier = new ArrayList<>();
@@ -48,8 +56,11 @@ public class Statistiques {
         }
         this.visiteFiltre.removeIf(visite -> !idConferencier.contains(visite.getConferencierId()));
     }
-
-    // Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
+    /**
+     * Méthode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une période donnée
+     * @param dateDebut la date de début de la période
+     * @param dateFin la date de fin de la période
+     */
     public void visitePeriode(Date dateDebut, Date dateFin) {
         initialiserVisiteFiltre();
         // Vérification des dates de début et de fin
@@ -62,7 +73,12 @@ public class Statistiques {
         );
     }
 
-    // Methode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une plage horaire donnée
+    /**
+     * Methode pour filtrer les visites pour ne conserver que celles ayant eu lieu dans une plage horaire donnée
+     * @param heureDebut
+     * @param heureFin
+     * @throws ParseException
+     */
     public void visitePlageHoraire(String heureDebut, String heureFin) throws ParseException {
         initialiserVisiteFiltre();
         SimpleDateFormat formatHeure = new SimpleDateFormat("HH'h'mm");
@@ -134,7 +150,10 @@ public class Statistiques {
 
         return pourcentageParConferencier;
     }
-    
+    /**
+     * Méthode pour obtenir le pourcentage de visites effectuées par des conférenciers internes et externes
+     * @return une chaine de caractères contenant le pourcentage de visites effectuées par des conférenciers internes et externes
+     */
     public StringBuilder afficherPVisitesConferencier() {
         StringBuilder str = new StringBuilder();
         Map<String, Double> pourcentageParConferencier = getPVisitesConferenciers();
@@ -149,7 +168,11 @@ public class Statistiques {
         }
         return str;
     }
-
+    /**
+     * Méthode pour obtenir le nom et prénom d'un conférencier à partir de son ID
+     * @param id l'ID du conférencier
+     * @return le nom et prénom du conférencier
+     */
     public String getNomPrenomConferencierById(String id) {
         for (Conferencier conferencier : donnees.getConferenciers()) {
             if (conferencier.getId().equals(id)) {
@@ -158,7 +181,11 @@ public class Statistiques {
         }
         return "Conférencier non trouvé";
     }
-
+    /**
+     * Méthode pour afficher le pourcentage de visites effectuées par des conférenciers internes et externes
+     * @return une chaine de caractères contenant le pourcentage de visites effectuées par des conférenciers
+     * internes ou externes
+     */
     public StringBuilder afficherPVisitesTConferencier() {
         initialiserVisiteFiltre();
         StringBuilder str = new StringBuilder();
@@ -184,7 +211,9 @@ public class Statistiques {
         str.append("Pourcentage de visites effectuées par des conférenciers externes: " + pourcentageExternes + "%");
         return str;
     }
-
+    /**
+     * Méthode pour filtrer les expositions temporaires
+     */
     public void expositionTemporaire() {
         initialiserVisiteFiltre();
         // Obtenir les ID des expositions temporaires
@@ -198,7 +227,9 @@ public class Statistiques {
         // Enlever les visites liées aux expositions temporaires
         this.visiteFiltre.removeIf(visite -> idExpositionsTemporaires.contains(visite.getExpositionId()));
     }
-
+    /**
+     * Méthode pour filtrer les expositions permanentes
+     */
     public void expositionPermanente() {
         initialiserVisiteFiltre();
         // Obtenir les ID des expositions permanentes
@@ -212,7 +243,10 @@ public class Statistiques {
         // Enlever les visites liées aux expositions permanantes
         this.visiteFiltre.removeIf(visite -> idExpositionsPermanantes.contains(visite.getExpositionId()));
     }
-    
+    /**
+     * Méthode pour afficher le pourcentage de visites par exposition
+     * @return une chaine de caractères contenant le pourcentage de visites par exposition
+     */
     public StringBuilder affichagePVisitesExposition() {
         StringBuilder pourcentageVisitesParExposition = new StringBuilder();
         Map<String, Double> pourcentageParExposition = getPVisitesExpositions();
@@ -230,7 +264,11 @@ public class Statistiques {
         }
         return pourcentageVisitesParExposition;
     }
-
+    /**
+     * Méthode pour retourner l'intitulé d'une exposition à partir de son ID
+     * @param id l'ID de l'exposition
+     * @return l'intitulé de l'exposition
+     */
     public String getExpositionIntituleById(String id) {
         for (Exposition exposition : donnees.getExpositions()) {
             if (exposition.getId().equals(id)) {
@@ -240,6 +278,9 @@ public class Statistiques {
         return id;
     }
 
+    /**
+     * Méthode pour reset les visites filtrées
+     */
     public void reset() {
         this.visiteFiltre = new ArrayList<>(visiteInitial);
     }

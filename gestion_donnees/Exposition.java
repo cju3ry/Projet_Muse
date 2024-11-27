@@ -151,36 +151,20 @@ public class Exposition implements Serializable {
 		this.resume = resume;
 	}
 
-	/*
-         * Permet de set la temporalité de l'exposition
-	 * @param un booléen portant sur la temporalité de l'exposition
-	*/
 	public void setEstTemporaire(boolean tempo) {
 		this.estTemporaire = tempo;
 	}
 
-	/**
-     * Retourne l'intitule, le résumé, le nombre d'oeuvres, si l'exposition est temporaire
-     * les mots clés, la période, la date de début et de fin sous la forme :
-     * "Exposition : [intitule]
-     * Résumé : [résumé]
-     * Nombre d'oeuvres : [nbOeuvre]
-     * Temporaire : [estTemporaire]"
-     * Mots-clés : [motsCles]
-     * Période : [periodeDebut-periodeFin]
-     * Début de l'exposition : [debutExpo]
-     * Fin de l'exposition : [finExpo]
-     * 
-     * @return Une chaîne de caractères représentant l'exposition.
-     */
 	@Override
 	public String toString() {
 		SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat formatAnnee = new SimpleDateFormat("yyyy");
 		String motsCles = (this.motCles == null) ? "Aucun mots clés" : String.join(", ", this.motCles);
 
+		int retourAlaLigne = this.resume.length() > 20 ? this.resume.lastIndexOf(" ", 60) : -1;
+
 		return "\tExposition : " + this.intitule + "\n" +
-				"\tRésumé : " + this.resume + "\n" +
+				"\tRésumé : " + (retourAlaLigne != -1 ? this.resume.substring(0, retourAlaLigne) + "\n\t" + this.resume.substring(retourAlaLigne + 1) : this.resume) + "\n" +
 				"\tNombre d'œuvres : " + this.nbOeuvre + "\n" +
 				"\tTemporaire : " + (this.estTemporaire ? "Oui" : "Non") + "\n" +
 				"\tMots-clés : " + motsCles + "\n" +  // Suppression du substring()
@@ -189,23 +173,15 @@ public class Exposition implements Serializable {
 				"\tFin de l'exposition : " + (this.finExpo != null ? formatDate.format(this.finExpo) : "Non spécifiée") + "\n";
 	}
 
-	/*
-	 * Méthode qui renvoit si exposition est temporaire
-	 */
+	// Méthode pour vérifier si une exposition est temporaire
 	public boolean estTemporaire() {
 		return this.estTemporaire;
 	}
 
-	/*
-	 * Méthode qui renvoit la période du début
-	 */
 	public Date getPeriodeDebut() {
 		return this.periodeDebut;
 	}
 
-	/*
-	 * Méthode qui renvoit la période de fin
-	 */
 	public Date getPeriodeFin() {
 		return this.periodeFin;
 	}
