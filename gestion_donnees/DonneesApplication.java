@@ -18,6 +18,10 @@ import java.util.Date;
 
 /**
  * La classe DonneesApplication gère les données de l'application, y compris les conférenciers, employés, expositions et visites.
+ * @author ADRIAN CAZOR--BONNET
+ *         QUENTIN CHESNIER
+ *         CLÉMENT JUERY
+ *         BAPTISTE LADUREAU
  */
 public class DonneesApplication {
 	private static ArrayList<Conferencier> conferenciers;
@@ -74,7 +78,6 @@ public class DonneesApplication {
 		} else {
 			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
 		}
-		//initialisesDonnees();
 	    for (int i = 1; i < arraysEmployes.size(); i++) {
 	        String[] tempEmployes = arraysEmployes.get(i).split(";");
 
@@ -137,12 +140,10 @@ public class DonneesApplication {
 				throw new IllegalArgumentException("Erreur dans le fichier .csv : la colonne estEmploye doit contenir 'oui' ou 'non'");
 			}
 			ArrayList<String> indisponibilite = new ArrayList<String>();
-			//indisponibilite.add(new Date("27/07/25"));
 			for (int j = 6; j < tempConferenciers.length; j++) {
 				if (tempConferenciers[j].isBlank() || tempConferenciers[j].isEmpty()) {
 					//Empty body car si pas de date, on ne fait rien
 				} else {
-					//System.out.println(nom + " " + tempConferenciers[j].trim());
 					indisponibilite.add(tempConferenciers[j].trim());
 				}
 			}
@@ -183,7 +184,6 @@ public class DonneesApplication {
 				|| !verifEntete[8].trim().equalsIgnoreCase("Fin")) {
 			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
 		}
-		//initialisesDonnees();
 		boolean estTemporaire = false;
 	    for (int i = 1; i < arraysExpositions.size(); i++) {
 	        String[] tempExpositions = arraysExpositions.get(i).split(";");
@@ -201,8 +201,6 @@ public class DonneesApplication {
                 String finExpo = "";
                 if (tempExpositions[7].isEmpty() || tempExpositions[7].isBlank()
                         && tempExpositions[8].isEmpty() || tempExpositions[8].isBlank()) {
-                    //tempExpositions[7] = null;
-                    //tempExpositions[8] = null;
                     estTemporaire = false;
                 } else if (!tempExpositions[7].isEmpty() || !tempExpositions[7].isBlank()
                         && !tempExpositions[8].isEmpty() || !tempExpositions[8].isBlank()) {
@@ -217,8 +215,6 @@ public class DonneesApplication {
     				throw new IllegalArgumentException("L'id de l'expositions existe déja");
     			}
 
-                //System.out.print(tempExpositions[7] + "   " + tempExpositions[8]);
-                //System.out.print(tempExpositions[8] + "/");
                 if (estTemporaire) {
                     Exposition expoTemp = new Exposition(id, intitule, debutExpo, finExpo);
                     expoTemp.setPeriode(periodeDebut, periodeFin);
@@ -236,7 +232,6 @@ public class DonneesApplication {
 					System.out.println("Expositions ajouté : " + expo);
 					expositions.add(expo);
                 }
-                //Exposition expo = new Exposition(id, intitule,periodeDebut,periodeFin, nbOeuvre, motCles,resume , debutExpo, finExpo);
 
             } else {
             	throw new IllegalArgumentException("Erreur dans la ligne " + (i + 1) + ": Format incorrect");
@@ -265,7 +260,6 @@ public class DonneesApplication {
 				|| !verifEntete[8].trim().equalsIgnoreCase("")) {
 			throw new IllegalArgumentException("Erreur dans la ligne 1: l'entete n'est pas correcte");
 		}
-		//initialisesDonnees();
 		boolean	estVisite = false;
 		for (int i = 1; i < arraysVisites.size(); i++) {
 			String[] tempVisites = arraysVisites.get(i).split(";");
@@ -338,19 +332,31 @@ public class DonneesApplication {
 	public ArrayList<Visite> getVisites() {
 		return visites;
 	}
-	
+
+	/**
+	 * Permet de set des employes dans la liste des Employes
+	 */
 	public void setEmployes(ArrayList<Employe> employe) {
 		employes = employe;
 	}
-	
+
+	/**
+	 * Permet de set des conferenciers dans la liste des Conferenciers
+	 */
 	public void setConferenciers(ArrayList<Conferencier> conferencier) {
 		conferenciers = conferencier;
 	}
-	
+
+	/**
+	 * Permet de set des exposition dans la liste des Exposition
+	 */
 	public void setExpositions(ArrayList<Exposition> exposition) {
 		expositions = exposition;
 	}
-	
+
+	/**
+	 * Permet de set des visites dans la liste des Visites
+	 */
 	public void setVisites(ArrayList<Visite> visite) {
 		visites = visite;
 	}
@@ -482,19 +488,31 @@ public class DonneesApplication {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Permet de reset la liste des Visites
+	 */
 	public static void clearListVisites() {
 		visites.clear();
 	}
-	
+
+	/**
+	 * Permet de reset la liste des Conferencier
+	 */
 	public static void clearListConferenciers() {
 		conferenciers.clear();
 	}
-	
+
+	/**
+	 * Permet de reset la liste des Employes
+	 */
 	public static void clearListEmployes() {
 		employes.clear();
 	}
-	
+
+	/**
+	 * Permet de reset la liste des Expositions
+	 */
 	public static void clearListExpositions() {
 		expositions.clear();
 	}
