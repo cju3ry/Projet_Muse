@@ -89,7 +89,7 @@ public class Conferencier implements Serializable {
 			throw new IllegalArgumentException("Les dates d'indisponibilité sont invalides ou non cohérentes.");
 		}
 
-		// On vérifier que les indisponibilités sont sans duplicata (unique)
+		// On vérifier que les indisponibilités sont unique
 		Set<String> uniqueIndisponibilites = new HashSet<>(indisponibilite);
 		this.indisponibilite = new ArrayList<>(uniqueIndisponibilites);
 	}
@@ -154,7 +154,6 @@ public class Conferencier implements Serializable {
 	 * Retourne une représentation sous forme de chaîne de caractères du conférencier.
 	 *
 	 * @return une chaîne de caractères représentant le conférencier.
-	 * @
 	 */
 	@Override
 	public String toString() {
